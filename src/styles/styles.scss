@@ -8,3 +8,86 @@
 @import "primeicons/primeicons.css";
 
 
+/* main-layout.component.scss */
+.main-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr; /* Sidebar width and content area */
+  grid-template-rows: auto 1fr auto; /* Header, content, footer heights */
+  grid-template-areas:
+    "header header"
+    "sidebar content"
+    "footer footer";
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.app-header {
+  grid-area: header;
+  position: fixed;
+  width: calc(100% - 250px); /* Sidebar width */
+  z-index: 9999;
+  margin-left: 250px; /* Sidebar width */
+  padding: 0 20px;
+  background-color: orange;
+  transition: transform 0.3s ease-in-out;
+  height: 50px; /* Adjust as necessary */
+}
+
+.app-footer {
+  grid-area: footer;
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 250px); /* Sidebar width */
+  margin-left: 250px; /* Sidebar width */
+  background-color: #333;
+  padding: 0 20px;
+  z-index: 9999;
+  transition: transform 0.3s ease-in-out;
+  height: 50px; /* Adjust as necessary */
+}
+
+.app-sidebar {
+  background-color: #09c;
+  width: 250px;
+  grid-area: sidebar;
+  position: fixed;
+  z-index: 1010;
+  height: 100vh; /* Assuming header height is 50px */
+  overflow-y: auto;
+  transition: transform 0.3s ease-in-out;
+}
+
+.app-content {
+  grid-area: content;
+  margin: 50px 0;
+  padding: 10px 20px;
+  overflow-y: auto;
+
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .main-layout {
+    grid-template-columns: 0 1fr; /* Hide sidebar by default on mobile */
+  }
+
+  .app-content, .app-header, .app-footer {
+    margin-left: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  .app-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar-toggle {
+    display: block;
+    position: fixed;
+    top: 10px; /* Adjust as necessary */
+    left: 10px; /* Adjust as necessary */
+    z-index: 1030;
+  }
+}
