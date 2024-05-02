@@ -1,0 +1,13 @@
+::ng-deep .app-footer {
+  grid-area: footer;
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 250px); /* Sidebar width */
+  margin-left: 250px; /* Sidebar width */
+  background-color: #22443c;
+  color: white;
+  padding: 0 20px;
+  z-index: 9999;
+  transition: transform 0.3s ease-in-out;
+  height: 50px; /* Adjust as necessary */
+}

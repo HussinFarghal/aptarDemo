@@ -1,0 +1,11 @@
+::ng-deep.app-header {
+  grid-area: header;
+  position: fixed;
+  width: calc(100% - 250px); /* Sidebar width */
+  z-index: 9999;
+  margin-left: 250px; /* Sidebar width */
+  padding: 0 20px;
+  background-color: white;
+  transition: transform 0.3s ease-in-out;
+  height: 50px; /* Adjust as necessary */
+}

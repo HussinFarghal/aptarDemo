@@ -1,0 +1,9 @@
+::ng-deep.app-sidebar {
+  width: 250px;
+  grid-area: sidebar;
+  position: fixed;
+  z-index: 1010;
+  height: 100vh; /* Assuming header height is 50px */
+  overflow-y: auto;
+  transition: transform 0.3s ease-in-out;
+}

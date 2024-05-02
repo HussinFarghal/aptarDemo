@@ -11,6 +11,12 @@
 //@import "font-awesome/scss/font-awesome.scss";
 @import "angular-sidebar-menu/themes/admin-lte.scss";
 
+body {
+  background-color: #f8f8f8;
+  color: #6e6b7b;
+  line-height: 1.5;
+  font-size: 1rem;
+}
 /* main-layout.component.scss */
 .main-layout {
   display: grid;
@@ -25,41 +31,6 @@
   overflow: hidden;
 }
 
-.app-header {
-  grid-area: header;
-  position: fixed;
-  width: calc(100% - 250px); /* Sidebar width */
-  z-index: 9999;
-  margin-left: 250px; /* Sidebar width */
-  padding: 0 20px;
-  background-color: orange;
-  transition: transform 0.3s ease-in-out;
-  height: 50px; /* Adjust as necessary */
-}
-
-.app-footer {
-  grid-area: footer;
-  position: fixed;
-  bottom: 0;
-  width: calc(100% - 250px); /* Sidebar width */
-  margin-left: 250px; /* Sidebar width */
-  background-color: #333;
-  padding: 0 20px;
-  z-index: 9999;
-  transition: transform 0.3s ease-in-out;
-  height: 50px; /* Adjust as necessary */
-}
-
-.app-sidebar {
-  background-color: #09c;
-  width: 250px;
-  grid-area: sidebar;
-  position: fixed;
-  z-index: 1010;
-  height: 100vh; /* Assuming header height is 50px */
-  overflow-y: auto;
-  transition: transform 0.3s ease-in-out;
-}
 
 .app-content {
   grid-area: content;
