@@ -1,6 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 @layer normalize, primeng;
 
+@import "primeflex/primeflex.css";
+
 @import "bootstrap/scss/bootstrap-grid.scss";
 @import "normalize.css/normalize.css";
 @import "primeng/resources/themes/aura-light-green/theme.css";
@@ -90,5 +92,26 @@
     top: 10px; /* Adjust as necessary */
     left: 10px; /* Adjust as necessary */
     z-index: 1030;
+  }
+}
+
+.p-sidebar {
+  width: 250px;
+}
+
+.p-sidebar-mini {
+  width: 75px;
+}
+
+.active-menu {
+  background: #559c8a;
+  color: white;
+  border-radius: 8px;
+
+  a {
+    &:hover {
+      background: #559c8a !important;
+      color: white !important;
+    }
   }
 }
