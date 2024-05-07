@@ -9,3 +9,11 @@
   transition: transform 0.3s ease-in-out;
   height: 50px; /* Adjust as necessary */
 }
+
+@media (max-width: 768px) {
+  ::ng-deep.app-header {
+    margin-left: 0;
+    left: 0;
+    width: 100%;
+  }
+}

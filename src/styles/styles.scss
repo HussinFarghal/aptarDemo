@@ -5,7 +5,7 @@
 
 @import "bootstrap/scss/bootstrap-grid.scss";
 @import "normalize.css/normalize.css";
-@import "primeng/resources/themes/aura-light-green/theme.css";
+@import "primeng/resources/themes/lara-light-green/theme.css";
 @import "primeng/resources/primeng.min.css";
 @import "primeicons/primeicons.css";
 //@import "font-awesome/scss/font-awesome.scss";
@@ -47,7 +47,7 @@ body {
     grid-template-columns: 0 1fr; /* Hide sidebar by default on mobile */
   }
 
-  .app-content, .app-header, .app-footer {
+  .app-content {
     margin-left: 0;
     left: 0;
     width: 100%;

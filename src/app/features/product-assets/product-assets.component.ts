@@ -1,56 +1,31 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
 import {ToastModule} from "primeng/toast";
 import {ConfirmationService, MessageService} from "primeng/api";
+import {ProductAssetsService} from "./product-assets.service";
+import {QuickFiltersComponent} from "./components/quick-filters/quick-filters.component";
+import {ProductsListComponent} from "./components/products-list/products-list.component";
+import {BreadCrumbsComponent} from "../../shared/components/bread-crumbs/bread-crumbs.component";
 
 @Component({
   selector: 'app-product-assets',
   standalone: true,
-  imports: [CommonModule, ConfirmDialogModule, ToastModule],
+  imports: [CommonModule, ConfirmDialogModule, ToastModule, QuickFiltersComponent, ProductsListComponent, BreadCrumbsComponent],
   providers: [ConfirmationService, MessageService],
   templateUrl: './product-assets.component.html',
   styleUrl: './product-assets.component.scss'
 })
-export class ProductAssetsComponent {
-  constructor(private confirmationService : ConfirmationService, private messageService : MessageService) {
+export class ProductAssetsComponent implements OnInit {
+  constructor(private productService : ProductAssetsService) {
   }
 
-  confirm1(event : Event) {
-    this.confirmationService.confirm({
-      target: event.target as EventTarget,
-      message: 'Are you sure that you want to proceed?',
-      header: 'Confirmation',
-      icon: 'pi pi-exclamation-triangle',
-      acceptIcon: "none",
-      rejectIcon: "none",
-      rejectButtonStyleClass: "p-button-text",
-      accept: () => {
-        this.messageService.add({severity: 'info', summary: 'Confirmed', detail: 'You have accepted'});
-      },
-      reject: () => {
-        this.messageService.add({severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000});
-      }
+  ngOnInit() : void {
+    this.productService.getCategory().subscribe((data) => {
+      console.log(data);
+    }, (error) => {
+      console.error(error);
     });
-  }
+  };
 
-  confirm2(event : Event) {
-    this.confirmationService.confirm({
-      target: event.target as EventTarget,
-      message: 'Do you want to delete this record?',
-      header: 'Delete Confirmation',
-      icon: 'pi pi-info-circle',
-      acceptButtonStyleClass: "p-button-danger p-button-text",
-      rejectButtonStyleClass: "p-button-text p-button-text",
-      acceptIcon: "none",
-      rejectIcon: "none",
-
-      accept: () => {
-        this.messageService.add({severity: 'info', summary: 'Confirmed', detail: 'Record deleted'});
-      },
-      reject: () => {
-        this.messageService.add({severity: 'error', summary: 'Rejected', detail: 'You have rejected'});
-      }
-    });
-  }
 }
