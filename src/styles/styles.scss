@@ -3,13 +3,12 @@
 
 @import "primeflex/primeflex.css";
 
-@import "bootstrap/scss/bootstrap-grid.scss";
+//@import "bootstrap/scss/bootstrap-grid.scss";
 @import "normalize.css/normalize.css";
 @import "primeng/resources/themes/lara-light-green/theme.css";
 @import "primeng/resources/primeng.min.css";
 @import "primeicons/primeicons.css";
 //@import "font-awesome/scss/font-awesome.scss";
-@import "angular-sidebar-menu/themes/admin-lte.scss";
 
 body {
   background-color: #f8f8f8;
@@ -85,4 +84,14 @@ body {
       color: white !important;
     }
   }
+}
+
+.p-inputtext {
+  height: 38px;
+  padding: 0.65rem 0.75rem;
+}
+
+.p-dropdown-label {
+  display: flex;
+  align-items: center;
 }

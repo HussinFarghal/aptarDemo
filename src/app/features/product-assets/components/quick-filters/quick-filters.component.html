@@ -1,3 +1,62 @@
 <p-panel [toggleable]="true" [toggler]="'header'" header="Quick Search">
+  @if (true) {
+    <form [formGroup]="quickFilterForm" (submit)="submitFilters()" (reset)="quickFilterForm.reset()">
+      <div class="align-items-center formgrid grid">
+        <div class="field col-12 md:col-3">
+          <label for="product">Product <span class="text-red-500">*</span></label>
+          <!--          class="ng-dirty ng-invalid"-->
+          <p-dropdown
+            [lazy]="true"
+            [appendTo]="document.body"
+            dataKey="value"
+            [resetFilterOnHide]="true"
+            [showClear]="true"
+            [filter]="true"
+            filterBy="label"
+            optionLabel="label"
+            styleClass="w-full"
+            [options]="productOptions"
+            formControlName="product"
+            id="product"
+            placeholder="Select a product">
+          </p-dropdown>
+        </div>
+        <div class="field col-12 md:col-3">
+          <label for="final-customer">Final Customer</label>
+          <p-dropdown
+            [showClear]="true"
+            [filter]="true"
+            filterBy="label"
+            optionLabel="label"
+            styleClass="w-full"
+            [options]="finalCustomerOptions"
+            formControlName="finalCustomer"
+            id="final-customer"
+            placeholder="Select a Customer">
+          </p-dropdown>
+        </div>
+        <div class="field col-12 md:col-3">
+          <label for="asset-name">Asset Type</label>
+          <input pKeyFilter="alphanum" class="w-full" pInputText formControlName="assetName" id="asset-name"
+                 placeholder="Enter Asset Type"/>
+        </div>
+        <div class="col xl:justify-content-end flex align-items-center">
+          <p-button [disabled]="!quickFilterForm.get('product')?.value" (click)="submitFilters()" type="button"
+                    styleClass="bg-primary border-primary-500 px-3 py-2 text-base border-1 border-solid border-round cursor-pointer transition-all transition-duration-200 hover:bg-primary-600 hover:border-primary-600 active:bg-primary-700 active:border-primary-700">
+            Apply
+          </p-button>
+          <p-button (click)="quickFilterForm.reset()" label="Clear Filters" [link]="true"></p-button>
+        </div>
+      </div>
+    </form>
+  } @else {
+    <div class="align-items-center formgrid grid">
+      <div class="field col-12 md:col-3">
+        <p-skeleton styleClass="mb-1"></p-skeleton>
+        <p-skeleton width="1100%" height="4rem"></p-skeleton>
+
+      </div>
+    </div>
+  }
 
 </p-panel>
