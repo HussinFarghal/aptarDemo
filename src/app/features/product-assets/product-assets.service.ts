@@ -71,7 +71,7 @@ export class ProductAssetsService {
         return response;
       }),
       catchError(error => {
-        error.source = 'getFinalCustomers()';
+        error.source = 'getFinalCustomers';
         throw error;
       })
     );

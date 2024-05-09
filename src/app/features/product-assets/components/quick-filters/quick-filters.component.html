@@ -1,10 +1,9 @@
 <p-panel [toggleable]="true" [toggler]="'header'" header="Quick Search">
-  @if (true) {
+  @if (isProductFamiliesSuccess || isFinalCustomersSuccess) {
     <form [formGroup]="quickFilterForm" (submit)="submitFilters()" (reset)="quickFilterForm.reset()">
       <div class="align-items-center formgrid grid">
         <div class="field col-12 md:col-3">
           <label for="product">Product <span class="text-red-500">*</span></label>
-          <!--          class="ng-dirty ng-invalid"-->
           <p-dropdown
             [lazy]="true"
             [appendTo]="document.body"
@@ -52,9 +51,18 @@
   } @else {
     <div class="align-items-center formgrid grid">
       <div class="field col-12 md:col-3">
-        <p-skeleton styleClass="mb-1"></p-skeleton>
-        <p-skeleton width="1100%" height="4rem"></p-skeleton>
+        <p-skeleton width="30%" height=".5rem" styleClass="mb-2"></p-skeleton>
+        <p-skeleton width="100%" height="32px"></p-skeleton>
 
+      </div>
+      <div class="field col-12 md:col-3">
+        <p-skeleton width="30%" height=".5rem" styleClass="mb-2"></p-skeleton>
+        <p-skeleton width="100%" height="32px"></p-skeleton>
+
+      </div>
+      <div class="field col-12 md:col-3">
+        <p-skeleton width="30%" height=".5rem" styleClass="mb-2"></p-skeleton>
+        <p-skeleton width="100%" height="32px"></p-skeleton>
       </div>
     </div>
   }

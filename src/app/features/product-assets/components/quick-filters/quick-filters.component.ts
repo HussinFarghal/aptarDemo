@@ -20,10 +20,12 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   public quickFilterForm! : FormGroup;
   public productOptions : { label : any; value : any; categoryId : any; }[] = []
   public finalCustomerOptions : { label : any; value : any; }[] = [];
-  protected readonly document = document;
+  public isProductFamiliesSuccess : boolean = false;
+  public isFinalCustomersSuccess : boolean = false;
   private getQuickFiltersDataSubscription : Subscription = new Subscription();
   private productOptionsSubscription : Subscription = new Subscription();
   private finalCustomerOptionsSubscription : Subscription = new Subscription();
+  protected readonly document = document;
 
   constructor(private productService : ProductAssetsService) {
     const formBuilder = inject(FormBuilder);
@@ -58,17 +60,26 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   private getQuickFiltersData() : void {
     const errorHandler = (source : string) => catchError((error : any) => {
       console.error(`An error occurred fetching ${source}:`, error);
+      switch (error.source) {
+        case '"getProductFamilies"':
+          this.isProductFamiliesSuccess = false;
+          break;
+        case '"getFinalCustomers"':
+          this.isFinalCustomersSuccess = false;
+          break;
+      }
       return EMPTY;
     });
     const productFamilies$ = this.productService.getProductFamilies().pipe(errorHandler('product families'));
     const finalCustomers$ = this.productService.getFinalCustomers().pipe(errorHandler('final customers'));
     this.getQuickFiltersDataSubscription.add(combineLatest([productFamilies$, finalCustomers$]).subscribe({
       next: ([productFamiliesData, finalCustomersData]) => {
-        if (productFamiliesData && finalCustomersData) {
-          console.log('Data Loaded:', {productFamiliesData, finalCustomersData});
+        if (productFamiliesData) {
+          this.isProductFamiliesSuccess = true;
         }
       }, error: (err) => {
         console.error('An error occurred:', err);
+
       }
     }));
   }
