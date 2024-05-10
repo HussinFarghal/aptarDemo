@@ -49,6 +49,7 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
 
   submitFilters() {
     this.productService.quickFiltersDataValue = this.quickFilterForm.value;
+    console.log('get quickFiltersDataValue =', this.productService.quickFiltersDataValue);
   }
 
   ngOnDestroy() : void {
@@ -63,8 +64,10 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
 
   resetFilters() {
     this.quickFilterForm.reset();
-    this.productService.quickFiltersDataValue = null;
-    this.productService.productsValue = null;
+    this.productService.quickFiltersDataValue = '';
+    this.productService.productsValue = [];
+    console.log('reset quickFiltersDataValue =', this.productService.quickFiltersDataValue);
+    console.log('reset productsValue =', this.productService.productsValue);
   }
 
   private getQuickFiltersData() : void {

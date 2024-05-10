@@ -24,8 +24,12 @@
         <div class="field col-12 md:col-3">
           <label for="final-customer">Final Customer</label>
           <p-dropdown
-            [showClear]="true"
             [filter]="true"
+            [showClear]="true"
+            [resetFilterOnHide]="true"
+            dataKey="label"
+            [lazy]="true"
+            [appendTo]="document.body"
             filterBy="label"
             optionLabel="label"
             styleClass="w-full"

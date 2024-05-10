@@ -12,16 +12,13 @@ import {IProductFamily} from "../../shared/models/product-family.interface";
 })
 export class ProductAssetsService {
   private productOptions : BehaviorSubject<{ label : any; value : any; categoryId : any; }[]> = new BehaviorSubject<{
-    label : any;
-    value : any;
-    categoryId : any;
+    label : any; value : any; categoryId : any;
   }[]>([]);
   public readonly productOptions$ = this.productOptions.asObservable();
   private products : BehaviorSubject<IProductFamily[] | null> = new BehaviorSubject<IProductFamily[] | null>(null);
   public products$ : Observable<IProductFamily[] | null> = this.products.asObservable();
   private finalCustomerOptions : BehaviorSubject<{ label : any; value : any; }[]> = new BehaviorSubject<{
-    label : any;
-    value : any;
+    label : any; value : any;
   }[]>([]);
   public readonly finalCustomerOptions$ = this.finalCustomerOptions.asObservable();
   private selectedProduct : BehaviorSubject<{ label : any; value : any; }> = new BehaviorSubject<any>(null);
@@ -54,39 +51,39 @@ export class ProductAssetsService {
   }
 
   set quickFiltersDataValue(value : any) {
+
+    if (value.assetName === null) {
+      value.assetName = '';
+    }
+    if (value.finalCustomer === null) {
+      value.finalCustomer = {label: ''};
+    }
     this.quickFiltersData.next(value);
-    console.log('get quickFiltersDataValue =', this.quickFiltersDataValue);
+
   }
 
 
   getCategory() : Observable<ICategory[]> {
-    return this.http.get<ICategory[]>(API_ENDPOINTS.getCategory()).pipe(
-      catchError(error => {
-        error.source = 'getCategory';
-        throw error;
-      })
-    );
+    return this.http.get<ICategory[]>(API_ENDPOINTS.getCategory()).pipe(catchError(error => {
+      error.source = 'getCategory';
+      throw error;
+    }));
 
   }
 
   getProductCatalog() : Observable<IProductCatalog[]> {
-    return this.http.get<IProductCatalog[]>(API_ENDPOINTS.getProductCatalog()).pipe(
-      map((response : any) => {
-        this.generateProductsOptions(response);
-        return response;
-      }),
-      catchError(error => {
-        error.source = 'getProductCatalog';
-        throw error;
-      })
-    );
+    return this.http.get<IProductCatalog[]>(API_ENDPOINTS.getProductCatalog()).pipe(map((response : any) => {
+      this.generateProductsOptions(response);
+      return response;
+    }), catchError(error => {
+      error.source = 'getProductCatalog';
+      throw error;
+    }));
   }
 
   generateProductsOptions(response : any[]) {
     const options = response.map((product : any) => ({
-      label: product.productFamily.name,
-      value: product.productFamilyId,
-      categoryId: product.productFamily.categoryId
+      label: product.productFamily.name, value: product.productFamilyId, categoryId: product.productFamily.categoryId
     }));
 
     const uniqueOptions = Array.from(new Set(options.map(a => a.value)))
@@ -94,39 +91,33 @@ export class ProductAssetsService {
       .filter(option => option !== undefined) as { label : any; value : any; categoryId : any; }[];
 
     this.productOptions.next(uniqueOptions);
-    console.log('uniqueOptions:', uniqueOptions);
     return uniqueOptions;
   }
 
   getFinalCustomers() : Observable<ICustomer[]> {
-    return this.http.get<ICustomer[]>(API_ENDPOINTS.getFinalCustomers()).pipe(
-      map((response : any) => {
-        this.generateProductOptions(response);
-        return response;
-      }),
-      catchError(error => {
-        error.source = 'getFinalCustomers';
-        throw error;
-      })
-    );
+    return this.http.get<ICustomer[]>(API_ENDPOINTS.getFinalCustomers()).pipe(map((response : any) => {
+      this.generateProductOptions(response);
+      return response;
+    }), catchError(error => {
+      error.source = 'getFinalCustomers';
+      throw error;
+    }));
   }
 
   generateProductOptions(response : any[]) {
     const options = response.map((customer : any) => ({
-      label: customer.finalCustomer,
-      value: customer.partnerId,
+      label: customer.finalCustomer, value: customer.partnerId,
     }));
 
     this.finalCustomerOptions.next(options);
     return this.finalCustomerOptions.value;
   }
 
-  getProductFamily(pageNumber : number, pageSize : number, sortDataColumnName : string, sortDataDirection : string, productFamilyId : string) : Observable<any> {
-    return this.http.get(API_ENDPOINTS.getProductFamily(pageNumber, pageSize, sortDataColumnName, sortDataDirection, productFamilyId)).pipe(
-      catchError(error => {
+  getProductFamily(pageNumber : number, pageSize : number, sortDataColumnName : string, sortDataDirection : string, productFamilyId : string, assetName : string, finalCustomer : string) : Observable<any> {
+    return this.http.get(API_ENDPOINTS.getProductFamily(pageNumber, pageSize, sortDataColumnName, sortDataDirection, productFamilyId, assetName, finalCustomer))
+      .pipe(catchError(error => {
         error.source = 'getProductFamily';
         throw error;
-      })
-    );
+      }));
   }
 }
