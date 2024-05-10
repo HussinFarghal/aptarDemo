@@ -11,19 +11,19 @@ import {IProductFamily} from "../../shared/models/product-family.interface";
   providedIn: 'root'
 })
 export class ProductAssetsService {
-  public readonly productOptions$ = this.productOptions.asObservable();
-  public readonly finalCustomerOptions$ = this.finalCustomerOptions.asObservable();
   private productOptions : BehaviorSubject<{ label : any; value : any; categoryId : any; }[]> = new BehaviorSubject<{
     label : any;
     value : any;
     categoryId : any;
   }[]>([]);
+  public readonly productOptions$ = this.productOptions.asObservable();
   private products : BehaviorSubject<IProductFamily[] | null> = new BehaviorSubject<IProductFamily[] | null>(null);
+  public products$ : Observable<IProductFamily[] | null> = this.products.asObservable();
   private finalCustomerOptions : BehaviorSubject<{ label : any; value : any; }[]> = new BehaviorSubject<{
     label : any;
     value : any;
   }[]>([]);
-  public products$ : Observable<IProductFamily[] | null> = this.products.asObservable();
+  public readonly finalCustomerOptions$ = this.finalCustomerOptions.asObservable();
   private selectedProduct : BehaviorSubject<{ label : any; value : any; }> = new BehaviorSubject<any>(null);
   public readonly selectedProduct$ : Observable<{ label : any; value : any; }> = this.selectedProduct.asObservable();
   private quickFiltersData : BehaviorSubject<any> = new BehaviorSubject<any>(null);
