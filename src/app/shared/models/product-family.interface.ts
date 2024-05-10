@@ -1,33 +1,28 @@
-interface IProductFamilyFile {
-  productFamilyId : string;
-  fileId : string;
-  productFamily : IProductFamily | null;
-  file : any | null;
+export interface Asset {
   id : string;
+  displayName : string;
+  assetTypeGroupId : number;
+  lastUpdatedBy : string;
+  lastUpdatedOn : string;
+  assetTypeId : string;
+  assetType : AssetType;
+  fileFinalCustomers : any;  // Use appropriate type if known
+}
+
+export interface AssetType {
+  id : string;
+  name : string;
+  displayOrder : number;
+}
+
+export interface PageInformation {
+  pageCount : number;
+  totalItemCount : number;
+  pageNumber : number;
+  pageSize : number;
 }
 
 export interface IProductFamily {
-  name : string;
-  displayOrder : number;
-  icon : string;
-  shortDescription : any | null;
-  description : any | null;
-  categoryId : string;
-  category : any | null;
-  compatibilityVariances : any | null;
-  recyclabilityVariances : any | null;
-  productFamilyMarketSegments : any | null;
-  productRegions : any | null;
-  productFamilyApplicationFields : any | null;
-  productFamilyAptarSegments : any | null;
-  productFamilyDigitalServices : any[];
-  productFamilyFiles : (IProductFamilyFile | null)[];
-  cmsTemplateId : any | null;
-  cmsTemplate : any | null;
-  productData : any | null;
-  createdBy : any | null;
-  createdOn : string;
-  lastUpdatedBy : any | null;
-  lastUpdatedOn : any | null;
-  id : string;
+  list : Asset[];
+  pageInformation : PageInformation;
 }

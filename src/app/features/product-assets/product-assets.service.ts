@@ -3,27 +3,61 @@ import {HttpClient} from "@angular/common/http";
 import {BehaviorSubject, catchError, map, Observable} from "rxjs";
 import {API_ENDPOINTS} from "../../api-config";
 import {ICategory} from "../../shared/models/category.interface";
-import {IProductFamily} from "../../shared/models/product-family.interface";
+import {IProductCatalog} from "../../shared/models/product-catalog.interface";
 import {ICustomer} from "../../shared/models/customer.interface";
+import {IProductFamily} from "../../shared/models/product-family.interface";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductAssetsService {
+  public readonly productOptions$ = this.productOptions.asObservable();
+  public readonly finalCustomerOptions$ = this.finalCustomerOptions.asObservable();
   private productOptions : BehaviorSubject<{ label : any; value : any; categoryId : any; }[]> = new BehaviorSubject<{
     label : any;
     value : any;
     categoryId : any;
   }[]>([]);
-  public productOptions$ = this.productOptions.asObservable();
+  private products : BehaviorSubject<IProductFamily[] | null> = new BehaviorSubject<IProductFamily[] | null>(null);
   private finalCustomerOptions : BehaviorSubject<{ label : any; value : any; }[]> = new BehaviorSubject<{
     label : any;
     value : any;
   }[]>([]);
-  public finalCustomerOptions$ = this.finalCustomerOptions.asObservable();
+  public products$ : Observable<IProductFamily[] | null> = this.products.asObservable();
+  private selectedProduct : BehaviorSubject<{ label : any; value : any; }> = new BehaviorSubject<any>(null);
+  public readonly selectedProduct$ : Observable<{ label : any; value : any; }> = this.selectedProduct.asObservable();
+  private quickFiltersData : BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  public quickFiltersData$ : Observable<any> = this.quickFiltersData.asObservable();
 
   constructor(private http : HttpClient) {
   }
+
+  get productsValue() : IProductFamily[] | null {
+    return this.products.value;
+  }
+
+  set productsValue(value : IProductFamily[] | null) {
+    this.products.next(value);
+  }
+
+  get selectedProductValue() : { label : any; value : any; } {
+    return this.selectedProduct.value;
+  }
+
+  set selectedProductValue(value : { label : any; value : any; }) {
+    this.selectedProduct.next(value);
+  }
+
+  get quickFiltersDataValue() : any {
+    return this.quickFiltersData.value;
+
+  }
+
+  set quickFiltersDataValue(value : any) {
+    this.quickFiltersData.next(value);
+    console.log('get quickFiltersDataValue =', this.quickFiltersDataValue);
+  }
+
 
   getCategory() : Observable<ICategory[]> {
     return this.http.get<ICategory[]>(API_ENDPOINTS.getCategory()).pipe(
@@ -35,14 +69,14 @@ export class ProductAssetsService {
 
   }
 
-  getProductFamilies() : Observable<IProductFamily[]> {
-    return this.http.get<IProductFamily[]>(API_ENDPOINTS.getProductFamilies()).pipe(
+  getProductCatalog() : Observable<IProductCatalog[]> {
+    return this.http.get<IProductCatalog[]>(API_ENDPOINTS.getProductCatalog()).pipe(
       map((response : any) => {
         this.generateProductsOptions(response);
         return response;
       }),
       catchError(error => {
-        error.source = 'getProductFamilies';
+        error.source = 'getProductCatalog';
         throw error;
       })
     );
@@ -85,5 +119,14 @@ export class ProductAssetsService {
 
     this.finalCustomerOptions.next(options);
     return this.finalCustomerOptions.value;
+  }
+
+  getProductFamily(pageNumber : number, pageSize : number, sortDataColumnName : string, sortDataDirection : string, productFamilyId : string) : Observable<any> {
+    return this.http.get(API_ENDPOINTS.getProductFamily(pageNumber, pageSize, sortDataColumnName, sortDataDirection, productFamilyId)).pipe(
+      catchError(error => {
+        error.source = 'getProductFamily';
+        throw error;
+      })
+    );
   }
 }

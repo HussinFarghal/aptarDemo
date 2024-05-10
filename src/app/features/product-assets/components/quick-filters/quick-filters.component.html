@@ -1,10 +1,11 @@
 <p-panel [toggleable]="true" [toggler]="'header'" header="Quick Search">
   @if (isProductFamiliesSuccess || isFinalCustomersSuccess) {
-    <form [formGroup]="quickFilterForm" (submit)="submitFilters()" (reset)="quickFilterForm.reset()">
+    <form [formGroup]="quickFilterForm" (submit)="submitFilters()" (reset)="resetFilters()">
       <div class="align-items-center formgrid grid">
         <div class="field col-12 md:col-3">
           <label for="product">Product <span class="text-red-500">*</span></label>
           <p-dropdown
+            (onChange)="onProductDropDownChange($event)"
             [lazy]="true"
             [appendTo]="document.body"
             dataKey="value"
@@ -44,7 +45,7 @@
                     styleClass="bg-primary border-primary-500 px-3 py-2 text-base border-1 border-solid border-round cursor-pointer transition-all transition-duration-200 hover:bg-primary-600 hover:border-primary-600 active:bg-primary-700 active:border-primary-700">
             Apply
           </p-button>
-          <p-button (click)="quickFilterForm.reset()" label="Clear Filters" [link]="true"></p-button>
+          <p-button (click)="resetFilters()" label="Clear Filters" [link]="true"></p-button>
         </div>
       </div>
     </form>
@@ -66,5 +67,4 @@
       </div>
     </div>
   }
-
 </p-panel>

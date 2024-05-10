@@ -22,10 +22,10 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   public finalCustomerOptions : { label : any; value : any; }[] = [];
   public isProductFamiliesSuccess : boolean = false;
   public isFinalCustomersSuccess : boolean = false;
+  protected readonly document = document;
   private getQuickFiltersDataSubscription : Subscription = new Subscription();
   private productOptionsSubscription : Subscription = new Subscription();
   private finalCustomerOptionsSubscription : Subscription = new Subscription();
-  protected readonly document = document;
 
   constructor(private productService : ProductAssetsService) {
     const formBuilder = inject(FormBuilder);
@@ -48,7 +48,7 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   }
 
   submitFilters() {
-    console.log('this.quickFilterForm.value =', this.quickFilterForm.value);
+    this.productService.quickFiltersDataValue = this.quickFilterForm.value;
   }
 
   ngOnDestroy() : void {
@@ -57,11 +57,21 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
     this.getQuickFiltersDataSubscription.unsubscribe();
   }
 
+  public onProductDropDownChange(event : any) : void {
+    this.productService.selectedProductValue = event.value;
+  }
+
+  resetFilters() {
+    this.quickFilterForm.reset();
+    this.productService.quickFiltersDataValue = null;
+    this.productService.productsValue = null;
+  }
+
   private getQuickFiltersData() : void {
     const errorHandler = (source : string) => catchError((error : any) => {
       console.error(`An error occurred fetching ${source}:`, error);
       switch (error.source) {
-        case '"getProductFamilies"':
+        case '"getProductCatalog"':
           this.isProductFamiliesSuccess = false;
           break;
         case '"getFinalCustomers"':
@@ -70,7 +80,7 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
       }
       return EMPTY;
     });
-    const productFamilies$ = this.productService.getProductFamilies().pipe(errorHandler('product families'));
+    const productFamilies$ = this.productService.getProductCatalog().pipe(errorHandler('product families'));
     const finalCustomers$ = this.productService.getFinalCustomers().pipe(errorHandler('final customers'));
     this.getQuickFiltersDataSubscription.add(combineLatest([productFamilies$, finalCustomers$]).subscribe({
       next: ([productFamiliesData, finalCustomersData]) => {
@@ -83,5 +93,4 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
       }
     }));
   }
-
 }
