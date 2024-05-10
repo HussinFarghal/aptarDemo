@@ -22,8 +22,7 @@ export class ProductAssetsService {
   }[]>([]);
   public readonly finalCustomerOptions$ = this.finalCustomerOptions.asObservable();
   private selectedProduct : BehaviorSubject<{ label : any; value : any; }> = new BehaviorSubject<any>(null);
-  public readonly selectedProduct$ : Observable<{ label : any; value : any; }> = this.selectedProduct.asObservable();
-  private quickFiltersData : BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  private quickFiltersData : BehaviorSubject<any> = new BehaviorSubject(null);
   public quickFiltersData$ : Observable<any> = this.quickFiltersData.asObservable();
 
   constructor(private http : HttpClient) {
@@ -37,27 +36,24 @@ export class ProductAssetsService {
     this.products.next(value);
   }
 
-  get selectedProductValue() : { label : any; value : any; } {
-    return this.selectedProduct.value;
-  }
-
   set selectedProductValue(value : { label : any; value : any; }) {
     this.selectedProduct.next(value);
   }
 
-  get quickFiltersDataValue() : any {
+  get quickFiltersDataValue() {
     return this.quickFiltersData.value;
 
   }
 
   set quickFiltersDataValue(value : any) {
 
-    if (value.assetName === null) {
+    if (value && value.assetName === null) {
       value.assetName = '';
     }
-    if (value.finalCustomer === null) {
-      value.finalCustomer = {label: ''};
+    if (value && value.finalCustomer === null) {
+      value.finalCustomer = {label: '', value: ''};
     }
+    console.log('set quickFiltersDataValue =', value);
     this.quickFiltersData.next(value);
 
   }

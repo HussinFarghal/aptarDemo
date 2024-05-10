@@ -7,7 +7,6 @@ import {ProductAssetsService} from "../../product-assets.service";
 })
 export class ProductsListComponent implements OnInit, OnDestroy {
   private productsSubscription : Subscription = new Subscription();
-  private selectedProduct : any;
 
   constructor(private productService : ProductAssetsService) {
   }
@@ -17,18 +16,18 @@ export class ProductsListComponent implements OnInit, OnDestroy {
   }
 
   getProducts() {
+
     this.productsSubscription = this.productService.quickFiltersData$
-      .pipe(// Use switchMap to switch to a new observable when quickFiltersData changes
-        switchMap(data => {
-          if (data) {
-            this.selectedProduct = data;
+      .pipe(
+        // Use switchMap to switch to a new observable when quickFiltersData changes
+        switchMap(quickFiltersData => {
+          if (quickFiltersData) {
             // Return the getProducts observable
             return this.productService.getProductFamily(1, 10, 'lastUpdatedOn', 'desc',
-              this.selectedProduct.product.value, this.selectedProduct.assetName, this.selectedProduct.finalCustomer.label);
+              quickFiltersData.product.value, quickFiltersData.assetName, quickFiltersData.finalCustomer.value);
           }
           // Return an empty or default observable if there is no data
           else {
-            this.productService.productsValue = [];
             return of(null); // Ensure to import `of` from 'rxjs'
           }
 
@@ -37,7 +36,8 @@ export class ProductsListComponent implements OnInit, OnDestroy {
         next: (products) => {
           if (products) {
             this.productService.productsValue = products;
-            console.log('Products fetched successfully', this.productService.productsValue);
+            console.log('Products fetched successfully', products);
+
           }
 
 
@@ -45,7 +45,7 @@ export class ProductsListComponent implements OnInit, OnDestroy {
           console.error('Error fetching products', error);
         }
       });
-  };
+  }
 
   ngOnDestroy() : void {
     this.productsSubscription.unsubscribe();

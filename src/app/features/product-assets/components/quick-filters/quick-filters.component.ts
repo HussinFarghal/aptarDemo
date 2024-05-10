@@ -64,7 +64,7 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
 
   resetFilters() {
     this.quickFilterForm.reset();
-    this.productService.quickFiltersDataValue = '';
+    this.productService.quickFiltersDataValue = null
     this.productService.productsValue = [];
     console.log('reset quickFiltersDataValue =', this.productService.quickFiltersDataValue);
     console.log('reset productsValue =', this.productService.productsValue);
