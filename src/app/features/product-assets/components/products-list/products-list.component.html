@@ -1,4 +1,6 @@
 <p-table #productsDataTable [columns]="productsColumns" [tableStyle]="{ 'min-width': '50rem' }" [value]="products"
+         styleClass="table raduis-5" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]" [responsive]="true"
+         [showCurrentPageReport]="true"
 >
   <ng-template let-columns pTemplate="header">
     <tr>
@@ -20,9 +22,10 @@
   <ng-template pTemplate="emptymessage">
     <tr>
       <td colspan="4">
-        <div class="empty-state">
+        <div class="empty-state flex flex-column align-items-center justify-content-center">
           <!-- Insert your SVG icon or image here -->
           <img alt="Empty state" height="161" ngSrc="./assets/empty-icon.svg" priority width="248"/>
+          <h3>No Data Found</h3>
         </div>
       </td>
     </tr>
