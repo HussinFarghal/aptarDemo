@@ -24,5 +24,4 @@ export interface PageInformation {
 
 export interface IProductFamily {
   list : Asset[];
-  pageInformation : PageInformation;
 }

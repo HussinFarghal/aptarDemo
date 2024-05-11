@@ -1,1 +1,31 @@
-<p>products-list works!</p>
+<p-table #productsDataTable [columns]="productsColumns" [tableStyle]="{ 'min-width': '50rem' }" [value]="products"
+>
+  <ng-template let-columns pTemplate="header">
+    <tr>
+      <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+        {{ col.header }}
+        <p-sortIcon [field]="col.field"></p-sortIcon>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template let-columns="products" let-rowData pTemplate="body">
+    <tr>
+      <td *ngFor="let col of columns">
+        {{ rowData[col.field] }}
+      </td>
+    </tr>
+  </ng-template>
+  <!-- Empty state using the body template -->
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="4">
+        <div class="empty-state">
+          <!-- Insert your SVG icon or image here -->
+          <img alt="Empty state" height="161" ngSrc="./assets/empty-icon.svg" priority width="248"/>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+

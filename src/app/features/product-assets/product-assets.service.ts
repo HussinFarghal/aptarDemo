@@ -111,9 +111,11 @@ export class ProductAssetsService {
 
   getProductFamily(pageNumber : number, pageSize : number, sortDataColumnName : string, sortDataDirection : string, productFamilyId : string, assetName : string, finalCustomer : string) : Observable<any> {
     return this.http.get(API_ENDPOINTS.getProductFamily(pageNumber, pageSize, sortDataColumnName, sortDataDirection, productFamilyId, assetName, finalCustomer))
-      .pipe(catchError(error => {
+      .pipe(
+        catchError(error => {
         error.source = 'getProductFamily';
         throw error;
-      }));
+          }
+        ));
   }
 }
