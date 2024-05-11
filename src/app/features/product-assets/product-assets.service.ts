@@ -5,7 +5,6 @@ import {API_ENDPOINTS} from "../../api-config";
 import {ICategory} from "../../shared/models/category.interface";
 import {IProductCatalog} from "../../shared/models/product-catalog.interface";
 import {ICustomer} from "../../shared/models/customer.interface";
-import {IProductFamily} from "../../shared/models/product-family.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +14,8 @@ export class ProductAssetsService {
     label : any; value : any; categoryId : any;
   }[]>([]);
   public readonly productOptions$ = this.productOptions.asObservable();
-  private products : BehaviorSubject<IProductFamily[] | null> = new BehaviorSubject<IProductFamily[] | null>(null);
-  public products$ : Observable<IProductFamily[] | null> = this.products.asObservable();
+  private products : BehaviorSubject<[] | null> = new BehaviorSubject<[] | null>(null);
+  public products$ : Observable<[] | null> = this.products.asObservable();
   private finalCustomerOptions : BehaviorSubject<{ label : any; value : any; }[]> = new BehaviorSubject<{
     label : any; value : any;
   }[]>([]);
@@ -28,11 +27,11 @@ export class ProductAssetsService {
   constructor(private http : HttpClient) {
   }
 
-  get productsValue() : IProductFamily[] | null {
+  get productsValue() : [] | null {
     return this.products.value;
   }
 
-  set productsValue(value : IProductFamily[] | null) {
+  set productsValue(value : [] | null) {
     this.products.next(value);
   }
 

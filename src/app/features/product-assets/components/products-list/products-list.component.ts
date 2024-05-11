@@ -1,15 +1,16 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {of, Subscription, switchMap} from "rxjs";
 import {ProductAssetsService} from "../../product-assets.service";
 import {TableModule} from "primeng/table";
 import {CommonModule, NgOptimizedImage} from "@angular/common";
 import {Column} from "../../../../shared/models/table-column.interface";
+import {DeepFieldPipe} from "../../../../shared/deep-field.pipe";
 
 @Component({
   selector: 'app-products-list',
   standalone: true,
   imports: [
-    TableModule, CommonModule, NgOptimizedImage
+    TableModule, CommonModule, NgOptimizedImage, DeepFieldPipe
   ],
   templateUrl: './products-list.component.html',
   styleUrl: './products-list.component.scss'
@@ -19,18 +20,17 @@ export class ProductsListComponent implements OnInit, OnDestroy {
   isProductError : boolean = false;
   isProductLoading : boolean = false;
   isProductEmpty : boolean = false;
-  products : [] = [];
+  products : any[] = [];
   productsColumns : Column[] = [];
   private getProductFamilySubscription : Subscription = new Subscription();
   private productsSubscription : Subscription = new Subscription();
 
-  constructor(private productService : ProductAssetsService) {
+  constructor(private productService : ProductAssetsService, private cdr : ChangeDetectorRef) {
     this.productsColumns = [
-      {field: 'assetName', header: 'Asset Name'},
+      {field: 'displayName', header: 'Asset Name'},
       {field: 'finalCustomer', header: 'Final Customer'},
-      {field: 'productFamily', header: 'Product Family'},
-      {field: 'assetType', header: 'Asset Type'},
-      {field: 'lastUpdated', header: 'Last Updated'}
+      {field: 'assetTypeName', header: 'Asset Type'},
+      {field: 'lastUpdatedOn', header: 'Last Updated'}
     ]
   }
 
@@ -62,6 +62,7 @@ export class ProductsListComponent implements OnInit, OnDestroy {
             this.isProductSuccess = true;
             this.isProductLoading = false;
             this.isProductEmpty = false;
+            this.cdr.detectChanges();
           } else {
             this.isProductSuccess = false;
             this.isProductLoading = false;
@@ -81,9 +82,22 @@ export class ProductsListComponent implements OnInit, OnDestroy {
   getProducts() {
     this.productsSubscription = this.productService.products$.subscribe({
       next: (res) => {
-        console.log('products', res)
+        console.log('res', res);
         if (res) {
+          this.products = res.map((product : any) => {
+            // Check if fileFinalCustomers exists and is not null, otherwise use an empty array
+            const finalCustomers = product.fileFinalCustomers ?
+              product.fileFinalCustomers.map((fc : any) => fc.displayName).join(', ') : 'None';
 
+            return {
+              displayName: product.displayName,
+              finalCustomer: finalCustomers, // Handle missing fileFinalCustomers gracefully
+              assetTypeName: product.assetType.name,
+              lastUpdatedOn: product.lastUpdatedOn
+            };
+          });
+          console.log('products', this.products);
+          this.cdr.detectChanges();
           this.isProductSuccess = true;
           this.isProductLoading = false;
           this.isProductEmpty = false;
@@ -92,7 +106,9 @@ export class ProductsListComponent implements OnInit, OnDestroy {
           this.isProductLoading = false;
           this.isProductEmpty = true;
         }
-      }, error: (error) => {
+      },
+      error: (error) => {
+        console.error('Error fetching products', error);
         this.isProductError = true;
         this.isProductLoading = false;
         this.isProductEmpty = false;
