@@ -1,7 +1,7 @@
 @if (isProductLoading) {
   <h1>Loading</h1>
 }
-@if (isProductSuccess) {
+@if (isProductSuccess || isProductEmpty) {
   <p-table #productsDataTable [columns]="productsColumns" [tableStyle]="{ 'min-width': '50rem' }" [value]="products"
            styleClass="table raduis-5" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]" [responsive]="true"
            [showCurrentPageReport]="true"
@@ -22,7 +22,7 @@
         <td>{{ rowData.lastUpdatedOn | date:'medium' }}</td>
       </tr>
     </ng-template>
-    @if (isProductEmpty) {
+
       <ng-template pTemplate="emptymessage">
         <tr>
           <td colspan="4">
@@ -34,13 +34,13 @@
           </td>
         </tr>
       </ng-template>
-    }
+
     <!-- Empty state using the body template -->
 
   </p-table>
 }
 
-@if (isProductError) {
+@if (isProductError && !isProductLoading && !isProductSuccess && !isProductEmpty) {
   <h1>Error</h1>
 }
 
