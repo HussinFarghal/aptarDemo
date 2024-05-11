@@ -8,11 +8,12 @@ import {ButtonModule} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
 import {KeyFilterModule} from "primeng/keyfilter";
 import {SkeletonModule} from "primeng/skeleton";
+import {NgOptimizedImage} from "@angular/common";
 
 @Component({
   selector: 'app-quick-filters',
   standalone: true,
-  imports: [PanelModule, ReactiveFormsModule, DropdownModule, ButtonModule, InputTextModule, KeyFilterModule, SkeletonModule],
+  imports: [PanelModule, ReactiveFormsModule, DropdownModule, ButtonModule, InputTextModule, KeyFilterModule, SkeletonModule, NgOptimizedImage],
   templateUrl: './quick-filters.component.html',
   styleUrl: './quick-filters.component.scss'
 })
@@ -21,6 +22,8 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   public productOptions : { label : any; value : any; categoryId : any; }[] = []
   public finalCustomerOptions : { label : any; value : any; }[] = [];
   public isProductFamiliesSuccess : boolean = false;
+  isProductFamiliesError : boolean = false;
+  isProductFamiliesLoading : boolean = true;
   public isFinalCustomersSuccess : boolean = false;
   protected readonly document = document;
   private getQuickFiltersDataSubscription : Subscription = new Subscription();
@@ -38,6 +41,7 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
     this.getQuickFiltersData();
     this.productOptionsSubscription = this.productService.productOptions$.subscribe((options) => {
       this.productOptions = options;
@@ -52,11 +56,7 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
     console.log('get quickFiltersDataValue =', this.productService.quickFiltersDataValue);
   }
 
-  ngOnDestroy() : void {
-    this.productOptionsSubscription.unsubscribe();
-    this.finalCustomerOptionsSubscription.unsubscribe();
-    this.getQuickFiltersDataSubscription.unsubscribe();
-  }
+
 
   public onProductDropDownChange(event : any) : void {
     this.productService.selectedProductValue = event.value;
@@ -70,30 +70,38 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
     console.log('reset productsValue =', this.productService.productsValue);
   }
 
-  private getQuickFiltersData() : void {
+  getQuickFiltersData() : void {
     const errorHandler = (source : string) => catchError((error : any) => {
       console.error(`An error occurred fetching ${source}:`, error);
-      switch (error.source) {
-        case '"getProductCatalog"':
-          this.isProductFamiliesSuccess = false;
-          break;
-        case '"getFinalCustomers"':
-          this.isFinalCustomersSuccess = false;
-          break;
+      if (source === 'product families') {
+        this.isProductFamiliesError = true;
+        this.isProductFamiliesSuccess = false;
+        this.isProductFamiliesLoading = false;
       }
       return EMPTY;
     });
+
     const productFamilies$ = this.productService.getProductCatalog().pipe(errorHandler('product families'));
     const finalCustomers$ = this.productService.getFinalCustomers().pipe(errorHandler('final customers'));
     this.getQuickFiltersDataSubscription.add(combineLatest([productFamilies$, finalCustomers$]).subscribe({
       next: ([productFamiliesData, finalCustomersData]) => {
         if (productFamiliesData) {
           this.isProductFamiliesSuccess = true;
+          this.isProductFamiliesLoading = false;
+          this.isProductFamiliesError = false;
         }
       }, error: (err) => {
         console.error('An error occurred:', err);
-
+        this.isProductFamiliesError = true;
+        this.isProductFamiliesSuccess = false;
+        this.isProductFamiliesLoading = false;
       }
     }));
+  }
+
+  ngOnDestroy() : void {
+    this.productOptionsSubscription.unsubscribe();
+    this.finalCustomerOptionsSubscription.unsubscribe();
+    this.getQuickFiltersDataSubscription.unsubscribe();
   }
 }

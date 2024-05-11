@@ -1,35 +1,48 @@
-<p-table #productsDataTable [columns]="productsColumns" [tableStyle]="{ 'min-width': '50rem' }" [value]="products"
-         styleClass="table raduis-5" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]" [responsive]="true"
-         [showCurrentPageReport]="true"
->
-  <ng-template let-columns pTemplate="header">
-    <tr>
-      <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-        {{ col.header }}
-        <p-sortIcon [field]="col.field"></p-sortIcon>
-      </th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-rowData>
-    <tr>
-      <td>{{ rowData.displayName }}</td>
-      <td>{{ rowData.finalCustomer }}</td>
-      <td>{{ rowData.assetTypeName }}</td>
-      <td>{{ rowData.lastUpdatedOn | date:'medium' }}</td>
-    </tr>
-  </ng-template>
-  <!-- Empty state using the body template -->
-  <ng-template pTemplate="emptymessage">
-    <tr>
-      <td colspan="4">
-        <div class="empty-state flex flex-column align-items-center justify-content-center">
-          <!-- Insert your SVG icon or image here -->
-          <img alt="Empty state" height="161" ngSrc="./assets/empty-icon.svg" priority width="248"/>
-          <h3>No Data Found</h3>
-        </div>
-      </td>
-    </tr>
-  </ng-template>
-</p-table>
+@if (isProductLoading) {
+  <h1>Loading</h1>
+}
+@if (isProductSuccess) {
+  <p-table #productsDataTable [columns]="productsColumns" [tableStyle]="{ 'min-width': '50rem' }" [value]="products"
+           styleClass="table raduis-5" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]" [responsive]="true"
+           [showCurrentPageReport]="true"
+  >
+    <ng-template let-columns pTemplate="header">
+      <tr>
+        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+          {{ col.header }}
+          <p-sortIcon [field]="col.field"></p-sortIcon>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData>
+      <tr>
+        <td>{{ rowData.displayName }}</td>
+        <td>{{ rowData.finalCustomer }}</td>
+        <td>{{ rowData.assetTypeName }}</td>
+        <td>{{ rowData.lastUpdatedOn | date:'medium' }}</td>
+      </tr>
+    </ng-template>
+    @if (isProductEmpty) {
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4">
+            <div class="empty-state flex flex-column align-items-center justify-content-center">
+              <!-- Insert your SVG icon or image here -->
+              <img alt="Empty state" height="161" ngSrc="./assets/empty-icon.svg" priority width="248"/>
+              <h3>No Data Found</h3>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    }
+    <!-- Empty state using the body template -->
+
+  </p-table>
+}
+
+@if (isProductError) {
+  <h1>Error</h1>
+}
+
 
 

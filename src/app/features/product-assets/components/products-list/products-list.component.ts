@@ -16,7 +16,7 @@ import {DeepFieldPipe} from "../../../../shared/deep-field.pipe";
 export class ProductsListComponent implements OnInit, OnDestroy {
   isProductSuccess : boolean = false;
   isProductError : boolean = false;
-  isProductLoading : boolean = false;
+  isProductLoading : boolean = true;
   isProductEmpty : boolean = false;
   products : any[] = [];
   productsColumns : Column[] = [];
@@ -38,7 +38,7 @@ export class ProductsListComponent implements OnInit, OnDestroy {
   }
 
   getProductFamily() {
-    this.isProductLoading = true;
+
     this.getProductFamilySubscription = this.productService.quickFiltersData$
       .pipe(// Use switchMap to switch to a new observable when quickFiltersData changes
         switchMap(quickFiltersData => {
@@ -48,11 +48,15 @@ export class ProductsListComponent implements OnInit, OnDestroy {
           }
           // Return an empty or default observable if there is no data
           else {
+            this.isProductError = true;
+            this.isProductLoading = false;
+            this.isProductEmpty = false;
             return of(null); // Ensure to import `of` from 'rxjs'
           }
 
         }))
       .subscribe({
+
         next: (res) => {
           console.log('product families', res)
           if (res) {
@@ -67,12 +71,17 @@ export class ProductsListComponent implements OnInit, OnDestroy {
           }
 
 
-        }, error: (error) => {
+        },
+        error: (error) => {
           console.error('Error fetching products', error);
           this.isProductError = true;
           this.isProductLoading = false;
           this.isProductEmpty = false;
+        },
+        complete: () => {
+          this.isProductLoading = true;
         }
+
       });
   }
 
@@ -80,8 +89,9 @@ export class ProductsListComponent implements OnInit, OnDestroy {
     this.productsSubscription = this.productService.products$.subscribe({
       next: (res) => {
         console.log('res', res);
+        this.isProductEmpty = true;
         if (res) {
-          const mappedProducts = res.map((product : any) => {
+          this.products = res.map((product : any) => {
             const finalCustomers = product.fileFinalCustomers
               ? product.fileFinalCustomers.map((fc : any) => fc.finalCustomer).join(', ')
               : 'None';  // Gracefully handle null or empty arrays
@@ -94,17 +104,11 @@ export class ProductsListComponent implements OnInit, OnDestroy {
               lastUpdatedOn: product.lastUpdatedOn
             };
           });
-
-          this.products = mappedProducts;
           console.log('products', this.products);
           this.cdr.detectChanges();  // Ensures the view updates with the new data
           this.isProductSuccess = true;
           this.isProductLoading = false;
           this.isProductEmpty = false;
-        } else {
-          this.isProductSuccess = false;
-          this.isProductLoading = false;
-          this.isProductEmpty = true;
         }
       },
       error: (error) => {

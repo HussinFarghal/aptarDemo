@@ -1,5 +1,5 @@
 <p-panel [toggleable]="true" [toggler]="'header'" header="Quick Search">
-  @if (isProductFamiliesSuccess || isFinalCustomersSuccess) {
+  @if (isProductFamiliesSuccess) {
     <form [formGroup]="quickFilterForm" (submit)="submitFilters()" (reset)="resetFilters()">
       <div class="align-items-center formgrid grid">
         <div class="field col-12 md:col-3">
@@ -53,7 +53,8 @@
         </div>
       </div>
     </form>
-  } @else {
+  }
+  @if (isProductFamiliesLoading) {
     <div class="align-items-center formgrid grid">
       <div class="field col-12 md:col-3">
         <p-skeleton width="30%" height=".5rem" styleClass="mb-2"></p-skeleton>
@@ -68,6 +69,18 @@
       <div class="field col-12 md:col-3">
         <p-skeleton width="30%" height=".5rem" styleClass="mb-2"></p-skeleton>
         <p-skeleton width="100%" height="32px"></p-skeleton>
+      </div>
+    </div>
+  }
+  @if (isProductFamiliesError) {
+    <div class="grid align-items-center justify-content-center">
+      <div class="col-12 flex flex-column align-items-center justify-content-center">
+        <img alt="Error" height="72" ngSrc="./assets/error.png" width="72" priority/>
+        <h2 class="text-red-500 m-0 p-0 font-bold text-3xl">Ops!</h2>
+        <p class="p-0 m-0 mb-0">Something Went Wrong please Try Again</p>
+      </div>
+      <div class="col-2 py-0">
+        <p-button (click)="getQuickFiltersData()" styleClass="p-button-sm w-full" label="Retry"></p-button>
       </div>
     </div>
   }
