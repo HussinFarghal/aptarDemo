@@ -9,9 +9,7 @@ import {DeepFieldPipe} from "../../../../shared/deep-field.pipe";
 @Component({
   selector: 'app-products-list',
   standalone: true,
-  imports: [
-    TableModule, CommonModule, NgOptimizedImage, DeepFieldPipe
-  ],
+  imports: [TableModule, CommonModule, NgOptimizedImage, DeepFieldPipe],
   templateUrl: './products-list.component.html',
   styleUrl: './products-list.component.scss'
 })
@@ -27,11 +25,11 @@ export class ProductsListComponent implements OnInit, OnDestroy {
 
   constructor(private productService : ProductAssetsService, private cdr : ChangeDetectorRef) {
     this.productsColumns = [
+
       {field: 'displayName', header: 'Asset Name'},
       {field: 'finalCustomer', header: 'Final Customer'},
       {field: 'assetTypeName', header: 'Asset Type'},
-      {field: 'lastUpdatedOn', header: 'Last Updated'}
-    ]
+      {field: 'lastUpdatedOn', header: 'Last Updated'}]
   }
 
   ngOnInit() : void {
@@ -46,7 +44,7 @@ export class ProductsListComponent implements OnInit, OnDestroy {
         switchMap(quickFiltersData => {
           if (quickFiltersData) {
             // Return the getProductFamily observable
-            return this.productService.getProductFamily(1, 10, 'lastUpdatedOn', 'desc', quickFiltersData.product.value, quickFiltersData.assetName, quickFiltersData.finalCustomer.value);
+            return this.productService.getProductFamily(1, 10, 'lastUpdatedOn', 'desc', quickFiltersData.product.value, quickFiltersData.assetName, quickFiltersData.finalCustomer.label);
           }
           // Return an empty or default observable if there is no data
           else {
@@ -62,7 +60,6 @@ export class ProductsListComponent implements OnInit, OnDestroy {
             this.isProductSuccess = true;
             this.isProductLoading = false;
             this.isProductEmpty = false;
-            this.cdr.detectChanges();
           } else {
             this.isProductSuccess = false;
             this.isProductLoading = false;
@@ -84,20 +81,23 @@ export class ProductsListComponent implements OnInit, OnDestroy {
       next: (res) => {
         console.log('res', res);
         if (res) {
-          this.products = res.map((product : any) => {
-            // Check if fileFinalCustomers exists and is not null, otherwise use an empty array
-            const finalCustomers = product.fileFinalCustomers ?
-              product.fileFinalCustomers.map((fc : any) => fc.displayName).join(', ') : 'None';
+          const mappedProducts = res.map((product : any) => {
+            const finalCustomers = product.fileFinalCustomers
+              ? product.fileFinalCustomers.map((fc : any) => fc.finalCustomer).join(', ')
+              : 'None';  // Gracefully handle null or empty arrays
 
             return {
+              id: product.id,
               displayName: product.displayName,
-              finalCustomer: finalCustomers, // Handle missing fileFinalCustomers gracefully
+              finalCustomer: finalCustomers, // Concatenate names or show 'None'
               assetTypeName: product.assetType.name,
               lastUpdatedOn: product.lastUpdatedOn
             };
           });
+
+          this.products = mappedProducts;
           console.log('products', this.products);
-          this.cdr.detectChanges();
+          this.cdr.detectChanges();  // Ensures the view updates with the new data
           this.isProductSuccess = true;
           this.isProductLoading = false;
           this.isProductEmpty = false;
@@ -114,6 +114,10 @@ export class ProductsListComponent implements OnInit, OnDestroy {
         this.isProductEmpty = false;
       }
     });
+  }
+
+  trackByProductId(index : number, product : any) : any {
+    return product.id; // assuming each product has a unique ID
   }
 
   ngOnDestroy() : void {

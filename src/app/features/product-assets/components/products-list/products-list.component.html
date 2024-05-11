@@ -8,13 +8,12 @@
       </th>
     </tr>
   </ng-template>
-  <ng-template let-product pTemplate="body">
-    <tr *ngFor="let product of products">
-      <!-- Handle nested properties specifically -->
-      <td>{{ product.assetTypeName }}</td>
-      <td>{{ product.finalCustomer }}</td>
-      <td>{{ product.displayName }}</td>
-      <td>{{ product.lastUpdatedOn }}</td>
+  <ng-template pTemplate="body" let-rowData>
+    <tr>
+      <td>{{ rowData.displayName }}</td>
+      <td>{{ rowData.finalCustomer }}</td>
+      <td>{{ rowData.assetTypeName }}</td>
+      <td>{{ rowData.lastUpdatedOn | date:'medium' }}</td>
     </tr>
   </ng-template>
   <!-- Empty state using the body template -->
