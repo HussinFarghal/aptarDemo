@@ -23,10 +23,19 @@ export class ProductAssetsService {
   private selectedProduct : BehaviorSubject<{ label : any; value : any; }> = new BehaviorSubject<any>(null);
   private quickFiltersData : BehaviorSubject<any> = new BehaviorSubject(null);
   public quickFiltersData$ : Observable<any> = this.quickFiltersData.asObservable();
+  private showAdvancedSearchDialog : BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public showAdvancedSearchDialog$ : Observable<boolean> = this.showAdvancedSearchDialog.asObservable();
 
   constructor(private http : HttpClient) {
   }
 
+  set showAdvancedSearchDialogValue(value : boolean) {
+    this.showAdvancedSearchDialog.next(value);
+  }
+
+  get showAdvancedSearchDialogValue() : boolean {
+    return this.showAdvancedSearchDialog.value;
+  }
   get productsValue() : [] | null {
     return this.products.value;
   }
@@ -112,8 +121,8 @@ export class ProductAssetsService {
     return this.http.get(API_ENDPOINTS.getProductFamily(pageNumber, pageSize, sortDataColumnName, sortDataDirection, productFamilyId, assetName, finalCustomer))
       .pipe(
         catchError(error => {
-        error.source = 'getProductFamily';
-        throw error;
+          error.source = 'getProductFamily';
+          throw error;
           }
         ));
   }

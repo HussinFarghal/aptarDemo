@@ -57,9 +57,11 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
     console.log('get quickFiltersDataValue =', this.productService.quickFiltersDataValue);
   }
 
+  showAdvancedSearchDialog() {
+    this.productService.showAdvancedSearchDialogValue = true;
+  }
 
-
-  public onProductDropDownChange(event : any) : void {
+  onProductDropDownChange(event : any) : void {
     this.productService.selectedProductValue = event.value;
   }
 

@@ -1,0 +1,29 @@
+<p-dialog [(visible)]="showDialog" [style]="{ width: '50rem' }" [draggable]="false" [maximizable]="false" [modal]="true"
+          header="Advanced Search">
+  <div class="grid">
+    <div class="col-12">
+      <h1>Body Content</h1>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <div class="grid">
+      <div class="col-auto">
+        <p-button
+          styleClass="mr-2 p-button-sm"
+          label="Cancel"
+          [text]="true"
+          autoFocus="false"
+          severity="danger"
+          (click)="closeDialog()"/>
+      </div>
+      <div class="col-auto">
+        <p-button
+          label="Save"
+          [outlined]="true"
+          autofocus="true"
+          (click)="closeDialog()"
+        />
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>
