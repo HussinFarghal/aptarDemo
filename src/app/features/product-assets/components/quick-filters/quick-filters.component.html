@@ -1,4 +1,8 @@
-<p-panel [toggleable]="true" [toggler]="'header'" header="Quick Search">
+<p-panel [toggleable]="true" header="Filters">
+  <ng-template pTemplate="icons">
+    <p-button icon="pi pi-filter-fill" pTooltip="Advanced Search" styleClass="p-panel-header-icon p-link mr-2"
+              tooltipPosition="left"></p-button>
+  </ng-template>
   @if (isProductFamiliesSuccess) {
     <form [formGroup]="quickFilterForm" (submit)="submitFilters()" (reset)="resetFilters()">
       <div class="align-items-center formgrid grid">

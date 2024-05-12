@@ -1,9 +1,7 @@
-@if (isProductLoading) {
-  <h1>Loading</h1>
-}
 @if (isProductSuccess || isProductEmpty) {
   <p-table #productsDataTable [columns]="productsColumns" [tableStyle]="{ 'min-width': '50rem' }" [value]="products"
-           styleClass="table raduis-5" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]" [responsive]="true"
+           styleClass="table raduis-5  p-datatable-gridlines p-datatable-striped" [paginator]="true" [rows]="10"
+           [rowsPerPageOptions]="[5, 10, 20]" [responsive]="true"
            [showCurrentPageReport]="true"
   >
     <ng-template let-columns pTemplate="header">
@@ -12,6 +10,7 @@
           {{ col.header }}
           <p-sortIcon [field]="col.field"></p-sortIcon>
         </th>
+        <th>#</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData>
@@ -20,12 +19,16 @@
         <td>{{ rowData.finalCustomer }}</td>
         <td>{{ rowData.assetTypeName }}</td>
         <td>{{ rowData.lastUpdatedOn | date:'medium' }}</td>
+        <td>
+          <p-button styleClass="p-button-sm" icon="pi pi-ellipsis-v" [rounded]="false" [text]="true"/>
+        </td>
       </tr>
+
     </ng-template>
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="4">
+          <td colspan="5">
             <div class="empty-state flex flex-column align-items-center justify-content-center">
               <!-- Insert your SVG icon or image here -->
               <img alt="Empty state" height="161" ngSrc="./assets/empty-icon.svg" priority width="248"/>

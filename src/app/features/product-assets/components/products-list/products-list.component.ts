@@ -5,11 +5,13 @@ import {TableModule} from "primeng/table";
 import {CommonModule, NgOptimizedImage} from "@angular/common";
 import {Column} from "../../../../shared/models/table-column.interface";
 import {DeepFieldPipe} from "../../../../shared/deep-field.pipe";
+import {SpeedDialModule} from "primeng/speeddial";
+import {MenuItem} from "primeng/api";
 
 @Component({
   selector: 'app-products-list',
   standalone: true,
-  imports: [TableModule, CommonModule, NgOptimizedImage, DeepFieldPipe],
+  imports: [TableModule, CommonModule, NgOptimizedImage, DeepFieldPipe, SpeedDialModule],
   templateUrl: './products-list.component.html',
   styleUrl: './products-list.component.scss'
 })
@@ -20,6 +22,8 @@ export class ProductsListComponent implements OnInit, OnDestroy {
   isProductEmpty : boolean = false;
   products : any[] = [];
   productsColumns : Column[] = [];
+  items : MenuItem[] | null = null;
+
   private getProductFamilySubscription : Subscription = new Subscription();
   private productsSubscription : Subscription = new Subscription();
 
@@ -29,7 +33,16 @@ export class ProductsListComponent implements OnInit, OnDestroy {
       {field: 'displayName', header: 'Asset Name'},
       {field: 'finalCustomer', header: 'Final Customer'},
       {field: 'assetTypeName', header: 'Asset Type'},
-      {field: 'lastUpdatedOn', header: 'Last Updated'}]
+      {field: 'lastUpdatedOn', header: 'Last Updated'}
+    ]
+    this.items = [
+      {
+        icon: 'pi pi-pencil',
+        command: () => {
+          console.log('Edit');
+        }
+      }
+    ];
   }
 
   ngOnInit() : void {

@@ -9,11 +9,12 @@ import {InputTextModule} from "primeng/inputtext";
 import {KeyFilterModule} from "primeng/keyfilter";
 import {SkeletonModule} from "primeng/skeleton";
 import {NgOptimizedImage} from "@angular/common";
+import {TooltipModule} from "primeng/tooltip";
 
 @Component({
   selector: 'app-quick-filters',
   standalone: true,
-  imports: [PanelModule, ReactiveFormsModule, DropdownModule, ButtonModule, InputTextModule, KeyFilterModule, SkeletonModule, NgOptimizedImage],
+  imports: [PanelModule, ReactiveFormsModule, DropdownModule, ButtonModule, InputTextModule, KeyFilterModule, SkeletonModule, NgOptimizedImage, TooltipModule],
   templateUrl: './quick-filters.component.html',
   styleUrl: './quick-filters.component.scss'
 })
