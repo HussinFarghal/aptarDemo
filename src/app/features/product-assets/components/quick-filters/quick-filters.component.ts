@@ -102,6 +102,8 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
     this.getQuickFiltersDataSubscription.add(combineLatest([productFamilies$, finalCustomers$]).subscribe({
       next: ([productFamiliesData, finalCustomersData]) => {
         if (productFamiliesData) {
+          console.log('product families', productFamiliesData);
+          this.productService.productFamiliesValue = productFamiliesData;
           this.isProductFamiliesSuccess = true;
           this.isProductFamiliesLoading = false;
           this.isProductFamiliesError = false;

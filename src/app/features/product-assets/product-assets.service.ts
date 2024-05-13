@@ -14,6 +14,8 @@ export class ProductAssetsService {
     label : any; value : any; categoryId : any;
   }[]>([]);
   public readonly productOptions$ = this.productOptions.asObservable();
+  private productFamilies : BehaviorSubject<any> = new BehaviorSubject(null);
+  public readonly productFamilies$ = this.productFamilies.asObservable();
   private products : BehaviorSubject<[] | null> = new BehaviorSubject<[] | null>(null);
   public products$ : Observable<[] | null> = this.products.asObservable();
   private finalCustomerOptions : BehaviorSubject<{ label : any; value : any; }[]> = new BehaviorSubject<{
@@ -29,13 +31,21 @@ export class ProductAssetsService {
   constructor(private http : HttpClient) {
   }
 
+  get productFamiliesValue() {
+    return this.productFamilies.value;
+  }
+
+  set productFamiliesValue(value : any) {
+    this.productFamilies.next(value);
+  }
+  get showAdvancedSearchDialogValue() : boolean {
+    return this.showAdvancedSearchDialog.value;
+  }
+
   set showAdvancedSearchDialogValue(value : boolean) {
     this.showAdvancedSearchDialog.next(value);
   }
 
-  get showAdvancedSearchDialogValue() : boolean {
-    return this.showAdvancedSearchDialog.value;
-  }
   get productsValue() : [] | null {
     return this.products.value;
   }
@@ -70,18 +80,19 @@ export class ProductAssetsService {
   getCategory() : Observable<ICategory[]> {
     return this.http.get<ICategory[]>(API_ENDPOINTS.getCategory()).pipe(
       map((response : any) => {
-        return response.filter((product : any) => product.parentCategory === null && product.childCategories !== null);
+        return response.filter((product : any) => (product.parentCategory === null && product.childCategories !== null && product.icon !== null));
       }),
       catchError(error => {
-      error.source = 'getCategory';
-      throw error;
-    }));
+        error.source = 'getCategory';
+        throw error;
+      }));
 
   }
 
   getProductCatalog() : Observable<IProductCatalog[]> {
     return this.http.get<IProductCatalog[]>(API_ENDPOINTS.getProductCatalog()).pipe(map((response : any) => {
       this.generateProductsOptions(response);
+      this.productFamiliesValue = response;
       return response;
     }), catchError(error => {
       error.source = 'getProductCatalog';

@@ -3,23 +3,62 @@
           [style]="{ width: '74rem' }" header="Advanced Search"
           styleClass="advanced-search-dialog">
   <div class="image-list">
-
-
-    <div class="card">
-      <div class="icon-wrapper">
-        <div>
-          <i class="pi pi-circle text-2xl"></i>
+    @for (category of categories; track category.id) {
+      <div class="card" (click)="onSelectedCategory(category)">
+        <div class="icon-wrapper">
+          <div>
+            <i class="pi pi-circle text-2xl"></i>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="image-list-item-icon">
+            <img alt="" [ngSrc]="category.icon" height="80" width="80">
+          </div>
+          <div class="image-list-item-title">
+            {{ category.name }}
+          </div>
         </div>
       </div>
-      <div class="card-body">
-        <div class="image-list-item-icon">
-          <img alt="" ngSrc="https://my.aptar.mobi/images/api/product_category/closures.svg" height="80" width="80">
+    }
+  </div>
+  <hr>
+  <div class="image-list my-4">
+    @for (subCategory of subCategories; track subCategory.id) {
+      <div class="card" (click)="onSelectedSubCategory(subCategory)">
+        <div class="icon-wrapper">
+          <div>
+            <i class="pi pi-circle text-2xl"></i>
+          </div>
         </div>
-        <div class="image-list-item-title">
-          Closures
+        <div class="card-body">
+          <div class="image-list-item-icon">
+            <img alt="" [ngSrc]="subCategory.icon || './assets/no-image.png'" height="80" width="80">
+          </div>
+          <div class="image-list-item-title">
+            {{ subCategory.name }}
+          </div>
         </div>
       </div>
-    </div>
+    }
+  </div>
+  <div class="image-list my-4">
+    @for (product of products; track product.id) {
+      <div class="card" (click)="onSelectedProduct(product)">
+        <div class="icon-wrapper">
+          <div>
+            <i class="pi pi-circle text-2xl"></i>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="image-list-item-icon">
+            <img alt="" [ngSrc]="product.icon || './assets/no-image.png'" height="80" width="80">
+          </div>
+          <div class="image-list-item-title">
+            {{ product.name }}
+          </div>
+        </div>
+      </div>
+    }
   </div>
   <ng-template pTemplate="footer">
     <div class="col-auto">
