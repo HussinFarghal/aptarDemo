@@ -118,7 +118,6 @@ export class ProductsListComponent implements OnInit, OnDestroy {
             };
           });
           console.log('products', this.products);
-          this.cdr.detectChanges();  // Ensures the view updates with the new data
           this.isProductSuccess = true;
           this.isProductLoading = false;
           this.isProductEmpty = false;

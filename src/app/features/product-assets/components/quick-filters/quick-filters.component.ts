@@ -26,6 +26,8 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   isProductFamiliesError : boolean = false;
   isProductFamiliesLoading : boolean = true;
   public isFinalCustomersSuccess : boolean = false;
+  public isFinalCustomersError : boolean = false;
+  public isFinalCustomersLoading : boolean = true;
   protected readonly document = document;
   private getQuickFiltersDataSubscription : Subscription = new Subscription();
   private productOptionsSubscription : Subscription = new Subscription();
@@ -80,12 +82,23 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
         this.isProductFamiliesError = true;
         this.isProductFamiliesSuccess = false;
         this.isProductFamiliesLoading = false;
+      } else if (source === 'final customers') {
+        this.isFinalCustomersSuccess = false;
+        this.isFinalCustomersError = true;
+        this.isFinalCustomersLoading = false;
+
       }
       return EMPTY;
     });
 
     const productFamilies$ = this.productService.getProductCatalog().pipe(errorHandler('product families'));
     const finalCustomers$ = this.productService.getFinalCustomers().pipe(errorHandler('final customers'));
+    this.isProductFamiliesLoading = true;
+    this.isProductFamiliesError = false;
+    this.isProductFamiliesSuccess = false;
+    this.isFinalCustomersLoading = true;
+    this.isFinalCustomersError = false;
+    this.isFinalCustomersSuccess = false;
     this.getQuickFiltersDataSubscription.add(combineLatest([productFamilies$, finalCustomers$]).subscribe({
       next: ([productFamiliesData, finalCustomersData]) => {
         if (productFamiliesData) {
@@ -95,9 +108,16 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
         }
       }, error: (err) => {
         console.error('An error occurred:', err);
+        if (err.source === 'getProductCatalog') {
         this.isProductFamiliesError = true;
         this.isProductFamiliesSuccess = false;
         this.isProductFamiliesLoading = false;
+        } else if (err.source === 'getFinalCustomers') {
+          this.isFinalCustomersSuccess = false;
+          this.isFinalCustomersError = true;
+          this.isFinalCustomersLoading = false;
+        }
+
       }
     }));
   }
@@ -106,5 +126,9 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
     this.productOptionsSubscription.unsubscribe();
     this.finalCustomerOptionsSubscription.unsubscribe();
     this.getQuickFiltersDataSubscription.unsubscribe();
+  }
+
+  disableAdvancedSearch() : boolean {
+    return (this.isFinalCustomersError || this.isProductFamiliesError) || this.isProductFamiliesLoading && this.isFinalCustomersLoading;
   }
 }
