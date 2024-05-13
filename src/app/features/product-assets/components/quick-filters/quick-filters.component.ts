@@ -32,6 +32,7 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   private getQuickFiltersDataSubscription : Subscription = new Subscription();
   private productOptionsSubscription : Subscription = new Subscription();
   private finalCustomerOptionsSubscription : Subscription = new Subscription();
+  private selectedProductSubscription : Subscription = new Subscription()
 
   constructor(private productService : ProductAssetsService) {
     const formBuilder = inject(FormBuilder);
@@ -52,10 +53,16 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
     this.finalCustomerOptionsSubscription = this.productService.finalCustomerOptions$.subscribe((options) => {
       this.finalCustomerOptions = options;
     });
+    this.selectedProductSubscription = this.productService.selectedProduct$.subscribe((product) => {
+      console.log('product', product)
+      this.quickFilterForm.get('product')?.setValue(product)
+
+    });
   }
 
   submitFilters() {
     this.productService.quickFiltersDataValue = this.quickFilterForm.value;
+
     console.log('get quickFiltersDataValue =', this.productService.quickFiltersDataValue);
   }
 

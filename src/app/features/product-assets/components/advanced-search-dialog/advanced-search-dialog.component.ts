@@ -91,8 +91,8 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
   }
 
   onSelectedProduct(product : any) {
-    console.log('categoryID=', product.categoryId);
-    this.productService.selectedProductValue = {label: product.label, value: product.categoryId}
+    console.log('product=', product);
+    this.productService.selectedProductValue = {label: product.name, value: product.id, categoryId: product.categoryId}
     this.closeDialog()
   }
 }

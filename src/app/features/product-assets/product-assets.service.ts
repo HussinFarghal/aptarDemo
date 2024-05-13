@@ -22,7 +22,8 @@ export class ProductAssetsService {
     label : any; value : any;
   }[]>([]);
   public readonly finalCustomerOptions$ = this.finalCustomerOptions.asObservable();
-  private selectedProduct : BehaviorSubject<{ label : any; value : any; }> = new BehaviorSubject<any>(null);
+  private selectedProduct : BehaviorSubject<{ label : any; value : any; categoryId : any; }> = new BehaviorSubject<any>(null);
+  public selectedProduct$ : Observable<{ label : any; value : any; categoryId : any; }> = this.selectedProduct.asObservable();
   private quickFiltersData : BehaviorSubject<any> = new BehaviorSubject(null);
   public quickFiltersData$ : Observable<any> = this.quickFiltersData.asObservable();
   private showAdvancedSearchDialog : BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -54,7 +55,7 @@ export class ProductAssetsService {
     this.products.next(value);
   }
 
-  set selectedProductValue(value : { label : any; value : any; }) {
+  set selectedProductValue(value : { label : any; value : any; categoryId : any; }) {
     this.selectedProduct.next(value);
   }
 
