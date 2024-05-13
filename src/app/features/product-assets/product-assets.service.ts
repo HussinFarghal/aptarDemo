@@ -68,7 +68,11 @@ export class ProductAssetsService {
 
 
   getCategory() : Observable<ICategory[]> {
-    return this.http.get<ICategory[]>(API_ENDPOINTS.getCategory()).pipe(catchError(error => {
+    return this.http.get<ICategory[]>(API_ENDPOINTS.getCategory()).pipe(
+      map((response : any) => {
+        return response.filter((product : any) => product.parentCategory === null && product.childCategories !== null);
+      }),
+      catchError(error => {
       error.source = 'getCategory';
       throw error;
     }));

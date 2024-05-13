@@ -15,14 +15,12 @@ import {AdvancedSearchDialogComponent} from "./components/advanced-search-dialog
   styleUrl: './product-assets.component.scss'
 })
 export class ProductAssetsComponent implements OnInit, OnDestroy {
+
   constructor(private productService : ProductAssetsService) {
   }
 
   ngOnInit() : void {
-
-
-  };
-
+  }
   ngOnDestroy() : void {
 
   }

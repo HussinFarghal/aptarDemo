@@ -1,29 +1,35 @@
-<p-dialog [(visible)]="showDialog" [style]="{ width: '50rem' }" [draggable]="false" [maximizable]="false" [modal]="true"
-          header="Advanced Search">
-  <div class="grid">
-    <div class="col-12">
-      <h1>Body Content</h1>
+<p-dialog [(visible)]="showDialog" [closeOnEscape]="false" [draggable]="false" [maximizable]="false"
+          [modal]="true"
+          [style]="{ width: '74rem' }" header="Advanced Search"
+          styleClass="advanced-search-dialog">
+  <div class="image-list">
+
+
+    <div class="card">
+      <div class="icon-wrapper">
+        <div>
+          <i class="pi pi-circle text-2xl"></i>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="image-list-item-icon">
+          <img alt="" ngSrc="https://my.aptar.mobi/images/api/product_category/closures.svg" height="80" width="80">
+        </div>
+        <div class="image-list-item-title">
+          Closures
+        </div>
+      </div>
     </div>
   </div>
   <ng-template pTemplate="footer">
-    <div class="grid">
-      <div class="col-auto">
-        <p-button
-          styleClass="mr-2 p-button-sm"
-          label="Cancel"
-          [text]="true"
-          autoFocus="false"
-          severity="danger"
-          (click)="closeDialog()"/>
-      </div>
-      <div class="col-auto">
-        <p-button
-          label="Save"
-          [outlined]="true"
-          autofocus="true"
-          (click)="closeDialog()"
-        />
-      </div>
+    <div class="col-auto">
+      <p-button
+        (click)="closeDialog()"
+        [autofocus]="false"
+        [text]="true"
+        label="Cancel"
+        severity="danger"
+        styleClass="mr-2 p-button-sm"/>
     </div>
   </ng-template>
 </p-dialog>
