@@ -1,6 +1,6 @@
 <p-panel [toggleable]="true" header="Filters">
   <ng-template pTemplate="icons">
-    <p-button [disabled]="disableAdvancedSearch()" (click)="showAdvancedSearchDialog()" icon="pi pi-filter-fill" pTooltip="Advanced Filters"
+    <p-button (click)="showAdvancedSearchDialog()" [disabled]="disableAdvancedSearch()" icon="pi pi-filter-fill" pTooltip="Advanced Filters"
               styleClass="p-panel-header-icon p-link mr-2"
               tooltipPosition="left"></p-button>
   </ng-template>
@@ -8,7 +8,12 @@
     <form [formGroup]="quickFilterForm" (submit)="submitFilters()" (reset)="resetFilters()">
       <div class="align-items-center formgrid grid">
         <div class="field col-12 md:col-3">
-          <label for="product">Product <span class="text-red-500">*</span></label>
+          <label for="product">Product <span
+            class="text-red-500">*</span>
+            @if (quickFilterForm.get('product')?.errors?.['required'] && quickFilterForm.get('product')?.dirty) {
+              <span class="text-red-500 text-xs">This field is required</span>
+            }
+          </label>
           <p-dropdown
             (onChange)="onProductDropDownChange($event)"
             [lazy]="true"
@@ -21,11 +26,11 @@
             optionLabel="label"
             styleClass="w-full"
             [options]="productOptions"
-
             formControlName="product"
             id="product"
             placeholder="Select a product">
           </p-dropdown>
+
         </div>
         <div class="field col-12 md:col-3">
           <label for="final-customer">Final Customer</label>
