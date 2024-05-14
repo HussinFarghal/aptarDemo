@@ -11,6 +11,13 @@ import {SkeletonModule} from "primeng/skeleton";
 import {NgOptimizedImage} from "@angular/common";
 import {TooltipModule} from "primeng/tooltip";
 
+enum LoadState {
+  Loading,
+  Success,
+  Error,
+  Idle
+}
+
 @Component({
   selector: 'app-quick-filters',
   standalone: true,
@@ -117,9 +124,9 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
       }, error: (err) => {
         console.error('An error occurred:', err);
         if (err.source === 'getProductCatalog') {
-        this.isProductFamiliesError = true;
-        this.isProductFamiliesSuccess = false;
-        this.isProductFamiliesLoading = false;
+          this.isProductFamiliesError = true;
+          this.isProductFamiliesSuccess = false;
+          this.isProductFamiliesLoading = false;
         } else if (err.source === 'getFinalCustomers') {
           this.isFinalCustomersSuccess = false;
           this.isFinalCustomersError = true;
@@ -139,4 +146,5 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   disableAdvancedSearch() : boolean {
     return (this.isFinalCustomersError || this.isProductFamiliesError) || this.isProductFamiliesLoading && this.isFinalCustomersLoading;
   }
+
 }

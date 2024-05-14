@@ -7,27 +7,29 @@
       @if (selectedCategory) {
         <li class="breadcrumb-item">
           <a>
-            <img [ngSrc]="selectedCategory.icon" alt="" height="28" width="28">
+            <img [ngSrc]="selectedCategory.icon || './assets/no-image.png'" alt="" height="28" width="28">
             <span>{{ selectedCategory.name }}</span>
-            <span *ngIf="!selectedSubCategory" (click)="clearSelected(selectedCategory)" class="ml-3 text-red-500">X Clear</span>
+            <span *ngIf="!selectedSubCategory" (click)="clearSelected(selectedCategory)"
+                  class="ml-2 text-red-500 cursor-pointer">X Clear</span>
           </a>
         </li>
       }
       @if (selectedSubCategory) {
-        <li class="breadcrumb-item">
+        <li class="breadcrumb-item active">
           <a>
-            <img [ngSrc]="selectedSubCategory.icon" alt="" height="28" width="28">
+            <img [ngSrc]="selectedSubCategory.icon|| './assets/no-image.png'" alt="" height="28" width="28">
             <span>  {{ selectedSubCategory.name }}</span>
-            <span *ngIf="!selectedProduct" (click)="clearSelected(selectedSubCategory)" class="ml-3 text-red-500">X Clear</span>
+            <span *ngIf="!selectedProduct" (click)="clearSelected(selectedSubCategory)"
+                  class="ml-2 text-red-500 cursor-pointer">X Clear</span>
           </a>
         </li>
       }
       @if (selectedProduct) {
         <li class="breadcrumb-item">
           <a>
-            <img [ngSrc]="selectedProduct.icon" alt="" height="28" width="28">
+            <img [ngSrc]="selectedProduct.icon || './assets/no-image.png'" alt="" height="28" width="28">
             <span> {{ selectedProduct.name }}</span>
-            <span (click)="clearSelected(selectedProduct)" class="ml-3 text-red-500">X Clear</span>
+            <span (click)="clearSelected(selectedProduct)" class="ml-2 text-red-500 cursor-pointer">X Clear</span>
 
           </a>
         </li>
@@ -50,7 +52,6 @@
           <div class="card-body">
             <div class="image-list-item-icon">
               <img alt="" [ngSrc]="category.icon" height="80" width="80">
-              <i *ngIf="!category.icon" class="pi pi-spinner pi-spin"></i>
             </div>
             <div class="image-list-item-title">
               {{ category.name }}
@@ -72,7 +73,6 @@
           <div class="card-body">
             <div class="image-list-item-icon">
               <img alt="" [ngSrc]="subCategory.icon || './assets/no-image.png'" height="80" width="80">
-              <i *ngIf="!subCategory.icon" class="pi pi-spinner pi-spin"></i>
             </div>
             <div class="image-list-item-title">
               {{ subCategory.name }}

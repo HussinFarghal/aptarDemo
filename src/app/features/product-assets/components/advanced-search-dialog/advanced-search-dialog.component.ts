@@ -29,7 +29,39 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
   protected readonly of = of;
   private productFamilies = [];
   private productFamiliesSubscription : Subscription = new Subscription();
+  private quickFiltersDataSubscription : Subscription = new Subscription();
 
+  // Allow calling with no arguments to clear all selections
+  clearSelected() : void;
+  // Original method which requires an argument
+  clearSelected(selected : any) : void;
+  clearSelected(selected? : any) : void {
+    if (selected === undefined) {
+      // Clear all selections logic
+      this.selectedCategory = null;
+      this.selectedSubCategory = null;
+      this.selectedProduct = null;
+      this.subCategories = [];
+      this.products = [];
+    } else {
+      // Existing logic
+      switch (selected) {
+        case this.selectedCategory:
+          this.selectedCategory = null;
+          this.subCategories = [];
+          break;
+        case this.selectedSubCategory:
+          this.selectedSubCategory = null;
+          this.products = [];
+          break;
+        case this.selectedProduct:
+          this.selectedProduct = null;
+          this.selectedSubCategory = null;
+          this.products = [];
+          break;
+      }
+    }
+  }
   constructor(private productService : ProductAssetsService) {
   }
 
@@ -52,7 +84,15 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
         this.productFamilies = response;
       }
     });
-  };
+    this.quickFiltersDataSubscription = this.productService.quickFiltersData$.subscribe({
+      next: (response) => {
+        console.log('quickFiltersData=', response);
+        if (response) {
+          console.log('response.product=', response.product);
+        }
+      }
+    });
+  }
 
   getProductCatalog() {
     this.getProductCatalogSubscription = this.productService.getCategory().subscribe({
@@ -95,25 +135,7 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
     this.productService.showAdvancedSearchDialogValue = false;
   }
 
-  clearSelected(selected : any) {
 
-    switch (selected) {
-      case this.selectedCategory:
-        this.selectedCategory = null;
-        this.subCategories = [];
-        break;
-      case this.selectedSubCategory:
-        this.selectedSubCategory = null;
-        this.products = [];
-        break;
-      case this.selectedProduct:
-        this.selectedProduct = null;
-        this.selectedSubCategory = null;
-        this.products = [];
-        break;
-    }
-
-  }
 
   ngOnDestroy() : void {
     this.getProductCatalogSubscription.unsubscribe();
