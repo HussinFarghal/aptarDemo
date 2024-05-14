@@ -50,6 +50,7 @@
           <div class="card-body">
             <div class="image-list-item-icon">
               <img alt="" [ngSrc]="category.icon" height="80" width="80">
+              <i *ngIf="!category.icon" class="pi pi-spinner pi-spin"></i>
             </div>
             <div class="image-list-item-title">
               {{ category.name }}
@@ -71,6 +72,7 @@
           <div class="card-body">
             <div class="image-list-item-icon">
               <img alt="" [ngSrc]="subCategory.icon || './assets/no-image.png'" height="80" width="80">
+              <i *ngIf="!subCategory.icon" class="pi pi-spinner pi-spin"></i>
             </div>
             <div class="image-list-item-title">
               {{ subCategory.name }}

@@ -88,7 +88,7 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
     this.selectedProduct = product;
     this.productService.selectedProductValue = {label: product.name, value: product.id, categoryId: product.categoryId}
     console.log('selectedProduct=', product);
-    // this.closeDialog()
+    this.closeDialog()
   }
 
   closeDialog() {
@@ -108,6 +108,7 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
         break;
       case this.selectedProduct:
         this.selectedProduct = null;
+        this.selectedSubCategory = null;
         this.products = [];
         break;
     }
