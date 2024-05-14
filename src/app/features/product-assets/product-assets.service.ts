@@ -72,7 +72,6 @@ export class ProductAssetsService {
     if (value && value.finalCustomer === null) {
       value.finalCustomer = {label: '', value: ''};
     }
-    console.log('set quickFiltersDataValue =', value);
     this.quickFiltersData.next(value);
 
   }

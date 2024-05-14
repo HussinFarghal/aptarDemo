@@ -46,7 +46,13 @@
 }
 
 @if (isProductError && !isProductLoading && !isProductSuccess && !isProductEmpty) {
-  <h1>Error</h1>
+  <div class="align-items-center justify-content-center border-round  bg-white">
+    <div class="col-12 flex flex-column align-items-center justify-content-center h-15rem">
+      <img alt="Error" height="72" ngSrc="./assets/error.png" width="72" priority/>
+      <h2 class="text-red-500 m-0 p-0 font-bold text-3xl">Ops!</h2>
+      <p class="p-0 m-0 mb-0">Something Went Wrong please Try Again</p>
+    </div>
+  </div>
 }
 
 

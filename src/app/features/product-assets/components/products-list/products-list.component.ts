@@ -39,7 +39,7 @@ export class ProductsListComponent implements OnInit, OnDestroy {
       {
         icon: 'pi pi-pencil',
         command: () => {
-          console.log('Edit');
+
         }
       }
     ];
@@ -71,7 +71,6 @@ export class ProductsListComponent implements OnInit, OnDestroy {
       .subscribe({
 
         next: (res) => {
-          console.log('product families', res)
           if (res) {
             this.productService.productsValue = res.list;
             this.isProductSuccess = true;
@@ -101,7 +100,6 @@ export class ProductsListComponent implements OnInit, OnDestroy {
   getProducts() {
     this.productsSubscription = this.productService.products$.subscribe({
       next: (res) => {
-        console.log('res', res);
         this.isProductEmpty = true;
         if (res) {
           this.products = res.map((product : any) => {
@@ -117,7 +115,6 @@ export class ProductsListComponent implements OnInit, OnDestroy {
               lastUpdatedOn: product.lastUpdatedOn
             };
           });
-          console.log('products', this.products);
           this.isProductSuccess = true;
           this.isProductLoading = false;
           this.isProductEmpty = false;
@@ -132,9 +129,6 @@ export class ProductsListComponent implements OnInit, OnDestroy {
     });
   }
 
-  trackByProductId(index : number, product : any) : any {
-    return product.id; // assuming each product has a unique ID
-  }
 
   ngOnDestroy() : void {
     this.getProductFamilySubscription.unsubscribe();

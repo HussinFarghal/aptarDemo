@@ -36,7 +36,6 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
   // Original method which requires an argument
   clearSelected(selected : any) : void;
   clearSelected(selected? : any) : void {
-    console.log('selected=', selected)
     if (selected === undefined) {
       // Clear all selections logic
       this.selectedCategory = null;
@@ -68,15 +67,10 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
 
   ngOnInit() : void {
     this.showDialog = this.productService.showAdvancedSearchDialogValue;
-    console.log('this.selectedCategory=', this.selectedCategory);
-    console.log('this.selectedSubCategory=', this.selectedSubCategory);
-    console.log('this.products=', this.products);
     this.showDialogSubscription = this.productService.showAdvancedSearchDialog$.subscribe({
       next: (value) => {
         this.showDialog = value;
-        console.log('this.selectedCategory=', this.selectedCategory);
-        console.log('this.selectedSubCategory=', this.selectedSubCategory);
-        console.log('this.products=', this.products);
+
       }
     });
     this.getProductCatalog();
@@ -110,7 +104,6 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
   onSelectedCategory(category : any) {
     this.selectedCategory = category;
     this.subCategories = this.selectedCategory.childCategories;
-    console.log('this.selectedCategory=', this.selectedCategory);
   }
 
   onSelectedSubCategory(subCategory : any) {
@@ -119,8 +112,6 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
       return product.productFamily.categoryId === this.selectedSubCategory.id;
     }).map((product : any) => product.productFamily);
     this.products = lodash.uniqBy(this.products, 'id');
-    console.log('this.selectedSubCategory=', this.selectedSubCategory);
-    console.log('this.products=', this.products);
 
 
   }
@@ -128,7 +119,6 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
   onSelectedProduct(product : any) {
     this.selectedProduct = product;
     this.productService.selectedProductValue = {label: product.name, value: product.id, categoryId: product.categoryId}
-    console.log('selectedProduct=', product);
     this.closeDialog()
   }
 

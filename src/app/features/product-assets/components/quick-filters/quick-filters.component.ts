@@ -30,8 +30,8 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   public productOptions : { label : any; value : any; categoryId : any; }[] = []
   public finalCustomerOptions : { label : any; value : any; }[] = [];
   public isProductFamiliesSuccess : boolean = false;
-  isProductFamiliesError : boolean = false;
-  isProductFamiliesLoading : boolean = true;
+  public isProductFamiliesError : boolean = false;
+  public isProductFamiliesLoading : boolean = true;
   public isFinalCustomersSuccess : boolean = false;
   public isFinalCustomersError : boolean = false;
   public isFinalCustomersLoading : boolean = true;
@@ -40,7 +40,6 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   private productOptionsSubscription : Subscription = new Subscription();
   private finalCustomerOptionsSubscription : Subscription = new Subscription();
   private selectedProductSubscription : Subscription = new Subscription()
-
   constructor(private productService : ProductAssetsService) {
     const formBuilder = inject(FormBuilder);
     this.quickFilterForm = formBuilder.group({
@@ -61,7 +60,6 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
       this.finalCustomerOptions = options;
     });
     this.selectedProductSubscription = this.productService.selectedProduct$.subscribe((product) => {
-      console.log('product', product)
       this.quickFilterForm.get('product')?.setValue(product)
 
     });
@@ -69,8 +67,6 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
 
   submitFilters() {
     this.productService.quickFiltersDataValue = this.quickFilterForm.value;
-
-    console.log('get quickFiltersDataValue =', this.productService.quickFiltersDataValue);
   }
 
   showAdvancedSearchDialog() {
@@ -79,14 +75,15 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
 
   onProductDropDownChange(event : any) : void {
     this.productService.selectedProductValue = event.value;
+    if (event) {
+      this.productService.productsValue = [];
+    }
   }
 
   resetFilters() {
     this.quickFilterForm.reset();
     this.productService.quickFiltersDataValue = null
     this.productService.productsValue = [];
-    console.log('reset quickFiltersDataValue =', this.productService.quickFiltersDataValue);
-    console.log('reset productsValue =', this.productService.productsValue);
   }
 
   getQuickFiltersData() : void {
