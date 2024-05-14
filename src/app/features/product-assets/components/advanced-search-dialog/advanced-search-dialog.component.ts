@@ -4,16 +4,13 @@ import {DialogModule} from "primeng/dialog";
 import {of, Subscription} from "rxjs";
 import {ButtonModule} from "primeng/button";
 import {CommonModule, NgOptimizedImage} from "@angular/common";
-import lodash from 'lodash'; // Ensure lodash is installed and imported
+import lodash from 'lodash';
+import {BreadcrumbModule} from "primeng/breadcrumb";
+import {MenuItem} from "primeng/api"; // Ensure lodash is installed and imported
 @Component({
   selector: 'app-advanced-search-dialog',
   standalone: true,
-  imports: [
-    DialogModule,
-    ButtonModule,
-    NgOptimizedImage,
-    CommonModule
-  ],
+  imports: [DialogModule, ButtonModule, NgOptimizedImage, CommonModule, BreadcrumbModule],
   templateUrl: './advanced-search-dialog.component.html',
   styleUrl: './advanced-search-dialog.component.scss'
 })
@@ -24,9 +21,11 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
   categories : any = [];
   subCategories : any = [];
   products : any = [];
-  selectedProduct : any = {};
-  selectedCategory : any = {};
-  selectedSubCategory : any = {};
+  selectedProduct : any;
+  selectedCategory : any;
+  selectedSubCategory : any;
+  items : MenuItem[] | undefined;
+  home : MenuItem | undefined;
   protected readonly of = of;
   private productFamilies = [];
   private productFamiliesSubscription : Subscription = new Subscription();
@@ -36,13 +35,18 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
 
   ngOnInit() : void {
     this.showDialog = this.productService.showAdvancedSearchDialogValue;
+    console.log('this.selectedCategory=', this.selectedCategory);
+    console.log('this.selectedSubCategory=', this.selectedSubCategory);
+    console.log('this.products=', this.products);
     this.showDialogSubscription = this.productService.showAdvancedSearchDialog$.subscribe({
       next: (value) => {
         this.showDialog = value;
+        console.log('this.selectedCategory=', this.selectedCategory);
+        console.log('this.selectedSubCategory=', this.selectedSubCategory);
+        console.log('this.products=', this.products);
       }
     });
     this.getProductCatalog();
-    console.log('this.categories', this.categories)
     this.productFamiliesSubscription = this.productService.productFamilies$.subscribe({
       next: (response) => {
         this.productFamilies = response;
@@ -56,43 +60,63 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
         for (let category of response) {
           this.categories.push(category);
         }
-      },
-      error: (error) => {
+      }, error: (error) => {
         console.log('error', error);
       }
     });
   };
 
   onSelectedCategory(category : any) {
-    this.selectedCategory = category.id;
-    this.subCategories = category.childCategories;
-    console.log('this.subCategories', this.subCategories);
-    console.log('this.selectedCategory', this.selectedCategory);
+    this.selectedCategory = category;
+    this.subCategories = this.selectedCategory.childCategories;
+    console.log('this.selectedCategory=', this.selectedCategory);
   }
 
   onSelectedSubCategory(subCategory : any) {
-    this.selectedSubCategory = subCategory.id;
-    console.log('this.productFamilies=', this.productService.productFamiliesValue);
-    console.log('this.selectedSubCategory', this.selectedSubCategory);
+    this.selectedSubCategory = subCategory;
     this.products = this.productFamilies.filter((product : any) => {
-      return product.productFamily.categoryId === this.selectedSubCategory;
+      return product.productFamily.categoryId === this.selectedSubCategory.id;
     }).map((product : any) => product.productFamily);
     this.products = lodash.uniqBy(this.products, 'id');
-    console.log('this.products', this.products);
+    console.log('this.selectedSubCategory=', this.selectedSubCategory);
+    console.log('this.products=', this.products);
 
+
+  }
+
+  onSelectedProduct(product : any) {
+    this.selectedProduct = product;
+    this.productService.selectedProductValue = {label: product.name, value: product.id, categoryId: product.categoryId}
+    console.log('selectedProduct=', product);
+    // this.closeDialog()
   }
 
   closeDialog() {
     this.productService.showAdvancedSearchDialogValue = false;
   }
 
+  clearSelected(selected : any) {
+
+    switch (selected) {
+      case this.selectedCategory:
+        this.selectedCategory = null;
+        this.subCategories = [];
+        break;
+      case this.selectedSubCategory:
+        this.selectedSubCategory = null;
+        this.products = [];
+        break;
+      case this.selectedProduct:
+        this.selectedProduct = null;
+        this.products = [];
+        break;
+    }
+
+  }
+
   ngOnDestroy() : void {
     this.getProductCatalogSubscription.unsubscribe();
   }
 
-  onSelectedProduct(product : any) {
-    console.log('product=', product);
-    this.productService.selectedProductValue = {label: product.name, value: product.id, categoryId: product.categoryId}
-    this.closeDialog()
-  }
+
 }

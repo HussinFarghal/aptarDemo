@@ -1,65 +1,107 @@
 <p-dialog [(visible)]="showDialog" [closeOnEscape]="false" [draggable]="false" [maximizable]="false"
           [modal]="true"
-          [style]="{ width: '74rem' }" header="Advanced Search"
+          [style]="{ width: '60rem' }" header="Advanced Search"
           styleClass="advanced-search-dialog">
-  <div class="image-list">
-    @for (category of categories; track category.id) {
-      <div class="card" (click)="onSelectedCategory(category)">
-        <div class="icon-wrapper">
-          <div>
-            <i class="pi pi-circle text-2xl"></i>
+  @if (subCategories.length > 0 || subCategories.length > 0 || products.length > 0) {
+    <ol class="breadcrumb">
+      @if (selectedCategory) {
+        <li class="breadcrumb-item">
+          <a>
+            <img [ngSrc]="selectedCategory.icon" alt="" height="28" width="28">
+            <span>{{ selectedCategory.name }}</span>
+            <span *ngIf="!selectedSubCategory" (click)="clearSelected(selectedCategory)" class="ml-3 text-red-500">X Clear</span>
+          </a>
+        </li>
+      }
+      @if (selectedSubCategory) {
+        <li class="breadcrumb-item">
+          <a>
+            <img [ngSrc]="selectedSubCategory.icon" alt="" height="28" width="28">
+            <span>  {{ selectedSubCategory.name }}</span>
+            <span *ngIf="!selectedProduct" (click)="clearSelected(selectedSubCategory)" class="ml-3 text-red-500">X Clear</span>
+          </a>
+        </li>
+      }
+      @if (selectedProduct) {
+        <li class="breadcrumb-item">
+          <a>
+            <img [ngSrc]="selectedProduct.icon" alt="" height="28" width="28">
+            <span> {{ selectedProduct.name }}</span>
+            <span (click)="clearSelected(selectedProduct)" class="ml-3 text-red-500">X Clear</span>
+
+          </a>
+        </li>
+      }
+    </ol>
+  }
+
+
+
+  <!--  <h2><span>{{selectedCategory.name }} / </span><span>{{selectedSubCategory.name}} / </span><span>{{selectedProduct.name}}</span></h2>-->
+  @if (categories && subCategories.length === 0 && products.length === 0) {
+    <div class="image-list">
+      @for (category of categories; track category.id) {
+        <div class="card" (click)="onSelectedCategory(category)">
+          <div class="icon-wrapper">
+            <div>
+              <i class="pi pi-circle text-2xl"></i>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="image-list-item-icon">
+              <img alt="" [ngSrc]="category.icon" height="80" width="80">
+            </div>
+            <div class="image-list-item-title">
+              {{ category.name }}
+            </div>
           </div>
         </div>
-        <div class="card-body">
-          <div class="image-list-item-icon">
-            <img alt="" [ngSrc]="category.icon" height="80" width="80">
+      }
+    </div>
+  }
+  @if (subCategories && products.length === 0) {
+    <div class="image-list ">
+      @for (subCategory of subCategories; track subCategory.id) {
+        <div class="card" (click)="onSelectedSubCategory(subCategory)">
+          <div class="icon-wrapper">
+            <div>
+              <i class="pi pi-circle text-2xl"></i>
+            </div>
           </div>
-          <div class="image-list-item-title">
-            {{ category.name }}
-          </div>
-        </div>
-      </div>
-    }
-  </div>
-  <hr>
-  <div class="image-list my-4">
-    @for (subCategory of subCategories; track subCategory.id) {
-      <div class="card" (click)="onSelectedSubCategory(subCategory)">
-        <div class="icon-wrapper">
-          <div>
-            <i class="pi pi-circle text-2xl"></i>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="image-list-item-icon">
-            <img alt="" [ngSrc]="subCategory.icon || './assets/no-image.png'" height="80" width="80">
-          </div>
-          <div class="image-list-item-title">
-            {{ subCategory.name }}
+          <div class="card-body">
+            <div class="image-list-item-icon">
+              <img alt="" [ngSrc]="subCategory.icon || './assets/no-image.png'" height="80" width="80">
+            </div>
+            <div class="image-list-item-title">
+              {{ subCategory.name }}
+            </div>
           </div>
         </div>
-      </div>
-    }
-  </div>
-  <div class="image-list my-4">
-    @for (product of products; track product.id) {
-      <div class="card" (click)="onSelectedProduct(product)">
-        <div class="icon-wrapper">
-          <div>
-            <i class="pi pi-circle text-2xl"></i>
+      }
+    </div>
+  }
+  @if (products.length > 0) {
+    <div class="image-list">
+      @for (product of products; track product.id) {
+        <div class="card" (click)="onSelectedProduct(product)">
+          <div class="icon-wrapper">
+            <div>
+              <i class="pi pi-circle text-2xl"></i>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="image-list-item-icon">
+              <img alt="" [ngSrc]="product.icon || './assets/no-image.png'" height="80" width="80">
+            </div>
+            <div class="image-list-item-title">
+              {{ product.name }}
+            </div>
           </div>
         </div>
-        <div class="card-body">
-          <div class="image-list-item-icon">
-            <img alt="" [ngSrc]="product.icon || './assets/no-image.png'" height="80" width="80">
-          </div>
-          <div class="image-list-item-title">
-            {{ product.name }}
-          </div>
-        </div>
-      </div>
-    }
-  </div>
+      }
+    </div>
+  }
+
   <ng-template pTemplate="footer">
     <div class="col-auto">
       <p-button
