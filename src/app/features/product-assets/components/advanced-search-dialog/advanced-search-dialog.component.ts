@@ -36,6 +36,7 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
   // Original method which requires an argument
   clearSelected(selected : any) : void;
   clearSelected(selected? : any) : void {
+    console.log('selected=', selected)
     if (selected === undefined) {
       // Clear all selections logic
       this.selectedCategory = null;
@@ -86,10 +87,10 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
     });
     this.quickFiltersDataSubscription = this.productService.quickFiltersData$.subscribe({
       next: (response) => {
-        console.log('quickFiltersData=', response);
-        if (response) {
-          console.log('response.product=', response.product);
+        if (!response) {
+          this.clearSelected();
         }
+
       }
     });
   }

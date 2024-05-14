@@ -15,7 +15,9 @@
     </ng-template>
     <ng-template pTemplate="body" let-rowData>
       <tr>
-        <td>{{ rowData.displayName }}</td>
+        <td><a class="text-primary-500" target="_blank"
+               href="https://cpassets.aptar.app/all-customers//product-aa04851b-8dc4-427a-8195-03cf2fbdb250/28-400mm%20Ecolite%20DPS%20-%20CS-2650-2474.pdf.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=GWLFz6dFaYq8M6MM%2F20240514%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240514T080957Z&X-Amz-Expires=1000&X-Amz-SignedHeaders=host&response-content-type=application%2Foctet-stream&X-Amz-Signature=8521499b7b09a27aecd856d0412ba8990c22aeb32bcc2723f168d6bdf5ed76a5">{{ rowData.displayName }}</a>
+        </td>
         <td>{{ rowData.finalCustomer }}</td>
         <td>{{ rowData.assetTypeName }}</td>
         <td>{{ rowData.lastUpdatedOn | date:'medium' }}</td>
