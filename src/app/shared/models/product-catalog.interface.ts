@@ -1,7 +1,7 @@
-interface IProductFamilyFile {
+export interface IProductFamilyFile {
   productFamilyId : string;
   fileId : string;
-  productFamily : IProductCatalog | null;
+  productFamily : IProductCatalog
   file : any | null;
   id : string;
 }
@@ -15,19 +15,17 @@ export interface IProductCatalog {
   categoryId : string;
   category : any | null;
   compatibilityVariances : any | null;
-  recyclabilityVariances : any | null;
   productFamilyMarketSegments : any | null;
   productRegions : any | null;
   productFamilyApplicationFields : any | null;
-  productFamilyAptarSegments : any | null;
   productFamilyDigitalServices : any[];
-  productFamilyFiles : (IProductFamilyFile | null)[];
+  productFamilyFiles : IProductFamilyFile [];
   cmsTemplateId : any | null;
   cmsTemplate : any | null;
   productData : any | null;
   createdBy : any | null;
-  createdOn : string;
+  createdOn : string | null;
   lastUpdatedBy : any | null;
-  lastUpdatedOn : any | null;
+  lastUpdatedOn : string | null;
   id : string;
 }

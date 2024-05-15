@@ -1,12 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ProductAssetsService} from "../../product-assets.service";
 import {DialogModule} from "primeng/dialog";
-import {of, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 import {ButtonModule} from "primeng/button";
 import {CommonModule, NgOptimizedImage} from "@angular/common";
 import lodash from 'lodash';
 import {BreadcrumbModule} from "primeng/breadcrumb";
-import {MenuItem} from "primeng/api"; // Ensure lodash is installed and imported
+import {IProductCatalog} from "../../../../shared/models/product-catalog.interface"; // Ensure lodash is installed and imported
 @Component({
   selector: 'app-advanced-search-dialog',
   standalone: true,
@@ -24,11 +24,7 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
   selectedProduct : any;
   selectedCategory : any;
   selectedSubCategory : any;
-  items : MenuItem[] | undefined;
-  home : MenuItem | undefined;
-  protected readonly of = of;
-  private productFamilies = [];
-  private productFamiliesSubscription : Subscription = new Subscription();
+  private productFamilies : IProductCatalog[] = [];
   private quickFiltersDataSubscription : Subscription = new Subscription();
 
   // Allow calling with no arguments to clear all selections
@@ -74,11 +70,12 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
       }
     });
     this.getProductCatalog();
-    this.productFamiliesSubscription = this.productService.productFamilies$.subscribe({
-      next: (response) => {
-        this.productFamilies = response;
-      }
-    });
+    // this.productFamiliesSubscription = this.productService.productFamilies$.subscribe({
+    //   next: (response) => {
+    //     this.productFamilies = response;
+    //   }
+    // });
+    this.productFamilies = this.productService.productFamilies();
     this.quickFiltersDataSubscription = this.productService.quickFiltersData$.subscribe({
       next: (response) => {
         if (!response) {

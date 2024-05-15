@@ -3,7 +3,7 @@ import {PanelModule} from "primeng/panel";
 import {ProductAssetsService} from "../../product-assets.service";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {DropdownModule} from "primeng/dropdown";
-import {catchError, combineLatest, EMPTY, Subscription} from "rxjs";
+import {catchError, combineLatest, EMPTY, Observable, Subscription} from "rxjs";
 import {ButtonModule} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
 import {KeyFilterModule} from "primeng/keyfilter";
@@ -11,6 +11,7 @@ import {SkeletonModule} from "primeng/skeleton";
 import {NgOptimizedImage} from "@angular/common";
 import {TooltipModule} from "primeng/tooltip";
 import {IDropdown} from "../../../../shared/models/dropdown.interface";
+import {IProductCatalog} from "../../../../shared/models/product-catalog.interface";
 
 enum LoadState {
   Loading,
@@ -54,9 +55,6 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.getQuickFiltersData();
-    this.finalCustomerOptionsSubscription = this.productService.finalCustomerOptions$.subscribe((options) => {
-      this.finalCustomerOptions = options;
-    });
     this.selectedProductSubscription = this.productService.selectedProduct$.subscribe((product) => {
       this.quickFilterForm.get('product')?.setValue(product)
 
@@ -85,33 +83,19 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   }
 
   getQuickFiltersData() : void {
-    const errorHandler = (source : string) => catchError((error : any) => {
-      console.error(`An error occurred fetching ${source}:`, error);
-      if (source === 'product families') {
-        this.isProductFamiliesError = true;
-        this.isProductFamiliesSuccess = false;
-        this.isProductFamiliesLoading = false;
-      } else if (source === 'final customers') {
-        this.isFinalCustomersSuccess = false;
-        this.isFinalCustomersError = true;
-        this.isFinalCustomersLoading = false;
-
-      }
-      return EMPTY;
-    });
-    const productFamilies$ = this.productService.getProductCatalog().pipe(errorHandler('product families'));
-    const finalCustomers$ = this.productService.getFinalCustomers().pipe(errorHandler('final customers'));
+    const finalCustomers$ = this.productService.getFinalCustomers().pipe(this.errorHandler('final customers'));
     this.isProductFamiliesLoading = true;
     this.isProductFamiliesError = false;
     this.isProductFamiliesSuccess = false;
     this.isFinalCustomersLoading = true;
     this.isFinalCustomersError = false;
     this.isFinalCustomersSuccess = false;
-    this.getQuickFiltersDataSubscription.add(combineLatest([productFamilies$, finalCustomers$]).subscribe({
+    this.getQuickFiltersDataSubscription.add(combineLatest([this.getProductFamilies$(), finalCustomers$]).subscribe({
       next: ([productFamiliesData, finalCustomersData]) => {
         this.productOptions = this.productService.productOptionsSignal();
-        if (productFamiliesData) {
-          this.productService.productFamiliesValue = productFamiliesData;
+        this.finalCustomerOptions = this.productService.finalCustomerOptions();
+        if ([productFamiliesData]) {
+          this.productService.productFamilies.set(productFamiliesData);
           this.isProductFamiliesSuccess = true;
           this.isProductFamiliesLoading = false;
           this.isProductFamiliesError = false;
@@ -132,13 +116,31 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
     }));
   }
 
-  ngOnDestroy() : void {
-    this.finalCustomerOptionsSubscription.unsubscribe();
-    this.getQuickFiltersDataSubscription.unsubscribe();
+  getProductFamilies$() : Observable<IProductCatalog[]> {
+    return this.productService.getProductCatalog().pipe(this.errorHandler('product families')) as Observable<IProductCatalog[]>;
   }
+
+  errorHandler = (source : string) => catchError((error : any) => {
+    console.error(`An error occurred fetching ${source}:`, error);
+    if (source === 'product families') {
+      this.isProductFamiliesError = true;
+      this.isProductFamiliesSuccess = false;
+      this.isProductFamiliesLoading = false;
+    } else if (source === 'final customers') {
+      this.isFinalCustomersSuccess = false;
+      this.isFinalCustomersError = true;
+      this.isFinalCustomersLoading = false;
+
+    }
+    return EMPTY;
+  });
 
   disableAdvancedSearch() : boolean {
     return (this.isFinalCustomersError || this.isProductFamiliesError) || this.isProductFamiliesLoading && this.isFinalCustomersLoading;
   }
+  ngOnDestroy() : void {
+    this.getQuickFiltersDataSubscription.unsubscribe();
+  }
+
 
 }
