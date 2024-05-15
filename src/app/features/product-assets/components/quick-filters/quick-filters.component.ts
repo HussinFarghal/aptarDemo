@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {PanelModule} from "primeng/panel";
 import {ProductAssetsService} from "../../product-assets.service";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
@@ -10,6 +10,7 @@ import {KeyFilterModule} from "primeng/keyfilter";
 import {SkeletonModule} from "primeng/skeleton";
 import {NgOptimizedImage} from "@angular/common";
 import {TooltipModule} from "primeng/tooltip";
+import {IDropdown} from "../../../../shared/models/dropdown.interface";
 
 enum LoadState {
   Loading,
@@ -26,8 +27,8 @@ enum LoadState {
   styleUrl: './quick-filters.component.scss'
 })
 export class QuickFiltersComponent implements OnInit, OnDestroy {
-  public quickFilterForm! : FormGroup;
-  public productOptions : { label : any; value : any; categoryId : any; }[] = []
+  public quickFilterForm : FormGroup = new FormGroup({});
+  public productOptions : IDropdown[] = []
   public finalCustomerOptions : { label : any; value : any; }[] = [];
   public isProductFamiliesSuccess : boolean = false;
   public isProductFamiliesError : boolean = false;
@@ -37,10 +38,10 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   public isFinalCustomersLoading : boolean = true;
   protected readonly document = document;
   private getQuickFiltersDataSubscription : Subscription = new Subscription();
-  private productOptionsSubscription : Subscription = new Subscription();
   private finalCustomerOptionsSubscription : Subscription = new Subscription();
   private selectedProductSubscription : Subscription = new Subscription()
-  constructor(private productService : ProductAssetsService) {
+
+  constructor(private productService : ProductAssetsService, private cd : ChangeDetectorRef) {
     const formBuilder = inject(FormBuilder);
     this.quickFilterForm = formBuilder.group({
       product: [null, Validators.required],
@@ -53,9 +54,6 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.getQuickFiltersData();
-    this.productOptionsSubscription = this.productService.productOptions$.subscribe((options) => {
-      this.productOptions = options;
-    });
     this.finalCustomerOptionsSubscription = this.productService.finalCustomerOptions$.subscribe((options) => {
       this.finalCustomerOptions = options;
     });
@@ -101,7 +99,6 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
       }
       return EMPTY;
     });
-
     const productFamilies$ = this.productService.getProductCatalog().pipe(errorHandler('product families'));
     const finalCustomers$ = this.productService.getFinalCustomers().pipe(errorHandler('final customers'));
     this.isProductFamiliesLoading = true;
@@ -112,6 +109,7 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
     this.isFinalCustomersSuccess = false;
     this.getQuickFiltersDataSubscription.add(combineLatest([productFamilies$, finalCustomers$]).subscribe({
       next: ([productFamiliesData, finalCustomersData]) => {
+        this.productOptions = this.productService.productOptionsSignal();
         if (productFamiliesData) {
           this.productService.productFamiliesValue = productFamiliesData;
           this.isProductFamiliesSuccess = true;
@@ -135,7 +133,6 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() : void {
-    this.productOptionsSubscription.unsubscribe();
     this.finalCustomerOptionsSubscription.unsubscribe();
     this.getQuickFiltersDataSubscription.unsubscribe();
   }

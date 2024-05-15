@@ -1,19 +1,17 @@
-import {Injectable} from '@angular/core';
+import {Injectable, signal, WritableSignal} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {BehaviorSubject, catchError, map, Observable} from "rxjs";
+import {BehaviorSubject, catchError, map, Observable, tap} from "rxjs";
 import {API_ENDPOINTS} from "../../api-config";
 import {ICategory} from "../../shared/models/category.interface";
 import {IProductCatalog} from "../../shared/models/product-catalog.interface";
 import {ICustomer} from "../../shared/models/customer.interface";
+import {IDropdown} from "../../shared/models/dropdown.interface";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductAssetsService {
-  private productOptions : BehaviorSubject<{ label : any; value : any; categoryId : any; }[]> = new BehaviorSubject<{
-    label : any; value : any; categoryId : any;
-  }[]>([]);
-  public readonly productOptions$ = this.productOptions.asObservable();
+  productOptionsSignal : WritableSignal<IDropdown[]> = signal<IDropdown[]>([]);
   private productFamilies : BehaviorSubject<any> = new BehaviorSubject(null);
   public readonly productFamilies$ = this.productFamilies.asObservable();
   private products : BehaviorSubject<[] | null> = new BehaviorSubject<[] | null>(null);
@@ -39,6 +37,7 @@ export class ProductAssetsService {
   set productFamiliesValue(value : any) {
     this.productFamilies.next(value);
   }
+
   get showAdvancedSearchDialogValue() : boolean {
     return this.showAdvancedSearchDialog.value;
   }
@@ -90,14 +89,15 @@ export class ProductAssetsService {
   }
 
   getProductCatalog() : Observable<IProductCatalog[]> {
-    return this.http.get<IProductCatalog[]>(API_ENDPOINTS.getProductCatalog()).pipe(map((response : any) => {
-      this.generateProductsOptions(response);
-      this.productFamiliesValue = response;
-      return response;
-    }), catchError(error => {
-      error.source = 'getProductCatalog';
-      throw error;
-    }));
+    return this.http.get<IProductCatalog[]>(API_ENDPOINTS.getProductCatalog()).pipe(
+      tap(response => this.generateProductsOptions(response)),
+      tap(response => this.productFamiliesValue = response),
+      catchError(error => {
+        console.error('Failed to fetch product catalog', error);
+        error.source = 'getProductCatalog';
+        throw error;
+      })
+    );
   }
 
   generateProductsOptions(response : any[]) {
@@ -107,10 +107,9 @@ export class ProductAssetsService {
 
     const uniqueOptions = Array.from(new Set(options.map(a => a.value)))
       .map(value => options.find(option => option.value === value))
-      .filter(option => option !== undefined) as { label : any; value : any; categoryId : any; }[];
+      .filter(option => option !== undefined) as IDropdown[];
 
-    this.productOptions.next(uniqueOptions);
-    return uniqueOptions;
+    this.productOptionsSignal.set(uniqueOptions);
   }
 
   getFinalCustomers() : Observable<ICustomer[]> {
