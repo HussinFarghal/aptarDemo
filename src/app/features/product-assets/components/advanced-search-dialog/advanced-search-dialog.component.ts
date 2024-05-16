@@ -60,17 +60,13 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
   constructor(private productService : ProductAssetsService) {
     effect(() => {
       this.showDialog = this.productService.showAdvancedSearchDialog();
-      console.log('this.showDialog=', this.showDialog)
       this.productFamilies = this.productService.productFamilies();
       this.products = this.productService.products();
     });
   }
 
   ngOnInit() : void {
-
-
     this.getProductCatalog();
-
     this.quickFiltersDataSubscription = this.productService.quickFiltersData$.subscribe({
       next: (response) => {
         if (!response) {
