@@ -45,6 +45,7 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
       this.selectedCategory = null;
       this.selectedSubCategory = null;
       this.selectedProduct = null;
+      this.productService.selectedProduct.set(null);
       this.subCategories = [];
       this.products = [];
       this.productService.productFamilies.set([]);
@@ -52,16 +53,17 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
       // Existing logic
       switch (selected) {
         case this.selectedCategory:
+          console.log('selected', selected);
           this.selectedCategory = null;
           this.subCategories = [];
           break;
         case this.selectedSubCategory:
-          this.selectedSubCategory = null;
-          this.products = [];
+          this.subCategories = [];
           break;
         case this.selectedProduct:
           this.productService.selectedProduct.set(null);
           this.selectedSubCategory = null;
+          this.productService.productFamilies.set([]);
           this.products = [];
           break;
       }
@@ -100,11 +102,13 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
 
   onSelectedSubCategory(subCategory : any) {
     this.selectedSubCategory = subCategory;
-    this.products = this.productService.productFamilies().filter((product : any) => {
+    this.products = this.productFamilies.filter((product : any) => {
       return product.productFamily.categoryId === this.selectedSubCategory.id;
     }).map((product : any) => product.productFamily);
     this.products = lodash.uniqBy(this.products, 'id');
+
   }
+
 
   onSelectedProduct(product : any) {
     this.selectedProduct = product;
