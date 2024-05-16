@@ -23,11 +23,15 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
   selectedProduct : any;
   selectedCategory : any;
   selectedSubCategory : any;
+  quickFiltersData = null;
   private productFamilies : IProductCatalog[] = [];
-  private quickFiltersDataSubscription : Subscription = new Subscription();
 
   constructor(private productService : ProductAssetsService) {
     effect(() => {
+      this.quickFiltersData = this.productService.quickFiltersDataSignal();
+      if (!this.quickFiltersData) {
+        this.clearSelected();
+      }
       this.showDialog = this.productService.showAdvancedSearchDialog();
       this.productFamilies = this.productService.productFamilies();
     }, {allowSignalWrites: true});
@@ -73,14 +77,8 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
   ngOnInit() : void {
     this.getProductCatalog();
     this.products = this.productService.products();
-    this.quickFiltersDataSubscription = this.productService.quickFiltersData$.subscribe({
-      next: (response) => {
-        if (!response) {
-          this.clearSelected();
-        }
+    this.quickFiltersData = this.productService.quickFiltersDataSignal();
 
-      }
-    });
   }
 
   getProductCatalog() {

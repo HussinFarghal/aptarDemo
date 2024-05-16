@@ -18,6 +18,7 @@ export class ProductAssetsService {
   public selectedProduct : WritableSignal<IProductDropDown | null> = signal<IProductDropDown | null>(null);
   public products : WritableSignal<any> = signal<any>(null);
   public showAdvancedSearchDialog : WritableSignal<boolean> = signal<boolean>(false);
+  public quickFiltersDataSignal : WritableSignal<any> = signal<any>(null);
   private quickFiltersData : BehaviorSubject<any> = new BehaviorSubject(null);
   public quickFiltersData$ : Observable<any> = this.quickFiltersData.asObservable();
   // private showAdvancedSearchDialog : BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -37,6 +38,7 @@ export class ProductAssetsService {
       value.finalCustomer = {label: '', value: ''};
     }
     this.quickFiltersData.next(value);
+    this.quickFiltersDataSignal.set(value);
 
   }
 
