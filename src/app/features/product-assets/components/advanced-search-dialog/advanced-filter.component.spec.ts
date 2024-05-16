@@ -1,18 +1,18 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {AdvancedSearchDialogComponent} from './advanced-search-dialog.component';
+import {AdvancedFilterComponent} from './advanced-filter.component';
 
 describe('AdvancedSearchDialogComponent', () => {
-  let component : AdvancedSearchDialogComponent;
-  let fixture : ComponentFixture<AdvancedSearchDialogComponent>;
+  let component : AdvancedFilterComponent;
+  let fixture : ComponentFixture<AdvancedFilterComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdvancedSearchDialogComponent]
+      imports: [AdvancedFilterComponent]
     })
       .compileComponents();
 
-    fixture = TestBed.createComponent(AdvancedSearchDialogComponent);
+    fixture = TestBed.createComponent(AdvancedFilterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

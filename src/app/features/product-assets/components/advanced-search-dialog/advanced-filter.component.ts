@@ -11,10 +11,10 @@ import {IProductCatalog} from "../../../../shared/models/product-catalog.interfa
   selector: 'app-advanced-search-dialog',
   standalone: true,
   imports: [DialogModule, ButtonModule, NgOptimizedImage, CommonModule, BreadcrumbModule],
-  templateUrl: './advanced-search-dialog.component.html',
-  styleUrl: './advanced-search-dialog.component.scss'
+  templateUrl: './advanced-filter.component.html',
+  styleUrl: './advanced-filter.component.scss'
 })
-export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
+export class AdvancedFilterComponent implements OnInit, OnDestroy {
   showDialog : boolean = false;
   getProductCatalogSubscription : Subscription = new Subscription();
   categories : any = [];
