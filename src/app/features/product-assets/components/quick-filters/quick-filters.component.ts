@@ -32,6 +32,7 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   public isFinalCustomersSuccess : boolean = false;
   public isFinalCustomersError : boolean = false;
   public isFinalCustomersLoading : boolean = true;
+  public selectedProduct : IProductDropDown | null = null;
   protected readonly document = document;
   private productFamilies = this.productService.productFamilies;
   private getQuickFiltersDataSubscription : Subscription = new Subscription();
@@ -46,7 +47,10 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
     effect(() => {
       this.productOptions = this.productService.productOptionsSignal();
       this.finalCustomerOptions = this.productService.finalCustomerOptions();
-    });
+      this.selectedProduct = this.productService.selectedProduct();
+      this.quickFilterForm.get('product')?.setValue(this.selectedProduct);
+
+    }, {allowSignalWrites: true});
   }
 
   ngOnInit() {

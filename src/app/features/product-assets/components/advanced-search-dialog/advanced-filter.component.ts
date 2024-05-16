@@ -26,10 +26,20 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
   private productFamilies : IProductCatalog[] = [];
   private quickFiltersDataSubscription : Subscription = new Subscription();
 
+  constructor(private productService : ProductAssetsService) {
+    effect(() => {
+      this.showDialog = this.productService.showAdvancedSearchDialog();
+      this.productFamilies = this.productService.productFamilies();
+      this.products = this.productService.products();
+    }, {allowSignalWrites: true});
+  }
+
   // Allow calling with no arguments to clear all selections
   clearSelected() : void;
+
   // Original method which requires an argument
   clearSelected(selected : any) : void;
+
   clearSelected(selected? : any) : void {
     if (selected === undefined) {
       // Clear all selections logic
@@ -56,13 +66,6 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
           break;
       }
     }
-  }
-  constructor(private productService : ProductAssetsService) {
-    effect(() => {
-      this.showDialog = this.productService.showAdvancedSearchDialog();
-      this.productFamilies = this.productService.productFamilies();
-      this.products = this.productService.products();
-    });
   }
 
   ngOnInit() : void {
@@ -106,6 +109,7 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
 
   onSelectedProduct(product : any) {
     this.selectedProduct = product;
+    console.log('product', product)
     this.productService.selectedProduct.set({label: product.name, value: product.id, categoryId: product.categoryId})
     this.closeDialog()
   }
@@ -113,7 +117,6 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
   closeDialog() {
     this.productService.showAdvancedSearchDialog.set(false);
   }
-
 
 
   ngOnDestroy() : void {
