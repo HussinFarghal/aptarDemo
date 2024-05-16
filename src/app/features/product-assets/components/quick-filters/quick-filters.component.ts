@@ -1,8 +1,8 @@
-import {ChangeDetectorRef, Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, effect, inject, OnDestroy, OnInit} from '@angular/core';
 import {PanelModule} from "primeng/panel";
 import {ProductAssetsService} from "../../product-assets.service";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {DropdownModule} from "primeng/dropdown";
+import {DropdownChangeEvent, DropdownModule} from "primeng/dropdown";
 import {catchError, combineLatest, EMPTY, Observable, Subscription} from "rxjs";
 import {ButtonModule} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
@@ -10,15 +10,10 @@ import {KeyFilterModule} from "primeng/keyfilter";
 import {SkeletonModule} from "primeng/skeleton";
 import {NgOptimizedImage} from "@angular/common";
 import {TooltipModule} from "primeng/tooltip";
-import {IDropdown} from "../../../../shared/models/dropdown.interface";
+import {IProductDropDown} from "../../../../shared/models/product-dropdown.interface";
 import {IProductCatalog} from "../../../../shared/models/product-catalog.interface";
-
-enum LoadState {
-  Loading,
-  Success,
-  Error,
-  Idle
-}
+import {IFinalCustomerDropDown} from "../../../../shared/models/final-customer-dropdown.interface";
+import {ICustomer} from "../../../../shared/models/customer.interface";
 
 @Component({
   selector: 'app-quick-filters',
@@ -29,8 +24,8 @@ enum LoadState {
 })
 export class QuickFiltersComponent implements OnInit, OnDestroy {
   public quickFilterForm : FormGroup = new FormGroup({});
-  public productOptions : IDropdown[] = []
-  public finalCustomerOptions : { label : any; value : any; }[] = [];
+  public productOptions : IProductDropDown[] = []
+  public finalCustomerOptions : IFinalCustomerDropDown[] = []
   public isProductFamiliesSuccess : boolean = false;
   public isProductFamiliesError : boolean = false;
   public isProductFamiliesLoading : boolean = true;
@@ -38,9 +33,8 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   public isFinalCustomersError : boolean = false;
   public isFinalCustomersLoading : boolean = true;
   protected readonly document = document;
+  private productFamilies = this.productService.productFamilies;
   private getQuickFiltersDataSubscription : Subscription = new Subscription();
-  private finalCustomerOptionsSubscription : Subscription = new Subscription();
-  private selectedProductSubscription : Subscription = new Subscription()
 
   constructor(private productService : ProductAssetsService, private cd : ChangeDetectorRef) {
     const formBuilder = inject(FormBuilder);
@@ -49,16 +43,16 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
       finalCustomer: [null],
       assetName: [null],
     });
-
+    effect(() => {
+      this.productOptions = this.productService.productOptionsSignal();
+      this.finalCustomerOptions = this.productService.finalCustomerOptions();
+    });
   }
 
   ngOnInit() {
 
     this.getQuickFiltersData();
-    this.selectedProductSubscription = this.productService.selectedProduct$.subscribe((product) => {
-      this.quickFilterForm.get('product')?.setValue(product)
 
-    });
   }
 
   submitFilters() {
@@ -66,42 +60,52 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   }
 
   showAdvancedSearchDialog() {
-    this.productService.showAdvancedSearchDialogValue = true;
+    console.log(' this.productService.showAdvancedSearchDialog=', this.productService.showAdvancedSearchDialog())
+    this.productService.showAdvancedSearchDialog.set(true);
   }
 
-  onProductDropDownChange(event : any) : void {
-    this.productService.selectedProductValue = event.value;
+  onProductDropDownChange(event : DropdownChangeEvent) : void {
+    this.productService.selectedProduct.set(event.value);
     if (event) {
-      this.productService.productsValue = [];
+      this.productService.products.set([]);
+    }
+  }
+
+  onProductDropDownClear(event : Event) {
+    console.log(event);
+    if (event) {
+      this.productService.products.set([]);
     }
   }
 
   resetFilters() {
     this.quickFilterForm.reset();
     this.productService.quickFiltersDataValue = null
-    this.productService.productsValue = [];
+    this.productService.products.set([]);
   }
 
   getQuickFiltersData() : void {
-    const finalCustomers$ = this.productService.getFinalCustomers().pipe(this.errorHandler('final customers'));
     this.isProductFamiliesLoading = true;
     this.isProductFamiliesError = false;
     this.isProductFamiliesSuccess = false;
     this.isFinalCustomersLoading = true;
     this.isFinalCustomersError = false;
     this.isFinalCustomersSuccess = false;
-    this.getQuickFiltersDataSubscription.add(combineLatest([this.getProductFamilies$(), finalCustomers$]).subscribe({
+    this.getQuickFiltersDataSubscription.add(combineLatest([this.getProductFamilies$(), this.getFinalCustomers$()]).subscribe({
       next: ([productFamiliesData, finalCustomersData]) => {
-        this.productOptions = this.productService.productOptionsSignal();
-        this.finalCustomerOptions = this.productService.finalCustomerOptions();
+
         if ([productFamiliesData]) {
-          this.productService.productFamilies.set(productFamiliesData);
+          this.productFamilies.set(productFamiliesData);
           this.isProductFamiliesSuccess = true;
           this.isProductFamiliesLoading = false;
           this.isProductFamiliesError = false;
         }
+        if ([finalCustomersData]) {
+          this.isFinalCustomersSuccess = true;
+          this.isFinalCustomersLoading = false;
+          this.isFinalCustomersError = false;
+        }
       }, error: (err) => {
-        console.error('An error occurred:', err);
         if (err.source === 'getProductCatalog') {
           this.isProductFamiliesError = true;
           this.isProductFamiliesSuccess = false;
@@ -120,8 +124,12 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
     return this.productService.getProductCatalog().pipe(this.errorHandler('product families')) as Observable<IProductCatalog[]>;
   }
 
+  getFinalCustomers$() : Observable<ICustomer[]> {
+    return this.productService.getFinalCustomers().pipe(this.errorHandler('final customers')) as Observable<ICustomer[]>;
+
+  }
+
   errorHandler = (source : string) => catchError((error : any) => {
-    console.error(`An error occurred fetching ${source}:`, error);
     if (source === 'product families') {
       this.isProductFamiliesError = true;
       this.isProductFamiliesSuccess = false;
@@ -138,6 +146,7 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   disableAdvancedSearch() : boolean {
     return (this.isFinalCustomersError || this.isProductFamiliesError) || this.isProductFamiliesLoading && this.isFinalCustomersLoading;
   }
+
   ngOnDestroy() : void {
     this.getQuickFiltersDataSubscription.unsubscribe();
   }

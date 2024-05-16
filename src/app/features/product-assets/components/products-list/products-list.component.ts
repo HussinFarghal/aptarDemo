@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, effect, OnDestroy, OnInit} from '@angular/core';
 import {of, Subscription, switchMap} from "rxjs";
 import {ProductAssetsService} from "../../product-assets.service";
 import {TableModule} from "primeng/table";
@@ -6,7 +6,6 @@ import {CommonModule, NgOptimizedImage} from "@angular/common";
 import {Column} from "../../../../shared/models/table-column.interface";
 import {DeepFieldPipe} from "../../../../shared/deep-field.pipe";
 import {SpeedDialModule} from "primeng/speeddial";
-import {MenuItem} from "primeng/api";
 
 @Component({
   selector: 'app-products-list',
@@ -22,36 +21,36 @@ export class ProductsListComponent implements OnInit, OnDestroy {
   isProductEmpty : boolean = false;
   products : any[] = [];
   productsColumns : Column[] = [];
-  items : MenuItem[] | null = null;
-
   private getProductFamilySubscription : Subscription = new Subscription();
-  private productsSubscription : Subscription = new Subscription();
 
-  constructor(private productService : ProductAssetsService, private cdr : ChangeDetectorRef) {
+  constructor(private productService : ProductAssetsService) {
     this.productsColumns = [
-
       {field: 'displayName', header: 'Asset Name'},
       {field: 'finalCustomer', header: 'Final Customer'},
       {field: 'assetTypeName', header: 'Asset Type'},
       {field: 'lastUpdatedOn', header: 'Last Updated'}
     ]
-    this.items = [
-      {
-        icon: 'pi pi-pencil',
-        command: () => {
-
-        }
-      }
-    ];
+    effect(() => {
+      this.products = this.productService.products().map((product : any) => {
+        const finalCustomers = product.fileFinalCustomers
+          ? product.fileFinalCustomers.map((fc : any) => fc.finalCustomer).join(', ')
+          : 'None';  // Gracefully handle null or empty arrays
+        return {
+          id: product.id,
+          displayName: product.displayName,
+          finalCustomer: finalCustomers, // Concatenate names or show 'None'
+          assetTypeName: product.assetType.name,
+          lastUpdatedOn: product.lastUpdatedOn
+        };
+      });
+    });
   }
 
   ngOnInit() : void {
     this.getProductFamily();
-    this.getProducts();
   }
 
   getProductFamily() {
-
     this.getProductFamilySubscription = this.productService.quickFiltersData$
       .pipe(// Use switchMap to switch to a new observable when quickFiltersData changes
         switchMap(quickFiltersData => {
@@ -71,15 +70,17 @@ export class ProductsListComponent implements OnInit, OnDestroy {
       .subscribe({
 
         next: (res) => {
-          if (res) {
-            this.productService.productsValue = res.list;
+          if (res?.list?.length > 0) {
+            console.log('res', res)
             this.isProductSuccess = true;
             this.isProductLoading = false;
             this.isProductEmpty = false;
+            this.productService.products.set(res.list);
           } else {
+            this.productService.products.set([]);
+            this.isProductEmpty = true;
             this.isProductSuccess = false;
             this.isProductLoading = false;
-            this.isProductEmpty = true;
           }
 
 
@@ -97,42 +98,9 @@ export class ProductsListComponent implements OnInit, OnDestroy {
       });
   }
 
-  getProducts() {
-    this.productsSubscription = this.productService.products$.subscribe({
-      next: (res) => {
-        this.isProductEmpty = true;
-        if (res) {
-          this.products = res.map((product : any) => {
-            const finalCustomers = product.fileFinalCustomers
-              ? product.fileFinalCustomers.map((fc : any) => fc.finalCustomer).join(', ')
-              : 'None';  // Gracefully handle null or empty arrays
-
-            return {
-              id: product.id,
-              displayName: product.displayName,
-              finalCustomer: finalCustomers, // Concatenate names or show 'None'
-              assetTypeName: product.assetType.name,
-              lastUpdatedOn: product.lastUpdatedOn
-            };
-          });
-          this.isProductSuccess = true;
-          this.isProductLoading = false;
-          this.isProductEmpty = false;
-        }
-      },
-      error: (error) => {
-        console.error('Error fetching products', error);
-        this.isProductError = true;
-        this.isProductLoading = false;
-        this.isProductEmpty = false;
-      }
-    });
-  }
-
 
   ngOnDestroy() : void {
     this.getProductFamilySubscription.unsubscribe();
-    this.productsSubscription.unsubscribe();
   }
 
 }

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, effect, OnDestroy, OnInit} from '@angular/core';
 import {ProductAssetsService} from "../../product-assets.service";
 import {DialogModule} from "primeng/dialog";
 import {Subscription} from "rxjs";
@@ -16,7 +16,6 @@ import {IProductCatalog} from "../../../../shared/models/product-catalog.interfa
 })
 export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
   showDialog : boolean = false;
-  showDialogSubscription : Subscription = new Subscription();
   getProductCatalogSubscription : Subscription = new Subscription();
   categories : any = [];
   subCategories : any = [];
@@ -59,23 +58,19 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
     }
   }
   constructor(private productService : ProductAssetsService) {
+    effect(() => {
+      this.showDialog = this.productService.showAdvancedSearchDialog();
+      console.log('this.showDialog=', this.showDialog)
+      this.productFamilies = this.productService.productFamilies();
+      this.products = this.productService.products();
+    });
   }
 
   ngOnInit() : void {
-    this.showDialog = this.productService.showAdvancedSearchDialogValue;
-    this.showDialogSubscription = this.productService.showAdvancedSearchDialog$.subscribe({
-      next: (value) => {
-        this.showDialog = value;
 
-      }
-    });
+
     this.getProductCatalog();
-    // this.productFamiliesSubscription = this.productService.productFamilies$.subscribe({
-    //   next: (response) => {
-    //     this.productFamilies = response;
-    //   }
-    // });
-    this.productFamilies = this.productService.productFamilies();
+
     this.quickFiltersDataSubscription = this.productService.quickFiltersData$.subscribe({
       next: (response) => {
         if (!response) {
@@ -105,22 +100,22 @@ export class AdvancedSearchDialogComponent implements OnInit, OnDestroy {
 
   onSelectedSubCategory(subCategory : any) {
     this.selectedSubCategory = subCategory;
+
     this.products = this.productFamilies.filter((product : any) => {
       return product.productFamily.categoryId === this.selectedSubCategory.id;
     }).map((product : any) => product.productFamily);
     this.products = lodash.uniqBy(this.products, 'id');
 
-
   }
 
   onSelectedProduct(product : any) {
     this.selectedProduct = product;
-    this.productService.selectedProductValue = {label: product.name, value: product.id, categoryId: product.categoryId}
+    this.productService.selectedProduct.set({label: product.name, value: product.id, categoryId: product.categoryId})
     this.closeDialog()
   }
 
   closeDialog() {
-    this.productService.showAdvancedSearchDialogValue = false;
+    this.productService.showAdvancedSearchDialog.set(false);
   }
 
 

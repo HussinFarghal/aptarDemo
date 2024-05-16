@@ -1,4 +1,4 @@
-<p-dialog [(visible)]="showDialog" [closeOnEscape]="false" [draggable]="false" [maximizable]="false"
+<p-dialog (onHide)="closeDialog()" [(visible)]="showDialog" [closeOnEscape]="false" [draggable]="false" [maximizable]="false"
           [modal]="true"
           [style]="{ width: '60rem' }" header="Advanced Filters"
           styleClass="advanced-search-dialog">

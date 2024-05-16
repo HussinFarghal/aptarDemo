@@ -16,6 +16,7 @@
           </label>
           <p-dropdown
             (onChange)="onProductDropDownChange($event)"
+            (onClear)="onProductDropDownClear($event)"
             [lazy]="true"
             [appendTo]="document.body"
             dataKey="value"
