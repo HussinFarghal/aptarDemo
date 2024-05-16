@@ -30,7 +30,6 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
     effect(() => {
       this.showDialog = this.productService.showAdvancedSearchDialog();
       this.productFamilies = this.productService.productFamilies();
-      this.products = this.productService.products();
     }, {allowSignalWrites: true});
   }
 
@@ -48,6 +47,7 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
       this.selectedProduct = null;
       this.subCategories = [];
       this.products = [];
+      this.productService.productFamilies.set([]);
     } else {
       // Existing logic
       switch (selected) {
@@ -60,7 +60,7 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
           this.products = [];
           break;
         case this.selectedProduct:
-          this.selectedProduct = null;
+          this.productService.selectedProduct.set(null);
           this.selectedSubCategory = null;
           this.products = [];
           break;
@@ -70,6 +70,7 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
 
   ngOnInit() : void {
     this.getProductCatalog();
+    this.products = this.productService.products();
     this.quickFiltersDataSubscription = this.productService.quickFiltersData$.subscribe({
       next: (response) => {
         if (!response) {
@@ -99,17 +100,14 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
 
   onSelectedSubCategory(subCategory : any) {
     this.selectedSubCategory = subCategory;
-
-    this.products = this.productFamilies.filter((product : any) => {
+    this.products = this.productService.productFamilies().filter((product : any) => {
       return product.productFamily.categoryId === this.selectedSubCategory.id;
     }).map((product : any) => product.productFamily);
     this.products = lodash.uniqBy(this.products, 'id');
-
   }
 
   onSelectedProduct(product : any) {
     this.selectedProduct = product;
-    console.log('product', product)
     this.productService.selectedProduct.set({label: product.name, value: product.id, categoryId: product.categoryId})
     this.closeDialog()
   }

@@ -31,10 +31,11 @@ export class ProductsListComponent implements OnInit, OnDestroy {
       {field: 'lastUpdatedOn', header: 'Last Updated'}
     ]
     effect(() => {
-      this.products = this.productService.products().map((product : any) => {
+      this.products = this.productService.products();
+      this.products = this.products.map((product : any) => {
         const finalCustomers = product.fileFinalCustomers
           ? product.fileFinalCustomers.map((fc : any) => fc.finalCustomer).join(', ')
-          : 'None';  // Gracefully handle null or empty arrays
+          : 'None';
         return {
           id: product.id,
           displayName: product.displayName,
@@ -71,7 +72,6 @@ export class ProductsListComponent implements OnInit, OnDestroy {
 
         next: (res) => {
           if (res?.list?.length > 0) {
-            console.log('res', res)
             this.isProductSuccess = true;
             this.isProductLoading = false;
             this.isProductEmpty = false;
