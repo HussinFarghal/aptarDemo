@@ -36,6 +36,27 @@
       }
     </ol>
   }
+  <div class="field col-12">
+    <label for="product">Product <span
+      class="text-red-500">*</span>
+    </label>
+    <p-dropdown
+      [lazy]="true"
+      [appendTo]="document.body"
+      dataKey="value"
+      [resetFilterOnHide]="true"
+      [showClear]="true"
+      [filter]="true"
+      filterBy="label"
+      optionLabel="label"
+      styleClass="w-full"
+      [options]="productOptions"
+      formControlName="product"
+      id="product"
+      placeholder="Select a product">
+    </p-dropdown>
+
+  </div>
   <!--  <h2><span>{{selectedCategory.name }} / </span><span>{{selectedSubCategory.name}} / </span><span>{{selectedProduct.name}}</span></h2>-->
   @if (categories && subCategories.length === 0 && products.length === 0) {
     <div class="image-list">

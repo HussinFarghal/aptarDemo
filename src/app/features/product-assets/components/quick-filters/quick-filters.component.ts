@@ -156,4 +156,11 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   }
 
 
+  onAssetNameChange(event : Event) {
+    if (event) {
+      this.productService.showAdvancedSearchDialog.set(true);
+    } else {
+      this.productService.showAdvancedSearchDialog.set(false);
+    }
+  }
 }

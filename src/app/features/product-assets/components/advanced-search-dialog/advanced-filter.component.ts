@@ -6,11 +6,13 @@ import {ButtonModule} from "primeng/button";
 import {CommonModule, NgOptimizedImage} from "@angular/common";
 import lodash from 'lodash';
 import {BreadcrumbModule} from "primeng/breadcrumb";
-import {IProductCatalog} from "../../../../shared/models/product-catalog.interface"; // Ensure lodash is installed and imported
+import {IProductCatalog} from "../../../../shared/models/product-catalog.interface";
+import {DropdownModule} from "primeng/dropdown";
+import {ReactiveFormsModule} from "@angular/forms"; // Ensure lodash is installed and imported
 @Component({
   selector: 'app-advanced-search-dialog',
   standalone: true,
-  imports: [DialogModule, ButtonModule, NgOptimizedImage, CommonModule, BreadcrumbModule],
+  imports: [DialogModule, ButtonModule, NgOptimizedImage, CommonModule, BreadcrumbModule, DropdownModule, ReactiveFormsModule],
   templateUrl: './advanced-filter.component.html',
   styleUrl: './advanced-filter.component.scss'
 })
@@ -24,6 +26,7 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
   selectedCategory : any;
   selectedSubCategory : any;
   quickFiltersData = null;
+  productOptions : any = [];
   private productFamilies : IProductCatalog[] = [];
 
   constructor(private productService : ProductAssetsService) {
@@ -32,6 +35,7 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
       if (!this.quickFiltersData) {
         this.clearSelected();
       }
+      this.productOptions = this.productService.productOptionsSignal();
       this.showDialog = this.productService.showAdvancedSearchDialog();
       this.productFamilies = this.productService.productFamilies();
     }, {allowSignalWrites: true});
@@ -124,4 +128,5 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
   }
 
 
+  protected readonly document = document;
 }

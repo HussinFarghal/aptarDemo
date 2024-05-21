@@ -4,7 +4,7 @@ import {ProductAssetsService} from "../../product-assets.service";
 import {TableModule} from "primeng/table";
 import {CommonModule, NgOptimizedImage} from "@angular/common";
 import {Column} from "../../../../shared/models/table-column.interface";
-import {DeepFieldPipe} from "../../../../shared/deep-field.pipe";
+import {DeepFieldPipe} from "../../../../shared/pipes/deep-field.pipe";
 import {SpeedDialModule} from "primeng/speeddial";
 
 @Component({
