@@ -1,5 +1,5 @@
 @if (isProductSuccess || isProductEmpty) {
-  <p-table #productsDataTable [columns]="productsColumns" [tableStyle]="{ 'min-width': '50rem' }" [value]="products"
+  <p-table #productsDataTable [columns]="productsColumns" [tableStyle]="{ 'min-width': '50rem' }" [value]="products()"
            styleClass="table raduis-5  p-datatable-gridlines p-datatable-striped" [paginator]="true" [rows]="10"
            [rowsPerPageOptions]="[5, 10, 20]"
            [showCurrentPageReport]="true"

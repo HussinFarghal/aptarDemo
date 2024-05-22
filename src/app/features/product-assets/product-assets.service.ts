@@ -1,12 +1,14 @@
 import {Injectable, signal, WritableSignal} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {BehaviorSubject, catchError, forkJoin, map, Observable, tap, throwError} from "rxjs";
+import {catchError, forkJoin, map, Observable, tap, throwError} from "rxjs";
 import {API_ENDPOINTS} from "../../api-config";
 import {ICategory} from "@shared/models/category.interface";
 import {IProductCatalog} from "@shared/models/product-catalog.interface";
 import {ICustomer} from "@shared/models/customer.interface";
 import {IProductDropDown} from "@shared/models/product-dropdown.interface";
 import {IFinalCustomerDropDown} from "@shared/models/final-customer-dropdown.interface";
+import {IFinalProduct, IFinalProducts} from "@shared/models/final-products.interface";
+import {IQuickFilters} from "@shared/models/quick-filters.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -17,29 +19,10 @@ export class ProductAssetsService {
   public products : WritableSignal<IProductCatalog[]> = signal<IProductCatalog[]>([]);
   public categories : WritableSignal<ICategory[]> = signal<ICategory[]>([]);
   public selectedProduct : WritableSignal<IProductDropDown | null> = signal<IProductDropDown | null>(null);
-  public finalProducts : WritableSignal<any> = signal<any>(null);
+  public finalProducts : WritableSignal<IFinalProduct[]> = signal<IFinalProduct[]>([]);
   public showAdvancedSearchDialog : WritableSignal<boolean> = signal<boolean>(false);
-  public quickFiltersDataSignal : WritableSignal<any> = signal<any>(null);
-  private quickFiltersData : BehaviorSubject<any> = new BehaviorSubject(null);
-  public quickFiltersData$ : Observable<any> = this.quickFiltersData.asObservable();
-  // private showAdvancedSearchDialog : BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  // public showAdvancedSearchDialog$ : Observable<boolean> = this.showAdvancedSearchDialog.asObservable();
-
+  public quickFiltersDataSignal : WritableSignal<IQuickFilters | null> = signal<IQuickFilters | null>(null);
   constructor(private http : HttpClient) {
-
-  }
-
-
-  set quickFiltersDataValue(value : any) {
-
-    if (value && value.assetName === null) {
-      value.assetName = '';
-    }
-    if (value && value.finalCustomer === null) {
-      value.finalCustomer = {label: '', value: ''};
-    }
-    this.quickFiltersData.next(value);
-    this.quickFiltersDataSignal.set(value);
 
   }
 
@@ -111,16 +94,14 @@ export class ProductAssetsService {
     this.finalCustomerOptions.set(options);
   }
 
-  getProductFamily(pageNumber : number, pageSize : number, sortDataColumnName : string, sortDataDirection : string, productFamilyId : string, assetName : string, finalCustomer : string) : Observable<any> {
-    return this.http.get(API_ENDPOINTS.getFinalProducts(pageNumber, pageSize, sortDataColumnName, sortDataDirection, productFamilyId, assetName, finalCustomer))
-      .pipe(
-        tap((res) => {
-          this.finalProducts.set(res)
-        }),
-        catchError(error => {
-          error.source = 'getProductFamily';
-          throw error;
-          }
-        ));
+  getFinalProducts() : Observable<IFinalProducts> {
+    return this.http.get<IFinalProducts>(API_ENDPOINTS.getFinalProducts()).pipe(
+      tap(response => this.finalProducts.set(response.list)),
+      catchError(error => {
+        error.source = 'getFinalProducts';
+        throw error;
+      })
+    );
   }
+
 }

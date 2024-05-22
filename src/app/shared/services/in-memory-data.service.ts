@@ -7382,7 +7382,94 @@ export class InMemoryDataService implements InMemoryDbService {
         "finalCustomer": "integrant"
       }
     ];
-    return {products, categories, finalCustomers};
+    const finalProducts = {
+      "list": [
+        {
+          "displayName": "28-400mm Ecolite DPS - CS-2650-2474.pdf",
+          "mimeType": "application/pdf",
+          "size": 315862,
+          "bucket": "all-customers",
+          "minioPrefix": "/product-aa04851b-8dc4-427a-8195-03cf2fbdb250/28-400mm Ecolite DPS - CS-2650-2474.pdf.pdf",
+          "minioVersion": "8817bb4c-ae80-4ae6-9da1-9e27b06cebd2",
+          "metadata": {
+            "createdBy": "brian.szwed@aptar.com",
+            "createdOn": "02/22/2023 16:12:56"
+          },
+          "assetTypeGroupId": 2,
+          "assetTypeGroup": {
+            "name": "Product",
+            "displayOrder": 2,
+            "id": 2
+          },
+          "assetTypeId": "939ab8a4-f54d-498b-8491-9d732d06f439",
+          "assetType": {
+            "parentAssetTypeId": null,
+            "assetTypeGroupId": 2,
+            "icon": "",
+            "parentAssetType": null,
+            "assetTypeGroup": {
+              "name": "Product",
+              "displayOrder": 2,
+              "id": 2
+            },
+            "childAssetTypes": null,
+            "name": "Technical Drawing",
+            "displayOrder": 1,
+            "createdBy": "ahmed.mohsen.ext@aptar.com",
+            "createdOn": "2023-04-05T09:32:17.771875Z",
+            "lastUpdatedBy": "ahmed.mohsen.ext@aptar.com",
+            "lastUpdatedOn": null,
+            "id": "939ab8a4-f54d-498b-8491-9d732d06f439"
+          },
+          "accessTypeId": 1,
+          "accessType": null,
+          "partnerId": null,
+          "partner": null,
+          "requestReplyFiles": null,
+          "productFamilyFiles": null,
+          "fileFinalCustomers": [
+            {
+              "fileId": "99d4b8ae-e192-4b75-894c-51063c1a4563",
+              "partnerId": "27ed76ce-bdb9-41f0-aca2-a12c59ed2d17",
+              "finalCustomer": "Henkil",
+              "file": null,
+              "partner": null,
+              "createdBy": "",
+              "createdOn": "2024-03-04T10:50:05.214588Z",
+              "lastUpdatedBy": null,
+              "lastUpdatedOn": "2024-03-04T10:50:05.214588Z",
+              "id": "9347e772-2250-4b92-b7c0-6919600771a3"
+            },
+            {
+              "fileId": "99d4b8ae-e192-4b75-894c-51063c1a4563",
+              "partnerId": "27ed76ce-bdb9-41f0-aca2-a12c59ed2d17",
+              "finalCustomer": "west cost",
+              "file": null,
+              "partner": null,
+              "createdBy": "",
+              "createdOn": "2024-03-04T10:50:05.213475Z",
+              "lastUpdatedBy": null,
+              "lastUpdatedOn": "2024-03-04T10:50:05.213475Z",
+              "id": "7ae5c7dc-7a60-4e18-8ceb-499de217101a"
+            }
+          ],
+          "customerProjectFiles": null,
+          "fileStatus": 1,
+          "createdBy": "brian.szwed@aptar.com",
+          "createdOn": "2023-02-22T16:12:56.64005Z",
+          "lastUpdatedBy": null,
+          "lastUpdatedOn": "2023-03-09T17:46:45.606458Z",
+          "id": "99d4b8ae-e192-4b75-894c-51063c1a4563"
+        }
+      ],
+      "pageInformation": {
+        "pageCount": 1,
+        "totalItemCount": 1,
+        "pageNumber": 1,
+        "pageSize": 10
+      }
+    };
+    return {products, categories, finalCustomers, finalProducts};
   }
 
 }

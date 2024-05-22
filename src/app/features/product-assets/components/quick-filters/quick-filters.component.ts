@@ -1,7 +1,7 @@
-import {ChangeDetectorRef, Component, effect, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, effect, inject, OnDestroy, OnInit} from '@angular/core';
 import {PanelModule} from "primeng/panel";
 import {ProductAssetsService} from "../../product-assets.service";
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {DropdownChangeEvent, DropdownModule} from "primeng/dropdown";
 import {Subscription} from "rxjs";
 import {ButtonModule} from "primeng/button";
@@ -12,6 +12,7 @@ import {NgOptimizedImage} from "@angular/common";
 import {TooltipModule} from "primeng/tooltip";
 import {IProductDropDown} from "@shared/models/product-dropdown.interface";
 import {IFinalCustomerDropDown} from "@shared/models/final-customer-dropdown.interface";
+import {IQuickFilters} from "@shared/models/quick-filters.interface";
 
 @Component({
   selector: 'app-quick-filters',
@@ -34,13 +35,14 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   public isFinalCustomersFailed : boolean = false;
   public isFinalCustomersLoading : boolean = true;
   public selectedProduct : IProductDropDown | null = null;
+  public quickFiltersData : IQuickFilters | null = null;
   protected readonly document = document;
   private getQuickFiltersDataSubscription : Subscription = new Subscription();
 
-  constructor(private productService : ProductAssetsService, private cd : ChangeDetectorRef) {
+  constructor(private productService : ProductAssetsService) {
     const formBuilder = inject(FormBuilder);
     this.quickFilterForm = formBuilder.group({
-      product: [null, Validators.required],
+      product: [null],
       finalCustomer: [null],
       assetName: [null],
     });
@@ -48,6 +50,7 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
       this.productOptions = this.productService.productOptionsSignal();
       this.finalCustomerOptions = this.productService.finalCustomerOptions();
       this.selectedProduct = this.productService.selectedProduct();
+      this.quickFiltersData = this.productService.quickFiltersDataSignal();
       this.quickFilterForm.get('product')?.setValue(this.selectedProduct);
 
     }, {allowSignalWrites: true});
@@ -55,6 +58,8 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getQuickFiltersData();
+    console.log('this.quickFilterForm.value=', this.productService.quickFiltersDataSignal())
+
   }
 
   getQuickFiltersData() {
@@ -96,11 +101,16 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   };
 
   submitFilters() {
-    this.productService.quickFiltersDataValue = this.quickFilterForm.value;
+    this.productService.quickFiltersDataSignal.set(this.quickFilterForm.value);
+    console.log('this.quickFilterForm.value=', this.quickFilterForm.value)
   }
 
+  makeFormDisabled(formValues : IQuickFilters) : boolean {
+    const {assetName, product, finalCustomer} = formValues;
+    // Enable button if assetName or product have values
+    return !(assetName || product);
+  }
   showAdvancedSearchDialog() {
-    console.log(' this.productService.showAdvancedSearchDialog=', this.productService.showAdvancedSearchDialog())
     this.productService.showAdvancedSearchDialog.set(true);
   }
 
@@ -120,8 +130,7 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
 
   resetFilters() {
     this.quickFilterForm.reset();
-    this.productService.quickFiltersDataValue = null
-    this.productService.finalProducts.set([]);
+    this.productService.quickFiltersDataSignal.set(null);
   }
 
 

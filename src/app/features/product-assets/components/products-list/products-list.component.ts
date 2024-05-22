@@ -1,16 +1,18 @@
-import {Component, effect, OnDestroy, OnInit} from '@angular/core';
-import {of, Subscription, switchMap} from "rxjs";
+import {Component, effect, OnDestroy, OnInit, signal} from '@angular/core';
 import {ProductAssetsService} from "../../product-assets.service";
 import {TableModule} from "primeng/table";
 import {CommonModule, NgOptimizedImage} from "@angular/common";
-import {Column} from "../../../../shared/models/table-column.interface";
-import {DeepFieldPipe} from "../../../../shared/pipes/deep-field.pipe";
-import {SpeedDialModule} from "primeng/speeddial";
+import {Column} from "@shared/models/table-column.interface";
+import {DeepFieldPipe} from "@shared/pipes/deep-field.pipe";
+import {ButtonModule} from "primeng/button";
+import {IFinalProduct} from "@shared/models/final-products.interface";
+import {IQuickFilters} from "@shared/models/quick-filters.interface";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-products-list',
   standalone: true,
-  imports: [TableModule, CommonModule, NgOptimizedImage, DeepFieldPipe, SpeedDialModule],
+  imports: [TableModule, CommonModule, NgOptimizedImage, DeepFieldPipe, ButtonModule],
   templateUrl: './products-list.component.html',
   styleUrl: './products-list.component.scss'
 })
@@ -19,9 +21,11 @@ export class ProductsListComponent implements OnInit, OnDestroy {
   isProductError : boolean = false;
   isProductLoading : boolean = true;
   isProductEmpty : boolean = false;
-  products : any[] = [];
+  products = signal<IFinalProduct[]>([]);
+  quickFiltersData = signal<IQuickFilters | null>(null);
+
   productsColumns : Column[] = [];
-  private getProductFamilySubscription : Subscription = new Subscription();
+  private subscriptions : Subscription = new Subscription();
 
   constructor(private productService : ProductAssetsService) {
     this.productsColumns = [
@@ -31,76 +35,60 @@ export class ProductsListComponent implements OnInit, OnDestroy {
       {field: 'lastUpdatedOn', header: 'Last Updated'}
     ]
     effect(() => {
-      this.products = this.productService.finalProducts();
-      this.products = this.products.map((product : any) => {
-        const finalCustomers = product.fileFinalCustomers
-          ? product.fileFinalCustomers.map((fc : any) => fc.finalCustomer).join(', ')
-          : 'None';
-        return {
-          id: product.id,
-          displayName: product.displayName,
-          finalCustomer: finalCustomers, // Concatenate names or show 'None'
-          assetTypeName: product.assetType.name,
-          lastUpdatedOn: product.lastUpdatedOn
-        };
-      });
-    });
+      const quickFiltersData = this.productService.quickFiltersDataSignal();
+      if (quickFiltersData !== this.quickFiltersData()) {
+        console.log('Quick Filters Data', quickFiltersData)
+        this.quickFiltersData.set(quickFiltersData);
+        if (quickFiltersData) {
+          console.log('Quick Filters Data', quickFiltersData)
+          this.fetchFinalProducts();
+          return;
+        }
+        this.products.set([]);
+      }
+    }, {allowSignalWrites: true});
   }
 
   ngOnInit() : void {
-    this.getProductFamily();
+    if (this.productService.quickFiltersDataSignal()) {
+      this.fetchFinalProducts();
+    } else {
+      this.isProductEmpty = true;
+    }
   }
 
-  getProductFamily() {
-    this.getProductFamilySubscription = this.productService.quickFiltersData$
-      .pipe(// Use switchMap to switch to a new observable when quickFiltersData changes
-        switchMap(quickFiltersData => {
-          if (quickFiltersData) {
-            // Return the getFinalProducts observable
-            return this.productService.getProductFamily(1, 10, 'lastUpdatedOn', 'desc', quickFiltersData.product.value, quickFiltersData.assetName, quickFiltersData.finalCustomer.label);
-          }
-          // Return an empty or default observable if there is no data
-          else {
-            this.isProductError = true;
-            this.isProductLoading = false;
-            this.isProductEmpty = false;
-            return of(null); // Ensure to import `of` from 'rxjs'
-          }
 
-        }))
-      .subscribe({
-
-        next: (res) => {
-          if (res?.list?.length > 0) {
-            this.isProductSuccess = true;
-            this.isProductLoading = false;
-            this.isProductEmpty = false;
-            this.productService.finalProducts.set(res.list);
-          } else {
-            this.productService.finalProducts.set([]);
-            this.isProductEmpty = true;
-            this.isProductSuccess = false;
-            this.isProductLoading = false;
-          }
-
-
-        },
-        error: (error) => {
-          console.error('Error fetching finalProducts', error);
-          this.isProductError = true;
-          this.isProductLoading = false;
+  fetchFinalProducts() : void {
+    this.isProductLoading = true;
+    this.isProductError = false;
+    this.isProductEmpty = false;
+    const subscription = this.productService.getFinalProducts().subscribe({
+      next: res => {
+        console.log('Final Products', res)
+        if (res?.list?.length > 0) {
+          this.products.set(res.list);
+          this.isProductSuccess = true;
           this.isProductEmpty = false;
-        },
-        complete: () => {
-          this.isProductLoading = true;
+        } else {
+          this.products.set([]);
+          this.isProductEmpty = true;
+          this.isProductSuccess = false;
         }
+        this.isProductLoading = false;
+      },
+      error: error => {
+        console.error('Error fetching finalProducts', error);
+        this.isProductLoading = false;
+        this.isProductError = true;
+        this.isProductEmpty = false;
+      }
+    });
 
-      });
+    this.subscriptions.add(subscription);
   }
-
 
   ngOnDestroy() : void {
-    this.getProductFamilySubscription.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 
 }

@@ -8,7 +8,8 @@ import lodash from 'lodash';
 import {BreadcrumbModule} from "primeng/breadcrumb";
 import {IProductCatalog} from "../../../../shared/models/product-catalog.interface";
 import {DropdownModule} from "primeng/dropdown";
-import {ReactiveFormsModule} from "@angular/forms"; // Ensure lodash is installed and imported
+import {ReactiveFormsModule} from "@angular/forms";
+import {IQuickFilters} from "@shared/models/quick-filters.interface"; // Ensure lodash is installed and imported
 @Component({
   selector: 'app-advanced-search-dialog',
   standalone: true,
@@ -25,7 +26,7 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
   selectedProduct : any;
   selectedCategory : any;
   selectedSubCategory : any;
-  quickFiltersData = null;
+  quickFiltersData : IQuickFilters | null = null;
   productOptions : any = [];
   private productFamilies : IProductCatalog[] = [];
 
