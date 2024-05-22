@@ -58,14 +58,12 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getQuickFiltersData();
-    console.log('this.quickFilterForm.value=', this.productService.quickFiltersDataSignal())
 
   }
 
   getQuickFiltersData() {
     this.productService.getQuickFilterData().subscribe({
       next: ({products, categories, customers}) => {
-        console.log('products, categories, customers', products, categories, customers)
         if (products) {
           this.isProductsSuccess = true;
           this.isProductsLoading = false;
@@ -102,7 +100,6 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
 
   submitFilters() {
     this.productService.quickFiltersDataSignal.set(this.quickFilterForm.value);
-    console.log('this.quickFilterForm.value=', this.quickFilterForm.value)
   }
 
   makeFormDisabled(formValues : IQuickFilters) : boolean {

@@ -37,10 +37,8 @@ export class ProductsListComponent implements OnInit, OnDestroy {
     effect(() => {
       const quickFiltersData = this.productService.quickFiltersDataSignal();
       if (quickFiltersData !== this.quickFiltersData()) {
-        console.log('Quick Filters Data', quickFiltersData)
         this.quickFiltersData.set(quickFiltersData);
         if (quickFiltersData) {
-          console.log('Quick Filters Data', quickFiltersData)
           this.fetchFinalProducts();
           return;
         }
@@ -64,7 +62,6 @@ export class ProductsListComponent implements OnInit, OnDestroy {
     this.isProductEmpty = false;
     const subscription = this.productService.getFinalProducts().subscribe({
       next: res => {
-        console.log('Final Products', res)
         if (res?.list?.length > 0) {
           this.products.set(res.list);
           this.isProductSuccess = true;

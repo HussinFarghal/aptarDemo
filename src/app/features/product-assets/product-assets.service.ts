@@ -22,6 +22,7 @@ export class ProductAssetsService {
   public finalProducts : WritableSignal<IFinalProduct[]> = signal<IFinalProduct[]>([]);
   public showAdvancedSearchDialog : WritableSignal<boolean> = signal<boolean>(false);
   public quickFiltersDataSignal : WritableSignal<IQuickFilters | null> = signal<IQuickFilters | null>(null);
+
   constructor(private http : HttpClient) {
 
   }
@@ -84,6 +85,7 @@ export class ProductAssetsService {
       catchError(error => throwError(() => error))
     );
   }
+
   generateFinalCustomerOptions(response : ICustomer[]) {
     const options : IFinalCustomerDropDown[] = response.map((customer : ICustomer) => (
       {
