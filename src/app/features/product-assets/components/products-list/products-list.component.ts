@@ -31,7 +31,7 @@ export class ProductsListComponent implements OnInit, OnDestroy {
       {field: 'lastUpdatedOn', header: 'Last Updated'}
     ]
     effect(() => {
-      this.products = this.productService.products();
+      this.products = this.productService.finalProducts();
       this.products = this.products.map((product : any) => {
         const finalCustomers = product.fileFinalCustomers
           ? product.fileFinalCustomers.map((fc : any) => fc.finalCustomer).join(', ')
@@ -56,7 +56,7 @@ export class ProductsListComponent implements OnInit, OnDestroy {
       .pipe(// Use switchMap to switch to a new observable when quickFiltersData changes
         switchMap(quickFiltersData => {
           if (quickFiltersData) {
-            // Return the getProductFamily observable
+            // Return the getFinalProducts observable
             return this.productService.getProductFamily(1, 10, 'lastUpdatedOn', 'desc', quickFiltersData.product.value, quickFiltersData.assetName, quickFiltersData.finalCustomer.label);
           }
           // Return an empty or default observable if there is no data
@@ -75,9 +75,9 @@ export class ProductsListComponent implements OnInit, OnDestroy {
             this.isProductSuccess = true;
             this.isProductLoading = false;
             this.isProductEmpty = false;
-            this.productService.products.set(res.list);
+            this.productService.finalProducts.set(res.list);
           } else {
-            this.productService.products.set([]);
+            this.productService.finalProducts.set([]);
             this.isProductEmpty = true;
             this.isProductSuccess = false;
             this.isProductLoading = false;
@@ -86,7 +86,7 @@ export class ProductsListComponent implements OnInit, OnDestroy {
 
         },
         error: (error) => {
-          console.error('Error fetching products', error);
+          console.error('Error fetching finalProducts', error);
           this.isProductError = true;
           this.isProductLoading = false;
           this.isProductEmpty = false;

@@ -37,7 +37,7 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
       }
       this.productOptions = this.productService.productOptionsSignal();
       this.showDialog = this.productService.showAdvancedSearchDialog();
-      this.productFamilies = this.productService.productFamilies();
+      this.productFamilies = this.productService.products();
     }, {allowSignalWrites: true});
   }
 
@@ -56,7 +56,7 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
       this.productService.selectedProduct.set(null);
       this.subCategories = [];
       this.products = [];
-      this.productService.productFamilies.set([]);
+      this.productService.products.set([]);
     } else {
       // Existing logic
       switch (selected) {
@@ -71,7 +71,7 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
         case this.selectedProduct:
           this.productService.selectedProduct.set(null);
           this.selectedSubCategory = null;
-          this.productService.productFamilies.set([]);
+          this.productService.products.set([]);
           this.products = [];
           break;
       }
@@ -80,13 +80,13 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
 
   ngOnInit() : void {
     this.getProductCatalog();
-    this.products = this.productService.products();
+    this.products = this.productService.finalProducts();
     this.quickFiltersData = this.productService.quickFiltersDataSignal();
 
   }
 
   getProductCatalog() {
-    this.getProductCatalogSubscription = this.productService.getCategory().subscribe({
+    this.getProductCatalogSubscription = this.productService.getCategories().subscribe({
       next: (response) => {
         for (let category of response) {
           this.categories.push(category);
