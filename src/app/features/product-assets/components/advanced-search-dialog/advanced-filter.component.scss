@@ -2,12 +2,16 @@
   &.advanced-search-dialog {
     &.p-dialog {
       .p-dialog-content {
-        .p-treeselect-label {
+        .p-treeselect-label, .p-multiselect-label {
           display: block;
           white-space: nowrap;
           cursor: pointer;
           overflow: auto;
           text-overflow: initial;
+        }
+
+        .p-multiselect .p-multiselect-label {
+          padding: 0.35rem 0.75rem;
         }
       }
 

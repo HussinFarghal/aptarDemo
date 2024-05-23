@@ -37,6 +37,7 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
     product: null
   };
   categoriesSubscription : Subscription = new Subscription();
+  productsSubscription : Subscription = new Subscription();
   protected readonly document = document;
 
   constructor(private productService : ProductAssetsService) {
@@ -82,7 +83,19 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
         this.categories = treeNodes;
       }
     });
-
+    this.productsSubscription = this.productService.getProducts().pipe(
+      map((products : any[]) => products.map(product => (
+        {
+          label: product.name,
+          value: product.id
+        }
+      )))
+    ).subscribe({
+      next: (products : any[]) => {
+        this.products = products;
+        console.log('Products', products);
+      }
+    });
   }
 
 // Function to transform categories to TreeNode structure

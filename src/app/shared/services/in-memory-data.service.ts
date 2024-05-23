@@ -135,7 +135,7 @@ export class InMemoryDataService implements InMemoryDbService {
   }
 
   private createProduct(id : number, nameIndex : number) : IProductCatalog {
-    const name = `Product Catalog ${id}`;
+    const name = `Product Name - ${id}`;
     const displayOrder = id;
     const icon = `icon-${id}`;
     const shortDescription = `Short description for product catalog ${id}`;
