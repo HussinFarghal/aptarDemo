@@ -9,7 +9,13 @@ import {FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {TreeSelectModule} from "primeng/treeselect";
 import {ChipsModule} from "primeng/chips";
 import {MultiSelectModule} from "primeng/multiselect";
-import {IQuickFilters} from "@shared/models/quick-filters.interface"; // Ensure lodash is installed and imported
+import {IQuickFilters} from "@shared/models/quick-filters.interface";
+import {map, Subscription} from "rxjs";
+import {ICategory} from "@shared/models/category.interface"; // Ensure lodash is installed and imported
+export interface TreeNode {
+  label : string;
+  children? : TreeNode[];
+}
 @Component({
   selector: 'app-advanced-search-dialog',
   standalone: true,
@@ -18,6 +24,7 @@ import {IQuickFilters} from "@shared/models/quick-filters.interface"; // Ensure 
   templateUrl: './advanced-filter.component.html',
   styleUrl: './advanced-filter.component.scss'
 })
+
 export class AdvancedFilterComponent implements OnInit, OnDestroy {
   showDialog : boolean = false;
   formGroup : FormGroup;
@@ -29,6 +36,7 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
     finalCustomer: null,
     product: null
   };
+  categoriesSubscription : Subscription = new Subscription();
   protected readonly document = document;
 
   constructor(private productService : ProductAssetsService) {
@@ -67,9 +75,27 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() : void {
+    this.categoriesSubscription = this.productService.getCategories().pipe(
+      map(categories => this.transformCategoriesToTreeNodes(categories))
+    ).subscribe({
+      next: (treeNodes : TreeNode[]) => {
+        this.categories = treeNodes;
+        console.log('Transformed Categories', treeNodes);
+      }
+    });
 
   }
 
+// Function to transform categories to TreeNode structure
+  private transformCategoriesToTreeNodes(categories : ICategory[]) : TreeNode[] {
+    return categories.map(category => ({
+      label: category.name,
+      children: category.childCategories.map(childCategory => ({
+        label: childCategory.name,
+        children: childCategory.childCategories.length > 0 ? this.transformCategoriesToTreeNodes(childCategory.childCategories) : []
+      }))
+    }));
+  }
 
   closeDialog() {
     this.productService.showAdvancedSearchDialog.set(false);

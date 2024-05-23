@@ -44,7 +44,7 @@ export class InMemoryDataService implements InMemoryDbService {
   }
 
   createDb() {
-    const categories = this.generateCategories(10);
+    const categories = this.generateCategories(50);
     const products = this.generateProducts(300);
     const finalCustomers = this.generateCustomers(customers.length);
     const finalProducts = this.generateFinalProducts(1000);
@@ -106,11 +106,11 @@ export class InMemoryDataService implements InMemoryDbService {
   }
 
   private createCategory(id : number, total : number) : ICategory {
-    const childCategories = id < total / 2 ? this.generateChildCategories(id, total) : [];
+    const childCategories = id < total / 4 ? this.generateChildCategories(id, total) : [];
     return {
       comingSoon: Math.random() > 0.5,
       icon: `icon-${id}`,
-      parentCategoryId: id < total / 2 ? `category-${Math.floor(id / 2)}` : '',
+      parentCategoryId: id < total / 42 ? `category-${Math.floor(id / 4)}` : '',
       parentCategory: null,
       childCategories,
       productFamilies: [], // Populate with product families as needed
@@ -125,8 +125,8 @@ export class InMemoryDataService implements InMemoryDbService {
   }
 
   private generateChildCategories(parentId : number, total : number) : ICategory[] {
-    return Array.from({length: Math.floor(Math.random() * (total / 2))}, (_, index) =>
-      this.createCategory(parentId * 10 + index + 1, total)
+    return Array.from({length: Math.floor(Math.random() * (total / 4))}, (_, index) =>
+      this.createCategory(parentId * 12 + index + 4, total)
     );
   }
 
