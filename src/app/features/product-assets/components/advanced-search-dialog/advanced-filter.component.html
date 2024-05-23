@@ -1,126 +1,26 @@
 <p-dialog (onHide)="closeDialog()" [(visible)]="showDialog" [closeOnEscape]="false" [draggable]="false" [maximizable]="false"
           [modal]="true"
-          [style]="{ width: '60rem' }" header="Advanced Filters"
+          [style]="{ width: '50%' }" header="Advanced Filters"
           styleClass="advanced-search-dialog">
-  <!--  @if (subCategories.length > 0 || subCategories.length > 0 || products.length > 0) {-->
-  <!--    <ol class="breadcrumb">-->
-  <!--      @if (selectedCategory) {-->
-  <!--        <li class="breadcrumb-item">-->
-  <!--          <a>-->
-  <!--            <img [ngSrc]="selectedCategory.icon || './assets/no-image.png'" alt="" height="28" width="28">-->
-  <!--            <span>{{ selectedCategory.name }}</span>-->
-  <!--            <span *ngIf="!selectedSubCategory" (click)="clearSelected(selectedCategory)"-->
-  <!--                  class="ml-2 text-red-500 cursor-pointer">X Clear</span>-->
-  <!--          </a>-->
-  <!--        </li>-->
-  <!--      }-->
-  <!--      @if (selectedSubCategory) {-->
-  <!--        <li class="breadcrumb-item active">-->
-  <!--          <a>-->
-  <!--            <img [ngSrc]="selectedSubCategory.icon|| './assets/no-image.png'" alt="" height="28" width="28">-->
-  <!--            <span>  {{ selectedSubCategory.name }}</span>-->
-  <!--            <span *ngIf="!selectedProduct" (click)="clearSelected(selectedSubCategory)"-->
-  <!--                  class="ml-2 text-red-500 cursor-pointer">X Clear</span>-->
-  <!--          </a>-->
-  <!--        </li>-->
-  <!--      }-->
-  <!--      @if (selectedProduct) {-->
-  <!--        <li class="breadcrumb-item">-->
-  <!--          <a>-->
-  <!--            <img [ngSrc]="selectedProduct.icon || './assets/no-image.png'" alt="" height="28" width="28">-->
-  <!--            <span> {{ selectedProduct.name }}</span>-->
-  <!--            <span (click)="clearSelected(selectedProduct)" class="ml-2 text-red-500 cursor-pointer">X Clear</span>-->
-
-  <!--          </a>-->
-  <!--        </li>-->
-  <!--      }-->
-  <!--    </ol>-->
-  <!--  }-->
-  <!--  <div class="field col-12">-->
-  <!--    <label for="product">Product <span-->
-  <!--      class="text-red-500">*</span>-->
-  <!--    </label>-->
-  <!--    <p-dropdown-->
-  <!--      [lazy]="true"-->
-  <!--      [appendTo]="document.body"-->
-  <!--      dataKey="value"-->
-  <!--      [resetFilterOnHide]="true"-->
-  <!--      [showClear]="true"-->
-  <!--      [filter]="true"-->
-  <!--      filterBy="label"-->
-  <!--      optionLabel="label"-->
-  <!--      styleClass="w-full"-->
-  <!--      [options]="productOptions"-->
-  <!--      formControlName="product"-->
-  <!--      id="product"-->
-  <!--      placeholder="Select a product">-->
-  <!--    </p-dropdown>-->
-
-  <!--  </div>-->
-  <!--  &lt;!&ndash;  <h2><span>{{selectedCategory.name }} / </span><span>{{selectedSubCategory.name}} / </span><span>{{selectedProduct.name}}</span></h2>&ndash;&gt;-->
-  <!--  @if (categories && subCategories.length === 0 && products.length === 0) {-->
-  <!--    <div class="image-list">-->
-  <!--      @for (category of categories; track category.id) {-->
-  <!--        <div class="card" (click)="onSelectedCategory(category)">-->
-  <!--          <div class="icon-wrapper">-->
-  <!--            <div>-->
-  <!--              <i class="pi pi-circle text-2xl"></i>-->
-  <!--            </div>-->
-  <!--          </div>-->
-  <!--          <div class="card-body">-->
-  <!--            <div class="image-list-item-icon">-->
-  <!--              <img alt="" [ngSrc]="category.icon" height="80" width="80">-->
-  <!--            </div>-->
-  <!--            <div class="image-list-item-title">-->
-  <!--              {{ category.name }}-->
-  <!--            </div>-->
-  <!--          </div>-->
-  <!--        </div>-->
-  <!--      }-->
-  <!--    </div>-->
-  <!--  }-->
-  <!--  @if (subCategories && products.length === 0) {-->
-  <!--    <div class="image-list ">-->
-  <!--      @for (subCategory of subCategories; track subCategory.id) {-->
-  <!--        <div class="card" (click)="onSelectedSubCategory(subCategory)">-->
-  <!--          <div class="icon-wrapper">-->
-  <!--            <div>-->
-  <!--              <i class="pi pi-circle text-2xl"></i>-->
-  <!--            </div>-->
-  <!--          </div>-->
-  <!--          <div class="card-body">-->
-  <!--            <div class="image-list-item-icon">-->
-  <!--              <img alt="" [ngSrc]="subCategory.icon || './assets/no-image.png'" height="80" width="80">-->
-  <!--            </div>-->
-  <!--            <div class="image-list-item-title">-->
-  <!--              {{ subCategory.name }}-->
-  <!--            </div>-->
-  <!--          </div>-->
-  <!--        </div>-->
-  <!--      }-->
-  <!--    </div>-->
-  <!--  }-->
-  <!--  @if (products.length > 0) {-->
-  <!--    <div class="image-list">-->
-  <!--      @for (product of products; track product.id) {-->
-  <!--        <div class="card" (click)="onSelectedProduct(product)">-->
-  <!--          <div class="icon-wrapper">-->
-  <!--            <div>-->
-  <!--              <i class="pi pi-circle text-2xl"></i>-->
-  <!--            </div>-->
-  <!--          </div>-->
-  <!--          <div class="card-body">-->
-  <!--            <div class="image-list-item-icon">-->
-  <!--              <img alt="" [ngSrc]="product.icon || './assets/no-image.png'" height="80" width="80">-->
-  <!--            </div>-->
-  <!--            <div class="image-list-item-title">-->
-  <!--              {{ product.name }}-->
-  <!--            </div>-->
-  <!--          </div>-->
-  <!--        </div>-->
-  <!--      }-->
-  <!--    </div>-->
-  <!--  }-->
+  <ng-template pTemplate="content">
+    <div class="field">
+      <div class="md:col">
+        <form [formGroup]="formGroup">
+          <p-treeSelect
+            [appendTo]="document.body"
+            [options]="categories"
+            [showClear]="true"
+            containerStyleClass="w-full"
+            display="chip"
+            formControlName="selectedCategories"
+            [metaKeySelection]="false"
+            selectionMode="multiple"
+            placeholder="Select One or multiple">
+          </p-treeSelect>
+        </form>
+      </div>
+    </div>
+  </ng-template>
 
   <ng-template pTemplate="footer">
     <div class="col-auto">

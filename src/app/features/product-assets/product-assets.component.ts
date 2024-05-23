@@ -1,9 +1,9 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, effect, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {ProductAssetsService} from "./product-assets.service";
 import {QuickFiltersComponent} from "./components/quick-filters/quick-filters.component";
 import {ProductsListComponent} from "./components/products-list/products-list.component";
-import {BreadCrumbsComponent} from "../../shared/components/bread-crumbs/bread-crumbs.component";
+import {BreadCrumbsComponent} from "@shared/components/bread-crumbs/bread-crumbs.component";
 import {AdvancedFilterComponent} from "./components/advanced-search-dialog/advanced-filter.component";
 
 @Component({
@@ -15,8 +15,11 @@ import {AdvancedFilterComponent} from "./components/advanced-search-dialog/advan
   styleUrl: './product-assets.component.scss'
 })
 export class ProductAssetsComponent implements OnInit, OnDestroy {
-
+  showAdvancedSearchDialog : boolean = false;
   constructor(private productService : ProductAssetsService) {
+    effect(() => {
+      this.showAdvancedSearchDialog = this.productService.showAdvancedSearchDialog();
+    });
   }
 
   ngOnInit() : void {
