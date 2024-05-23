@@ -5,5 +5,6 @@ export const API_ENDPOINTS = {
   getCategories: () => `${API_BASE_URL}categories`,
   getProducts: () => `${API_BASE_URL}products`,
   getFinalCustomers: () => `${API_BASE_URL}finalCustomers`,
-  getFinalProducts: () => `${API_BASE_URL}finalProducts`,
+  getFinalProducts: (productName : string, assetName : string) =>
+    `${API_BASE_URL}finalProducts?productName=${productName}&assetName=${assetName}`,
 };

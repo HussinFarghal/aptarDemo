@@ -102,8 +102,8 @@ export class ProductAssetsService {
     this.finalCustomerOptions.set(options);
   }
 
-  getFinalProducts() : Observable<IFinalProducts> {
-    return this.http.get<IFinalProducts>(API_ENDPOINTS.getFinalProducts()).pipe(
+  getFinalProducts(productName : string, assetName : string) : Observable<IFinalProducts> {
+    return this.http.get<IFinalProducts>(API_ENDPOINTS.getFinalProducts(productName, assetName)).pipe(
       tap(response => this.finalProducts.set(response.list)),
       catchError(error => {
         error.source = 'getFinalProducts';

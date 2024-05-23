@@ -30,7 +30,7 @@ export class ProductsListComponent implements OnInit, OnDestroy {
 
   constructor(private productService : ProductAssetsService) {
     this.productsColumns = [
-      {field: 'displayName', header: 'Asset Name'},
+      {field: 'displayName', header: 'Display Name'},
       {field: 'finalCustomer', header: 'Final Customer'},
       {field: 'assetTypeName', header: 'Asset Type'},
       {field: 'lastUpdatedOn', header: 'Last Updated'}
@@ -65,7 +65,7 @@ export class ProductsListComponent implements OnInit, OnDestroy {
     this.isProductEmpty = false;
     this.isProductSuccess = false;
     this.products.set([]);
-    const subscription = this.productService.getFinalProducts().subscribe({
+    const subscription = this.productService.getFinalProducts('UltraFlex Nozzle', '919').subscribe({
       next: res => {
         if (res?.list?.length > 0) {
           this.products.set(res.list);

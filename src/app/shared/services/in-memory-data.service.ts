@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {InMemoryDbService} from 'angular-in-memory-web-api';
+import {InMemoryDbService, RequestInfo, ResponseOptions} from 'angular-in-memory-web-api';
 import {IProductCatalog, IProductFamilyFile} from '@shared/models/product-catalog.interface';
 import {ICategory} from '@shared/models/category.interface';
-import {ICustomer} from '@shared/models/customer.interface';
-import {IFinalProduct, IFinalProducts, IPageInformation} from "@shared/models/final-products.interface";
+import {IFinalProduct, IFinalProducts, IPageInformation} from '@shared/models/final-products.interface';
+import {ICustomer} from "@shared/models/customer.interface";
 
 const productFamilyNames : string[] = [
   'Ecolite Directional Pour Spout',
@@ -28,9 +28,11 @@ const productFamilyNames : string[] = [
   'FlowMax Handle'
 ];
 
-const finalCustomers = [
-  {name: 'Henkil', createdBy: 'brian.szwed@aptar.com'},
-  {name: 'west coast', createdBy: 'brian.szwed@aptar.com'}
+const customers : string[] = [
+  'henkin',
+  'unilever',
+  'West Coast',
+  'North Region'
 ];
 
 @Injectable({
@@ -43,12 +45,54 @@ export class InMemoryDataService implements InMemoryDbService {
 
   createDb() {
     const categories = this.generateCategories(10);
-    const products = this.generateProducts(20);
-    const finalCustomers = this.generateCustomers(50);
-    const finalProducts = this.generateFinalProducts(100);
+    const products = this.generateProducts(100);
+    const finalCustomers = this.generateCustomers(customers.length);
+    const finalProducts = this.generateFinalProducts(1000);
 
     return {products, categories, finalCustomers, finalProducts};
   }
+
+  get(reqInfo : RequestInfo) {
+    const collectionName = reqInfo.collectionName;
+    if (collectionName === 'finalProducts') {
+      const productQuery = reqInfo.query.get('productName');
+      const assetQuery = reqInfo.query.get('assetName');
+      const productName = productQuery ? productQuery[0] : '';
+      const assetName = assetQuery ? assetQuery[0] : '';
+
+      if (productName || assetName) {
+        const db = reqInfo.utils.getDb() as { finalProducts : IFinalProducts };
+        const finalProductsList = db.finalProducts.list;
+        let filteredProducts = finalProductsList.filter((product : IFinalProduct) =>
+          (productName ? product.displayName.includes(productName) : true) &&
+          (assetName ? product.displayName.includes(assetName) : true)
+        );
+
+        if (filteredProducts.length === 0 && productName) {
+          // If no products match the assetName, return products matching productName only
+          filteredProducts = finalProductsList.filter((product : IFinalProduct) =>
+            product.displayName.includes(productName)
+          );
+        }
+
+        return reqInfo.utils.createResponse$(() => {
+          return {
+            body: {list: filteredProducts},
+            status: 200
+          } as ResponseOptions;
+        });
+      } else {
+        return reqInfo.utils.createResponse$(() => {
+          return {
+            body: {list: []},
+            status: 200
+          } as ResponseOptions;
+        });
+      }
+    }
+    return undefined; // Let the default GET handle all other collections
+  }
+
 
   private generateCategories(count : number) : ICategory[] {
     return Array.from({length: count}, (_, index) => this.createCategory(index + 1, count));
@@ -80,11 +124,7 @@ export class InMemoryDataService implements InMemoryDbService {
   }
 
   private generateProducts(count : number) : IProductCatalog[] {
-    const products = [];
-    for (let i = 0; i < count; i++) {
-      products.push(this.createProduct(i + 1, i % productFamilyNames.length));
-    }
-    return products;
+    return Array.from({length: count}, (_, index) => this.createProduct(index + 1, index % productFamilyNames.length));
   }
 
   private createProduct(id : number, nameIndex : number) : IProductCatalog {
@@ -160,13 +200,13 @@ export class InMemoryDataService implements InMemoryDbService {
   }
 
   private generateCustomers(count : number) : ICustomer[] {
-    return Array.from({length: count}, (_, index) => this.createCustomer(index + 1));
+    return Array.from({length: count}, (_, index) => this.createCustomer(index));
   }
 
-  private createCustomer(id : number) : ICustomer {
+  private createCustomer(index : number) : ICustomer {
     return {
-      partnerId: `partner-${id}`,
-      finalCustomer: `Final Customer ${id}`
+      partnerId: this.generateUUID(),
+      finalCustomer: customers[index % customers.length]
     };
   }
 
@@ -183,7 +223,7 @@ export class InMemoryDataService implements InMemoryDbService {
 
   private createFinalProduct(id : number) : IFinalProduct {
     const randomNameIndex = Math.floor(Math.random() * productFamilyNames.length);
-    const randomCustomerIndex = Math.floor(Math.random() * finalCustomers.length);
+    const randomCustomerIndex = Math.floor(Math.random() * customers.length);
     return {
       displayName: `${id} - ${productFamilyNames[randomNameIndex]}.pdf`,
       mimeType: 'application/pdf',
@@ -192,7 +232,7 @@ export class InMemoryDataService implements InMemoryDbService {
       minioPrefix: `/product-${this.generateUUID()}/${productFamilyNames[randomNameIndex]}.pdf`,
       minioVersion: this.generateUUID(),
       metadata: {
-        createdBy: finalCustomers[randomCustomerIndex].createdBy,
+        createdBy: 'creator@example.com',
         createdOn: new Date().toISOString()
       },
       assetTypeGroupId: 2,
@@ -227,10 +267,10 @@ export class InMemoryDataService implements InMemoryDbService {
       partner: null,
       requestReplyFiles: null,
       productFamilyFiles: null,
-      fileFinalCustomers: this.generateFileFinalCustomers(id),
+      fileFinalCustomers: this.generateFileFinalCustomers(2, id), // Ensure we generate multiple final customers
       customerProjectFiles: null,
       fileStatus: 1,
-      createdBy: finalCustomers[randomCustomerIndex].createdBy,
+      createdBy: 'creator@example.com',
       createdOn: new Date().toISOString(),
       lastUpdatedBy: null,
       lastUpdatedOn: new Date().toISOString(),
@@ -238,14 +278,13 @@ export class InMemoryDataService implements InMemoryDbService {
     };
   }
 
-  private generateFileFinalCustomers(fileId : number) {
-    const customers = [];
-    for (let i = 0; i < 2; i++) {
-      const randomCustomerIndex = Math.floor(Math.random() * finalCustomers.length);
-      customers.push({
+  private generateFileFinalCustomers(count : number, fileId : number) {
+    return Array.from({length: count}, () => {
+      const randomCustomerIndex = Math.floor(Math.random() * customers.length);
+      return {
         fileId: this.generateUUID(),
         partnerId: this.generateUUID(),
-        finalCustomer: finalCustomers[randomCustomerIndex].name,
+        finalCustomer: customers[randomCustomerIndex],
         file: null,
         partner: null,
         createdBy: '',
@@ -253,14 +292,13 @@ export class InMemoryDataService implements InMemoryDbService {
         lastUpdatedBy: null,
         lastUpdatedOn: new Date().toISOString(),
         id: this.generateUUID()
-      });
-    }
-    return customers;
+      };
+    });
   }
 
   private generateUUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-      const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
     });
   }
