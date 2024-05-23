@@ -2,7 +2,7 @@ export interface ICategory {
   comingSoon : boolean;
   icon : string;
   parentCategoryId : string;
-  parentCategory : ICategory;
+  parentCategory : ICategory | null;
   childCategories : ICategory[];
   productFamilies : any; // Define according to what this actually includes
   name : string;

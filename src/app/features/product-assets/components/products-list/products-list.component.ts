@@ -8,18 +8,19 @@ import {ButtonModule} from "primeng/button";
 import {IFinalProduct} from "@shared/models/final-products.interface";
 import {IQuickFilters} from "@shared/models/quick-filters.interface";
 import {Subscription} from "rxjs";
+import {SkeletonModule} from "primeng/skeleton";
 
 @Component({
   selector: 'app-products-list',
   standalone: true,
-  imports: [TableModule, CommonModule, NgOptimizedImage, DeepFieldPipe, ButtonModule],
+  imports: [TableModule, CommonModule, NgOptimizedImage, DeepFieldPipe, ButtonModule, SkeletonModule],
   templateUrl: './products-list.component.html',
   styleUrl: './products-list.component.scss'
 })
 export class ProductsListComponent implements OnInit, OnDestroy {
   isProductSuccess : boolean = false;
   isProductError : boolean = false;
-  isProductLoading : boolean = true;
+  isProductLoading : boolean = false;
   isProductEmpty : boolean = false;
   products = signal<IFinalProduct[]>([]);
   quickFiltersData = signal<IQuickFilters | null>(null);
@@ -41,8 +42,10 @@ export class ProductsListComponent implements OnInit, OnDestroy {
         if (quickFiltersData) {
           this.fetchFinalProducts();
           return;
-        }
+        } else {
         this.products.set([]);
+          this.isProductEmpty = true;
+        }
       }
     }, {allowSignalWrites: true});
   }
@@ -60,6 +63,8 @@ export class ProductsListComponent implements OnInit, OnDestroy {
     this.isProductLoading = true;
     this.isProductError = false;
     this.isProductEmpty = false;
+    this.isProductSuccess = false;
+    this.products.set([]);
     const subscription = this.productService.getFinalProducts().subscribe({
       next: res => {
         if (res?.list?.length > 0) {

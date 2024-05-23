@@ -52,16 +52,22 @@ export class ProductAssetsService {
     );
   }
 
-  generateProductsOptions(response : IProductCatalog[]) {
-    const options = response.map((product : any) => (
-      {
-        label: product.productFamily.name,
-        value: product.productFamilyId,
-        categoryId: product.productFamily.categoryId
-      }));
+  generateProductsOptions(response : IProductCatalog[]) : IProductDropDown[] {
+    const options = response
+      .filter(product => product.productFamilyFiles.length > 0 && product.productFamilyFiles[0].productFamily)
+      .map(product => {
+        const productFamily = product.productFamilyFiles[0].productFamily;
+        return {
+          label: productFamily.name,
+          value: product.productFamilyFiles[0].productFamilyId,
+          categoryId: productFamily.categoryId
+        };
+      });
+
     const uniqueOptions = Array.from(new Set(options.map(a => a.value)))
       .map(value => options.find(option => option.value === value))
       .filter(option => option !== undefined) as IProductDropDown[];
+
     this.productOptionsSignal.set(uniqueOptions);
     return uniqueOptions;
   }
