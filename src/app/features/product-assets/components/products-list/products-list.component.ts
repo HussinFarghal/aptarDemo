@@ -65,7 +65,7 @@ export class ProductsListComponent implements OnInit, OnDestroy {
     this.isProductEmpty = false;
     this.isProductSuccess = false;
     this.products.set([]);
-    const subscription = this.productService.getFinalProducts('UltraFlex Nozzle', '919').subscribe({
+    const subscription = this.productService.getFinalProducts('UltraFlex Nozzle', '44').subscribe({
       next: res => {
         if (res?.list?.length > 0) {
           this.products.set(res.list);

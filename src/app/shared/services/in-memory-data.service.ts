@@ -63,17 +63,12 @@ export class InMemoryDataService implements InMemoryDbService {
       if (productName || assetName) {
         const db = reqInfo.utils.getDb() as { finalProducts : IFinalProducts };
         const finalProductsList = db.finalProducts.list;
-        let filteredProducts = finalProductsList.filter((product : IFinalProduct) =>
-          (productName ? product.displayName.includes(productName) : true) &&
-          (assetName ? product.displayName.includes(assetName) : true)
-        );
-
-        if (filteredProducts.length === 0 && productName) {
-          // If no products match the assetName, return products matching productName only
-          filteredProducts = finalProductsList.filter((product : IFinalProduct) =>
-            product.displayName.includes(productName)
-          );
-        }
+        const filteredProducts = finalProductsList.filter((product : IFinalProduct) => {
+          const [asset, ...nameParts] = product.displayName.split(' - ');
+          const name = nameParts.join(' - ').replace('.pdf', '');
+          return (productName ? name === productName : true) &&
+            (assetName ? asset.includes(assetName) : true);
+        });
 
         return reqInfo.utils.createResponse$(() => {
           return {
