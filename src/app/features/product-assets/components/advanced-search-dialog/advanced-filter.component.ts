@@ -23,7 +23,7 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
   formGroup : FormGroup;
   categories : any[] = [];
   products : any[] = [];
-  assetName : string = '';
+  assetName : string | undefined | null = '';
   quickFiltersData : IQuickFilters | null = {
     assetName: null,
     finalCustomer: null,
@@ -61,15 +61,13 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
     effect(() => {
       this.showDialog = this.productService.showAdvancedSearchDialog();
       this.quickFiltersData = this.productService.quickFiltersDataSignal();
-      console.log('this.quickFiltersData', this.quickFiltersData)
-
-      this.formGroup.get('assetName')?.setValue(this.quickFiltersData?.assetName);
+      this.assetName = this.quickFiltersData?.assetName;
+      this.formGroup.get('assetName')?.setValue(this.assetName);
     }, {allowSignalWrites: true});
   }
 
   ngOnInit() : void {
-    console.log('AdvancedFilterComponent ngOnInit')
-    console.log('this.quickFiltersData assetName', this.quickFiltersData?.assetName)
+
   }
 
 

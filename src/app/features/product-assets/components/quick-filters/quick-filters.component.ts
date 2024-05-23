@@ -109,6 +109,7 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
     // Enable button if assetName or product have values
     return !(assetName || product);
   }
+
   showAdvancedSearchDialog() {
     this.productService.showAdvancedSearchDialog.set(true);
   }
@@ -128,8 +129,14 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   }
 
   resetFilters() {
+    this.productService.quickFiltersDataSignal.set({
+      assetName: null,
+      product: null,
+      finalCustomer: null
+    });
+    this.productService.selectedProduct.set(null);
+    this.productService.finalProducts.set([]);
     this.quickFilterForm.reset();
-    this.productService.quickFiltersDataSignal.set(null);
   }
 
 
@@ -145,11 +152,14 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   onAssetNameChange(event : KeyboardEvent) {
     const inputElement = event.target as HTMLInputElement;
     if (inputElement && inputElement.value.trim().length > 0) {
+      console.log('inputElement', inputElement.value)
       this.productService.quickFiltersDataSignal.set({
         assetName: inputElement.value,
-        finalCustomer: this.quickFilterForm.get('finalCustomer')?.value,
-        product: this.quickFilterForm.get('product')?.value
+        product: null,
+        finalCustomer: null
+
       });
+      console.log('quickFiltersData', this.productService.quickFiltersDataSignal())
       this.showSearchIconsSignal.set(true);
     } else {
       this.showSearchIconsSignal.set(false);

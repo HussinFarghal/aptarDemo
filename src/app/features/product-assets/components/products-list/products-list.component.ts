@@ -37,12 +37,10 @@ export class ProductsListComponent implements OnInit, OnDestroy {
       {field: 'lastUpdatedOn', header: 'Last Updated'}
     ]
     effect(() => {
-      const quickFiltersData = this.productService.quickFiltersDataSignal();
-      if (quickFiltersData !== this.quickFiltersData()) {
-        this.quickFiltersData.set(quickFiltersData);
-        if (quickFiltersData) {
-          this.productName = quickFiltersData.product?.label || '';
-          console.log('productName', this.productName)
+      const quickFiltersData = this.productService.quickFiltersDataSignal()
+      if (quickFiltersData?.product) {
+        console.log('quickFiltersData', quickFiltersData.product)
+        this.productName = quickFiltersData.product.label || '';
           this.assetName = quickFiltersData.assetName || '';
           this.fetchFinalProducts(this.productName, this.assetName);
           return;
@@ -50,7 +48,6 @@ export class ProductsListComponent implements OnInit, OnDestroy {
         this.products.set([]);
           this.isProductEmpty = true;
         }
-      }
     }, {allowSignalWrites: true});
   }
 

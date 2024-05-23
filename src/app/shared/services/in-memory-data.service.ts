@@ -44,8 +44,8 @@ export class InMemoryDataService implements InMemoryDbService {
   }
 
   createDb() {
-    const categories = this.generateCategories(100);
-    const products = this.generateProducts(1000);
+    const categories = this.generateCategories(10);
+    const products = this.generateProducts(300);
     const finalCustomers = this.generateCustomers(customers.length);
     const finalProducts = this.generateFinalProducts(1000);
 
