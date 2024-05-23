@@ -78,10 +78,8 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() : void {
-    this.categoriesSubscription = this.productService.getCategories().pipe(
-      map(categories => this.transformCategoriesToTreeNodes(categories))
-    ).subscribe({
-      next: (treeNodes : TreeNode[]) => {
+    this.categoriesSubscription = this.productService.getCategories().subscribe({
+      next: (treeNodes : TreeNode[] | ICategory[]) => {
         this.categories = treeNodes;
       }
     });
@@ -109,13 +107,5 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
   }
 
 // Function to transform categories to TreeNode structure
-  private transformCategoriesToTreeNodes(categories : ICategory[]) : TreeNode[] {
-    return categories.map(category => ({
-      label: category.name,
-      children: category.childCategories.map(childCategory => ({
-        label: childCategory.name,
-        children: childCategory.childCategories.length > 0 ? this.transformCategoriesToTreeNodes(childCategory.childCategories) : []
-      }))
-    }));
-  }
+
 }

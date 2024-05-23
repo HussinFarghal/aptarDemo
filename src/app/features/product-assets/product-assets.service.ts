@@ -9,6 +9,7 @@ import {IProductDropDown} from "@shared/models/product-dropdown.interface";
 import {IFinalCustomerDropDown} from "@shared/models/final-customer-dropdown.interface";
 import {IFinalProduct, IFinalProducts} from "@shared/models/final-products.interface";
 import {IQuickFilters} from "@shared/models/quick-filters.interface";
+import {TreeNode} from "./components/advanced-search-dialog/advanced-filter.component";
 
 @Injectable({
   providedIn: 'root'
@@ -28,12 +29,12 @@ export class ProductAssetsService {
   }
 
 
-  getCategories() : Observable<ICategory[]> {
+  getCategories() : Observable<ICategory[] | TreeNode[]> {
     return this.http.get<ICategory[]>(API_ENDPOINTS.getCategories()).pipe(
       map((response : ICategory[]) => {
-        const filteredCategories = response.filter((product : any) => (product.parentCategory === null && product.childCategories !== null && product.icon !== null));
+        const filteredCategories = response.filter((product : any) => (product.parentCategory === null && product.childCategories !== null && product.icon !== null))
         this.categories.set(filteredCategories);
-        return filteredCategories;
+        return this.transformCategoriesToTreeNodes(filteredCategories);
       }),
       catchError(error => {
         error.source = 'getCategories';
@@ -42,6 +43,15 @@ export class ProductAssetsService {
 
   }
 
+  private transformCategoriesToTreeNodes(categories : ICategory[]) : TreeNode[] {
+    return categories.map(category => ({
+      label: category.name,
+      children: category.childCategories.map(childCategory => ({
+        label: childCategory.name,
+        children: childCategory.childCategories.length > 0 ? this.transformCategoriesToTreeNodes(childCategory.childCategories) : []
+      }))
+    }));
+  }
   getProducts() : Observable<IProductCatalog[]> {
     return this.http.get<IProductCatalog[]>(API_ENDPOINTS.getProducts()).pipe(
       tap(response => this.generateProductsOptions(response)),
@@ -82,7 +92,7 @@ export class ProductAssetsService {
       }));
   }
 
-  getQuickFilterData() : Observable<{ products : IProductCatalog[], categories : ICategory[], customers : ICustomer[] }> {
+  getQuickFilterData() : Observable<{ products : IProductCatalog[], categories : ICategory[] | TreeNode[], customers : ICustomer[] }> {
     return forkJoin({
       products: this.getProducts(),
       categories: this.getCategories(),
