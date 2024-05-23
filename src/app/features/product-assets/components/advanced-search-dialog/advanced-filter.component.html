@@ -1,16 +1,16 @@
 <p-dialog (onHide)="closeDialog()" [(visible)]="showDialog" [closeOnEscape]="false" [draggable]="false" [maximizable]="false"
           [modal]="true"
-          [style]="{ width: '60%' }" header="Advanced Filters"
+          [style]="{ width: '1200px' }" header="Filter Asset Name"
           styleClass="advanced-search-dialog">
   <ng-template pTemplate="content">
     <div class="field grid">
-      <div class="md:col-4">
+      <div class="md:col-2">
         <form [formGroup]="formGroup">
           <label for="asset-name">Asset Name</label>
           <input [size]="4" class="w-full" formControlName="assetName" id="asset-name" pInputText readonly value="">
         </form>
       </div>
-      <div class="md:col-4">
+      <div class="md:col-5">
         <form [formGroup]="formGroup">
           <label for="categories">Categories</label>
           <p-treeSelect
@@ -28,13 +28,13 @@
           </p-treeSelect>
         </form>
       </div>
-      <div class="md:col-4">
+      <div class="md:col-5">
         <form [formGroup]="formGroup">
           <label for="selectedProducts">Products</label>
           <p-multiSelect
             display="chip"
             [appendTo]="document.body"
-            [className]="'w-full'"
+            styleClass="w-full"
             [options]="products"
             formControlName="selectedProducts"
             id="selectedProducts"

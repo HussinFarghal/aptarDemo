@@ -80,7 +80,6 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
     ).subscribe({
       next: (treeNodes : TreeNode[]) => {
         this.categories = treeNodes;
-        console.log('Transformed Categories', treeNodes);
       }
     });
 
@@ -102,5 +101,6 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() : void {
+    this.categoriesSubscription.unsubscribe();
   }
 }

@@ -2,83 +2,12 @@
   &.advanced-search-dialog {
     &.p-dialog {
       .p-dialog-content {
-        background: #f8f8f8;
-        padding: 2rem 1.5rem 2rem 1.5rem;
-
-        .breadcrumb {
-          border-radius: 8px;
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          margin-top: 0;
-          margin-bottom: 8px;
-          list-style: none;
-          padding: 12px 4px;
-          box-shadow: 0 .5rem 1rem #19191926;
-
-          .breadcrumb-item {
-            margin-left: 8px;
-          }
-
-          a {
-            display: flex;
-            align-items: end;
-            text-decoration: none;
-            color: #559c8b;
-          }
-        }
-
-        .image-list {
-          display: grid;
-          gap: 2rem;
-          grid-template-columns: repeat(auto-fit, 200px [col-start]);
-
-          .card {
-            width: 13rem !important;
-            height: 13rem !important;
-            cursor: pointer;
-            color: #7894b4;
-            box-shadow: 0 4px 24px #0000001a !important;
-            border: none;
-            transition: all .3s ease-in-out, background 0s, color 0s, border-color 0s;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-            word-wrap: break-word;
-            background-color: #fff;
-            background-clip: border-box;
-            border-radius: 8px;
-            text-align: right;
-
-            .icon-wrapper {
-              margin: 10px 9px 0 0;
-              color: #559c8b;
-            }
-
-            .card-body {
-              flex: 1 1 auto;
-              padding: 1rem;
-              text-align: center;
-
-              .image-list-item-icon {
-                img {
-                  width: 80px;
-                  height: 80px;
-                }
-              }
-
-              .image-list-item-title {
-                margin-top: 1.5rem;
-
-                &:after {
-                  display: block;
-                  clear: both;
-                  content: "";
-                }
-              }
-            }
-          }
+        .p-treeselect-label {
+          display: block;
+          white-space: nowrap;
+          cursor: pointer;
+          overflow: auto;
+          text-overflow: initial;
         }
       }
 
