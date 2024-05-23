@@ -11,11 +11,13 @@ import {ChipsModule} from "primeng/chips";
 import {MultiSelectModule} from "primeng/multiselect";
 import {IQuickFilters} from "@shared/models/quick-filters.interface";
 import {map, Subscription} from "rxjs";
-import {ICategory} from "@shared/models/category.interface"; // Ensure lodash is installed and imported
+import {ICategory} from "@shared/models/category.interface";
+import {IProductCatalog} from "@shared/models/product-catalog.interface"; // Ensure lodash is installed and imported
 export interface TreeNode {
   label : string;
   children? : TreeNode[];
 }
+
 @Component({
   selector: 'app-advanced-search-dialog',
   standalone: true,
@@ -84,18 +86,26 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
       }
     });
     this.productsSubscription = this.productService.getProducts().pipe(
-      map((products : any[]) => products.map(product => (
+      map((products : IProductCatalog[]) => products.map(product => (
         {
           label: product.name,
           value: product.id
         }
       )))
     ).subscribe({
-      next: (products : any[]) => {
+      next: (products : { label : string; value : string; }[]) => {
         this.products = products;
         console.log('Products', products);
       }
     });
+  }
+
+  closeDialog() {
+    this.productService.showAdvancedSearchDialog.set(false);
+  }
+
+  ngOnDestroy() : void {
+    this.categoriesSubscription.unsubscribe();
   }
 
 // Function to transform categories to TreeNode structure
@@ -107,13 +117,5 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
         children: childCategory.childCategories.length > 0 ? this.transformCategoriesToTreeNodes(childCategory.childCategories) : []
       }))
     }));
-  }
-
-  closeDialog() {
-    this.productService.showAdvancedSearchDialog.set(false);
-  }
-
-  ngOnDestroy() : void {
-    this.categoriesSubscription.unsubscribe();
   }
 }
