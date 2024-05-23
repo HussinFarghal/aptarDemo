@@ -44,8 +44,8 @@ export class InMemoryDataService implements InMemoryDbService {
   }
 
   createDb() {
-    const categories = this.generateCategories(10);
-    const products = this.generateProducts(100);
+    const categories = this.generateCategories(100);
+    const products = this.generateProducts(1000);
     const finalCustomers = this.generateCustomers(customers.length);
     const finalProducts = this.generateFinalProducts(1000);
 
@@ -63,12 +63,24 @@ export class InMemoryDataService implements InMemoryDbService {
       if (productName || assetName) {
         const db = reqInfo.utils.getDb() as { finalProducts : IFinalProducts };
         const finalProductsList = db.finalProducts.list;
-        const filteredProducts = finalProductsList.filter((product : IFinalProduct) => {
+
+        // Step 1: Exact match filtering
+        let filteredProducts = finalProductsList.filter((product : IFinalProduct) => {
           const [asset, ...nameParts] = product.displayName.split(' - ');
           const name = nameParts.join(' - ').replace('.pdf', '');
           return (productName ? name === productName : true) &&
-            (assetName ? asset.includes(assetName) : true);
+            (assetName ? asset === assetName : true);
         });
+
+        // Step 2: Partial match filtering if no exact matches found
+        if (filteredProducts.length === 0 && assetName) {
+          filteredProducts = finalProductsList.filter((product : IFinalProduct) => {
+            const [asset, ...nameParts] = product.displayName.split(' - ');
+            const name = nameParts.join(' - ').replace('.pdf', '');
+            return (productName ? name === productName : true) &&
+              (assetName ? asset.includes(assetName) : true);
+          });
+        }
 
         return reqInfo.utils.createResponse$(() => {
           return {

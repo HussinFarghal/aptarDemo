@@ -24,7 +24,8 @@ export class ProductsListComponent implements OnInit, OnDestroy {
   isProductEmpty : boolean = false;
   products = signal<IFinalProduct[]>([]);
   quickFiltersData = signal<IQuickFilters | null>(null);
-
+  productName : string = '';
+  assetName : string = '';
   productsColumns : Column[] = [];
   private subscriptions : Subscription = new Subscription();
 
@@ -40,7 +41,10 @@ export class ProductsListComponent implements OnInit, OnDestroy {
       if (quickFiltersData !== this.quickFiltersData()) {
         this.quickFiltersData.set(quickFiltersData);
         if (quickFiltersData) {
-          this.fetchFinalProducts();
+          this.productName = quickFiltersData.product?.label || '';
+          console.log('productName', this.productName)
+          this.assetName = quickFiltersData.assetName || '';
+          this.fetchFinalProducts(this.productName, this.assetName);
           return;
         } else {
         this.products.set([]);
@@ -52,20 +56,20 @@ export class ProductsListComponent implements OnInit, OnDestroy {
 
   ngOnInit() : void {
     if (this.productService.quickFiltersDataSignal()) {
-      this.fetchFinalProducts();
+      this.fetchFinalProducts(this.productName, this.assetName);
     } else {
       this.isProductEmpty = true;
     }
   }
 
 
-  fetchFinalProducts() : void {
+  fetchFinalProducts(productName : string, assetName : string) : void {
     this.isProductLoading = true;
     this.isProductError = false;
     this.isProductEmpty = false;
     this.isProductSuccess = false;
     this.products.set([]);
-    const subscription = this.productService.getFinalProducts('UltraFlex Nozzle', '44').subscribe({
+    const subscription = this.productService.getFinalProducts(productName, assetName).subscribe({
       next: res => {
         if (res?.list?.length > 0) {
           this.products.set(res.list);
