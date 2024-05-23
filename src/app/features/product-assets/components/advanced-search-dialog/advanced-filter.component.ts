@@ -7,12 +7,14 @@ import {BreadcrumbModule} from "primeng/breadcrumb";
 import {DropdownModule} from "primeng/dropdown";
 import {FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {TreeSelectModule} from "primeng/treeselect";
-import {ChipsModule} from "primeng/chips"; // Ensure lodash is installed and imported
+import {ChipsModule} from "primeng/chips";
+import {MultiSelectModule} from "primeng/multiselect";
+import {IQuickFilters} from "@shared/models/quick-filters.interface"; // Ensure lodash is installed and imported
 @Component({
   selector: 'app-advanced-search-dialog',
   standalone: true,
   imports: [DialogModule, ButtonModule, NgOptimizedImage, CommonModule,
-    BreadcrumbModule, DropdownModule, ReactiveFormsModule, TreeSelectModule, ChipsModule],
+    BreadcrumbModule, DropdownModule, ReactiveFormsModule, TreeSelectModule, ChipsModule, MultiSelectModule],
   templateUrl: './advanced-filter.component.html',
   styleUrl: './advanced-filter.component.scss'
 })
@@ -20,11 +22,20 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
   showDialog : boolean = false;
   formGroup : FormGroup;
   categories : any[] = [];
+  products : any[] = [];
+  assetName : string = '';
+  quickFiltersData : IQuickFilters | null = {
+    assetName: null,
+    finalCustomer: null,
+    product: null
+  };
   protected readonly document = document;
 
   constructor(private productService : ProductAssetsService) {
 
     this.formGroup = new FormGroup({
+      assetName: new FormControl(),
+      selectedProducts: new FormControl(),
       selectedCategories: new FormControl(),
     });
 
@@ -49,17 +60,16 @@ export class AdvancedFilterComponent implements OnInit, OnDestroy {
     ];
     effect(() => {
       this.showDialog = this.productService.showAdvancedSearchDialog();
+      this.quickFiltersData = this.productService.quickFiltersDataSignal();
+      console.log('this.quickFiltersData', this.quickFiltersData)
+
+      this.formGroup.get('assetName')?.setValue(this.quickFiltersData?.assetName);
     }, {allowSignalWrites: true});
   }
 
   ngOnInit() : void {
-    console.log(Array.isArray(this.categories)); // Should log true
-    console.log(this.categories);
-    // Verify each child array
-    this.categories.forEach(category => {
-      console.log('Is children an array?', Array.isArray(category.children));
-      console.log('Children:', category.children);
-    });
+    console.log('AdvancedFilterComponent ngOnInit')
+    console.log('this.quickFiltersData assetName', this.quickFiltersData?.assetName)
   }
 
 

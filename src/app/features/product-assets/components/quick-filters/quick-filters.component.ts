@@ -145,6 +145,11 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   onAssetNameChange(event : KeyboardEvent) {
     const inputElement = event.target as HTMLInputElement;
     if (inputElement && inputElement.value.trim().length > 0) {
+      this.productService.quickFiltersDataSignal.set({
+        assetName: inputElement.value,
+        finalCustomer: this.quickFilterForm.get('finalCustomer')?.value,
+        product: this.quickFilterForm.get('product')?.value
+      });
       this.showSearchIconsSignal.set(true);
     } else {
       this.showSearchIconsSignal.set(false);

@@ -1,22 +1,42 @@
 <p-dialog (onHide)="closeDialog()" [(visible)]="showDialog" [closeOnEscape]="false" [draggable]="false" [maximizable]="false"
           [modal]="true"
-          [style]="{ width: '50%' }" header="Advanced Filters"
+          [style]="{ width: '60%' }" header="Advanced Filters"
           styleClass="advanced-search-dialog">
   <ng-template pTemplate="content">
-    <div class="field">
-      <div class="md:col">
+    <div class="field grid">
+      <div class="md:col-4">
         <form [formGroup]="formGroup">
+          <label for="asset-name">Asset Name</label>
+          <input [size]="4" class="w-full" formControlName="assetName" id="asset-name" pInputText readonly value="">
+        </form>
+      </div>
+      <div class="md:col-4">
+        <form [formGroup]="formGroup">
+          <label for="categories">Categories</label>
           <p-treeSelect
             [appendTo]="document.body"
+            [className]="'w-full'"
+            [metaKeySelection]="false"
             [options]="categories"
             [showClear]="true"
             containerStyleClass="w-full"
             display="chip"
             formControlName="selectedCategories"
-            [metaKeySelection]="false"
-            selectionMode="multiple"
-            placeholder="Select One or multiple">
+            id="categories"
+            placeholder="Select One or multiple"
+            selectionMode="multiple">
           </p-treeSelect>
+        </form>
+      </div>
+      <div class="md:col-4">
+        <form [formGroup]="formGroup">
+          <label for="selectedProducts">Products</label>
+          <p-multiSelect
+            [options]="products"
+            formControlName="selectedProducts"
+            id="selectedProducts"
+            optionLabel="name"
+            placeholder="Select Product or multiple"/>
         </form>
       </div>
     </div>
