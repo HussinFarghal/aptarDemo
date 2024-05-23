@@ -1,0 +1,48 @@
+// Define the keyframes for wiggle
+@keyframes wiggle {
+  0%, 100% {
+    transform: rotate(-5deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+}
+
+// Define the keyframes for shake
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+}
+
+// Define the keyframes for scale
+@keyframes scale {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+// Combine the animations
+.pi.pi-search-plus.mx-1 {
+  display: inline-block; // Ensures the element can be transformed
+  animation: wiggle 600ms ease-in-out alternate,
+  shake 800ms ease-in-out;
+  animation-iteration-count: 1; // Runs the animation sequence for 2 iterations (total of 3 seconds)
+}
+
+// Optional: Add a smooth transition when the animations start or end
+.pi.pi-search-plus.mx-1:hover {
+  animation-play-state: paused; // Pause the animation on hover for better UX
+}

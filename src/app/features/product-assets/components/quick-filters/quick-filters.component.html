@@ -48,15 +48,21 @@
           </p-dropdown>
         </div>
         <div class="field col-12 md:col-3">
-          <label for="asset-name">Asset Name</label> <i class="pi pi-info-circle text-xs mx-1"></i> <span class="text-xs text-gray-500">Require select finalProducts from Categories</span>
-          <input (change)="onAssetNameChange($event)" pKeyFilter="alphanum" class="w-full" pInputText formControlName="assetName"
+          <div class="flex justify-content-between">
+            <label class="mb-2" for="asset-name">Asset Name</label>
+            @if (showSearchIcons) {
+              <i (click)="showAdvancedSearchDialog()" pTooltip="Filter asset name" class="pi pi-search-plus mx-1 cursor-pointer"></i>
+            }
+          </div>
+
+          <input (keyup)="onAssetNameChange($event)" pKeyFilter="alphanum" class="w-full" pInputText formControlName="assetName"
                  id="asset-name"
                  placeholder="Enter Asset Name"/>
         </div>
         <div class="col xl:justify-content-end flex align-items-center">
-          <p-button [disabled]="makeFormDisabled(quickFilterForm.value)" (click)="submitFilters()" type="button"
+          <p-button label="Apply" [disabled]="makeFormDisabled(quickFilterForm.value)" (click)="submitFilters()" type="button"
                     styleClass="bg-primary border-primary-500 px-3 py-2 text-base border-1 border-solid border-round cursor-pointer transition-all transition-duration-200 hover:bg-primary-600 hover:border-primary-600 active:bg-primary-700 active:border-primary-700">
-            Apply
+
           </p-button>
           <p-button (click)="resetFilters()" label="Clear Filters" [link]="true"></p-button>
         </div>

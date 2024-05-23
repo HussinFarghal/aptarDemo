@@ -1,4 +1,4 @@
-import {Component, effect, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, effect, inject, OnDestroy, OnInit, signal} from '@angular/core';
 import {PanelModule} from "primeng/panel";
 import {ProductAssetsService} from "../../product-assets.service";
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
@@ -36,6 +36,8 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   public isFinalCustomersLoading : boolean = true;
   public selectedProduct : IProductDropDown | null = null;
   public quickFiltersData : IQuickFilters | null = null;
+  public showSearchIcons : boolean = false;
+  public showSearchIconsSignal = signal(false);
   protected readonly document = document;
   private getQuickFiltersDataSubscription : Subscription = new Subscription();
 
@@ -52,7 +54,7 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
       this.selectedProduct = this.productService.selectedProduct();
       this.quickFiltersData = this.productService.quickFiltersDataSignal();
       this.quickFilterForm.get('product')?.setValue(this.selectedProduct);
-
+      this.showSearchIcons = this.showSearchIconsSignal();
     }, {allowSignalWrites: true});
   }
 
@@ -140,11 +142,12 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   }
 
 
-  onAssetNameChange(event : Event) {
-    if (event) {
-      this.productService.showAdvancedSearchDialog.set(true);
+  onAssetNameChange(event : KeyboardEvent) {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement && inputElement.value.trim().length > 0) {
+      this.showSearchIconsSignal.set(true);
     } else {
-      this.productService.showAdvancedSearchDialog.set(false);
+      this.showSearchIconsSignal.set(false);
     }
   }
 }
