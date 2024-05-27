@@ -6,8 +6,11 @@
   </ng-template>
   @if (isProductsSuccess && isFinalCustomersSuccess && isCategoriesSuccess) {
     <form [formGroup]="quickFilterForm" (submit)="submitFilters()" (reset)="resetFilters()">
-      <div class="align-items-center formgrid grid">
-        <div class="field col-12 md:col-3">
+      <div class="align-items-center formgrid grid" >
+        <div class="field col-12 md:col-3" joyrideStep="step1" [stepContent]="step1Content">
+          <ng-template #step1Content>
+            You can here find the product by searching in name and it will get data for this name.
+          </ng-template>
           <label for="product">Product
           </label>
           <p-dropdown
@@ -29,7 +32,10 @@
           </p-dropdown>
 
         </div>
-        <div class="field col-12 md:col-3">
+        <div class="field col-12 md:col-3"  joyrideStep="step2" [stepContent]="step2Content" >
+          <ng-template #step2Content>
+            This is the Final Customer drop down to select the final customer and add filters.
+          </ng-template>
           <label for="final-customer">Final Customer</label>
           <p-dropdown
             [filter]="true"
@@ -47,7 +53,10 @@
             placeholder="Select a Customer">
           </p-dropdown>
         </div>
-        <div class="field col-12 md:col-3">
+        <div class="field col-12 md:col-3" joyrideStep="step3" [stepContent]="step3Content">
+          <ng-template #step3Content>
+            Here you can type file name and when its valid you will see search for more filters here to filter asset name to relevant data
+          </ng-template>
           <div class="flex justify-content-between">
             <label class="mb-2" for="asset-name">Asset Name</label>
             @if (showSearchIcons) {
@@ -70,7 +79,7 @@
     </form>
   }
   @if (isProductsLoading && isFinalCustomersLoading && isCategoriesLoading) {
-    <div class="align-items-center formgrid grid">
+    <div class="align-items-center formgrid grid" >
       <div class="field col-12 md:col-3">
         <p-skeleton width="30%" height=".5rem" styleClass="mb-2"></p-skeleton>
         <p-skeleton width="100%" height="32px"></p-skeleton>
@@ -99,4 +108,19 @@
       </div>
     </div>
   }
+  <!-- Templates for Joyride step content -->
+  <ng-template #step1Title>Step 1</ng-template>
+  <ng-template #step1Content>
+    <p>Welcome to the tutorial!</p>
+  </ng-template>
+
+  <ng-template #step2Title>Step 2</ng-template>
+  <ng-template #step2Content>
+    <p>This is step 2 of the tour.</p>
+  </ng-template>
+
+  <ng-template #step3Title>Step 3</ng-template>
+  <ng-template #step3Content>
+    <p>This is step 3 of the tour.</p>
+  </ng-template>
 </p-panel>

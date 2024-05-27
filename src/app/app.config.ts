@@ -9,9 +9,10 @@ import {GeneralHeadersInterceptor} from "@shared/interceptors/general-headers.in
 import {environment} from "../environments/environment";
 import {HttpClientInMemoryWebApiModule} from 'angular-in-memory-web-api';
 import {InMemoryDataService} from "@shared/services/in-memory-data.service";
+import {JoyrideModule} from "ngx-joyride";
 
 const providers = [provideRouter(routes),
-  importProvidersFrom([BrowserModule, BrowserAnimationsModule, HttpClientModule]),
+  importProvidersFrom([BrowserModule, BrowserAnimationsModule, HttpClientModule, JoyrideModule.forRoot()]),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: GeneralHeadersInterceptor,

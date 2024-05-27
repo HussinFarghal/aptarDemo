@@ -13,11 +13,13 @@ import {TooltipModule} from "primeng/tooltip";
 import {IProductDropDown} from "@shared/models/product-dropdown.interface";
 import {IFinalCustomerDropDown} from "@shared/models/final-customer-dropdown.interface";
 import {IQuickFilters} from "@shared/models/quick-filters.interface";
+import {TourService} from "@shared/services/tour.service";
+import {JoyrideModule, JoyrideService} from "ngx-joyride";
 
 @Component({
   selector: 'app-quick-filters',
   standalone: true,
-  imports: [PanelModule, ReactiveFormsModule, DropdownModule, ButtonModule, InputTextModule, KeyFilterModule, SkeletonModule, NgOptimizedImage, TooltipModule],
+  imports: [PanelModule, ReactiveFormsModule, DropdownModule, ButtonModule, InputTextModule, KeyFilterModule, SkeletonModule, NgOptimizedImage, TooltipModule,JoyrideModule],
   templateUrl: './quick-filters.component.html',
   styleUrl: './quick-filters.component.scss'
 })
@@ -41,7 +43,8 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
   protected readonly document = document;
   private getQuickFiltersDataSubscription : Subscription = new Subscription();
 
-  constructor(private productService : ProductAssetsService) {
+  constructor(private productService : ProductAssetsService, private joyrideService: JoyrideService
+  ) {
     const formBuilder = inject(FormBuilder);
     this.quickFilterForm = formBuilder.group({
       product: [null],
@@ -60,6 +63,7 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getQuickFiltersData();
+    this.startTour();
 
   }
 
@@ -148,7 +152,14 @@ export class QuickFiltersComponent implements OnInit, OnDestroy {
     this.getQuickFiltersDataSubscription.unsubscribe();
   }
 
-
+  startTour() {
+    this.joyrideService.startTour({
+      steps: ['step1', 'step2', 'step3'],
+      customTexts: { prev: 'Previous', next: 'Next', done: 'Done' },
+      themeColor: '#559c8a',
+      stepDefaultPosition: 'bottom',
+    });
+  }
   onAssetNameChange(event : KeyboardEvent) {
     const inputElement = event.target as HTMLInputElement;
     if (inputElement && inputElement.value.trim().length > 0) {
