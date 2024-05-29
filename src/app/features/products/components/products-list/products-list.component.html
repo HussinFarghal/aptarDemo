@@ -1,0 +1,39 @@
+@if (isProductsLoading$()) {
+  loading...
+}
+@if (isProductsSuccess$()) {
+  <p-table [value]="products()">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+      <tr>
+        <td>{{ product.id }}</td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.categoryId }}</td>
+        <td>
+          <button pButton type="button" icon="pi pi-pencil"></button>
+          <button pButton type="button" icon="pi pi-trash"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4">No products found</td>
+      </tr>
+    </ng-template>
+  </p-table>
+}
+@if (isProductsFailed$()){
+  <p>Failed to load products</p>
+}
+@if (isProductsEmpty$() && !isProductsLoading$()) {
+  <p>No products found</p>
+}
+
+

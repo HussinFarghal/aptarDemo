@@ -20,7 +20,7 @@ const providers = [provideRouter(routes),
     }
 ];
 if (environment.useMockApi) {
-  providers.push(importProvidersFrom(HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, {passThruUnknownUrl: true, delay: 0})));
+  providers.push(importProvidersFrom(HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, {passThruUnknownUrl: true, delay:3000})));
 }
 export const appConfig : ApplicationConfig = {
 

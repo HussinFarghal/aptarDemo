@@ -1,0 +1,12 @@
+<form [formGroup]="filterForm" (ngSubmit)="onSubmit()" (reset)="resetFilters()">
+  <label>
+    Name:
+    <input formControlName="name">
+  </label>
+  <label>
+    id:
+    <input formControlName="id">
+  </label>
+  <button type="submit">Apply Filters</button>
+  <button type="button" (click)="resetFilters()">Reset</button>
+</form>
