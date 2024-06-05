@@ -196,12 +196,14 @@ export class RequestsServiceService {
           props: {
             label: 'Email',
             required: true,
-            type: 'email'
+            type: 'email',
+            pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' // Regex pattern for email validation
+
           },
           validation: {
             messages: {
               required: 'Email is required',
-              email: 'Email is not valid'
+              pattern: 'Email pattern is not valid'
             }
           }
         },
