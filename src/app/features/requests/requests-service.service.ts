@@ -141,8 +141,14 @@ export class RequestsServiceService {
             }
           }
         },
+
+      ]
+    },
+    {
+      fieldGroupClassName: 'grid',
+      fieldGroup: [
         {
-          className: 'md:col-6',
+          className: 'md:col-3',
           key: 'samplesCount',
           type: 'input',
           wrappers: ['customWrapper'],
@@ -163,7 +169,7 @@ export class RequestsServiceService {
           }
         },
         {
-          className: 'md:col-6',
+          className: 'md:col-3',
           key: 'material',
           type: 'select',
           wrappers: ['customWrapper'],
@@ -183,9 +189,10 @@ export class RequestsServiceService {
           }
         },
         {
-          className: 'md:col-6',
+          className: 'md:col-3',
           key: 'email',
           type: 'input',
+          wrappers: ['customWrapper'],
           props: {
             label: 'Email',
             required: true,
@@ -199,9 +206,10 @@ export class RequestsServiceService {
           }
         },
         {
-          className: 'md:col-6',
+          className: 'md:col-3',
           key: 'phoneNumber',
           type: 'input',
+          wrappers: ['customWrapper'],
           props: {
             label: 'Phone Number',
             required: false,

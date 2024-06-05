@@ -91,6 +91,7 @@ body {
   padding: 0.65rem 0.75rem;
   display: flex;
   width: 100%;
+
 }
 
 .p-dropdown {
@@ -108,4 +109,27 @@ body {
 
 form {
   width: 100%;
+}
+
+.field {
+  position: relative;
+
+  &.has-error {
+    input.p-inputtext,
+    textarea.p-inputtextarea,
+    select.p-dropdown {
+      border-color: #e24c4c;
+      // Additional error styles if necessary
+    }
+
+    label {
+      color: #e24c4c
+    }
+  }
+
+  .error-message {
+    color: #e24c4c;
+    font-size: 0.875em;
+    margin-top: 0.25rem;
+  }
 }

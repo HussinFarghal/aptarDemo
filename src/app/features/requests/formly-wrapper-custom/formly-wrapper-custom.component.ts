@@ -1,12 +1,14 @@
 import {Component} from '@angular/core';
-import {FieldWrapper} from '@ngx-formly/core';
-import {NgIf} from "@angular/common";
+import {FieldWrapper, FormlyModule} from '@ngx-formly/core';
+import {NgClass, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-formly-wrapper-custom',
   standalone: true,
   imports: [
-    NgIf
+    NgIf,
+    FormlyModule,
+    NgClass
   ],
   templateUrl: './formly-wrapper-custom.component.html',
   styleUrl: './formly-wrapper-custom.component.scss'

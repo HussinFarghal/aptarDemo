@@ -1,7 +1,10 @@
-<div class="field">
+<div class="field" [ngClass]="{'has-error': showError}">
   <label *ngIf="to['label']" [for]="id">
     {{ to['label'] }}
     <ng-container *ngIf="to['required']">*</ng-container>
   </label>
   <ng-container #fieldComponent></ng-container>
+  <div *ngIf="showError" class="error-message">
+    <formly-validation-message [field]="field"></formly-validation-message>
+  </div>
 </div>
