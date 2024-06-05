@@ -7,7 +7,6 @@ import {PanelModule} from 'primeng/panel';
 import {RequestsComponent} from './requests.component';
 import {RequestsRoutingModule} from "./requests-routing.module";
 import {FormlyFormFieldModule} from '@ngx-formly/primeng/form-field';
-import {FormlyWrapperCustomComponent} from "./formly-wrapper-custom/formly-wrapper-custom.component";
 import {ButtonModule} from "primeng/button";
 
 
@@ -17,9 +16,9 @@ import {ButtonModule} from "primeng/button";
     CommonModule,
     ReactiveFormsModule,
     FormlyModule.forChild({
-      wrappers: [
-        {name: 'customWrapper', component: FormlyWrapperCustomComponent},
-      ],
+      //   wrappers: [
+      //     {name: 'customWrapper', component: FormlyWrapperCustomComponent},
+      //   ],
     }), // Import FormlyModule with forRoot configuration
     FormlyPrimeNGModule,
     PanelModule,

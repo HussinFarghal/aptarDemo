@@ -1,18 +1,17 @@
 <p-panel [toggleable]="true" header="Formly form">
   <form [formGroup]="form" (ngSubmit)="onSubmit(model)">
     <div class="grid">
-      <form [formGroup]="form" (ngSubmit)="onSubmit(model)">
-        <formly-form [form]="form" [fields]="fields" [model]="model"></formly-form>
-      </form>
-    </div>
-    <div class="grid text-right">
-      <div class="col">
-        <button type="button" class="mr-3" pButton label="Reset" (click)="onReset()" [disabled]="!form.dirty"></button>
-        <button type="submit" pButton label="Submit" [disabled]="!form.valid"></button>
+      <div *ngFor="let field of fields" class="field"
+           [ngClass]="{'has-error': field.formControl?.invalid && field.formControl?.touched}">
+        <formly-field [field]="field"></formly-field>
+        <div *ngIf="field.formControl?.invalid && field.formControl?.touched" class="error-message">
+          <formly-validation-message [field]="field"></formly-validation-message>
+        </div>
       </div>
-
-
+    </div>
+    <div class="button-group">
+      <button type="submit" pButton label="Submit" [disabled]="!form.valid"></button>
+      <button type="button" pButton label="Reset" (click)="onReset()" [disabled]="!form.dirty"></button>
     </div>
   </form>
-  <pre> {{ model | json }}</pre>
 </p-panel>
