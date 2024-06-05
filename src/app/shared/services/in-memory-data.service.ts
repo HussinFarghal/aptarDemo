@@ -48,8 +48,69 @@ export class InMemoryDataService implements InMemoryDbService {
     const products = this.generateProducts(10);
     const finalCustomers = this.generateCustomers(customers.length);
     const finalProducts = this.generateFinalProducts(1000);
-
-    return {products, categories, finalCustomers, finalProducts};
+    const formlyReq = [
+      {
+        "key": "subject",
+        "type": "input",
+        "templateOptions": {
+          "label": "Subject",
+          "required": true,
+          "maxLength": 50
+        }
+      },
+      {
+        "key": "description",
+        "type": "textarea",
+        "templateOptions": {
+          "label": "Description",
+          "required": true,
+          "maxLength": 500
+        }
+      },
+      {
+        "key": "samplesCount",
+        "type": "input",
+        "templateOptions": {
+          "label": "Samples Number",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 10
+        }
+      },
+      {
+        "key": "material",
+        "type": "select",
+        "templateOptions": {
+          "label": "Material",
+          "required": true,
+          "options": [
+            {"label": "Plastic", "value": 1},
+            {"label": "Aluminum", "value": 2},
+            {"label": "Glass", "value": 3}
+          ]
+        }
+      },
+      {
+        "key": "email",
+        "type": "input",
+        "templateOptions": {
+          "label": "Email",
+          "required": true,
+          "type": "email"
+        }
+      },
+      {
+        "key": "phoneNumber",
+        "type": "input",
+        "templateOptions": {
+          "label": "Phone Number",
+          "required": false,
+          "pattern": "^[0-9]*$"
+        }
+      }
+    ]
+    return {products, categories, finalCustomers, finalProducts, formlyReq};
   }
 
   get(reqInfo : RequestInfo) {

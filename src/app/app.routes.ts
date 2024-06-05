@@ -20,6 +20,6 @@ export const routes : Routes = [
   },
   {
     path: 'requests',
-    loadComponent: () => import('./features/requests/requests.component').then(m => m.RequestsComponent)
+    loadChildren: () => import('./features/requests/requests.module').then(m => m.RequestsModule)
   }
 ];

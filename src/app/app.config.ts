@@ -10,19 +10,24 @@ import {environment} from "../environments/environment";
 import {HttpClientInMemoryWebApiModule} from 'angular-in-memory-web-api';
 import {InMemoryDataService} from "@shared/services/in-memory-data.service";
 import {JoyrideModule} from "ngx-joyride";
+import {FormlyModule} from "@ngx-formly/core";
+import {FormlyPrimeNGModule} from "@ngx-formly/primeng";
 
 const providers = [provideRouter(routes),
-  importProvidersFrom([BrowserModule, BrowserAnimationsModule, HttpClientModule, JoyrideModule.forRoot()]),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: GeneralHeadersInterceptor,
-      multi: true
-    }
+  importProvidersFrom([BrowserModule, BrowserAnimationsModule, HttpClientModule, JoyrideModule.forRoot(), FormlyModule.forRoot(), FormlyPrimeNGModule]),
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: GeneralHeadersInterceptor,
+    multi: true
+  }
 ];
 if (environment.useMockApi) {
-  providers.push(importProvidersFrom(HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, {passThruUnknownUrl: true, delay:3000})));
+  providers.push(importProvidersFrom(HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, {
+    passThruUnknownUrl: true,
+    delay: 2000
+  })));
 }
-export const appConfig : ApplicationConfig = {
+export const appConfig: ApplicationConfig = {
 
   providers: providers,
 };

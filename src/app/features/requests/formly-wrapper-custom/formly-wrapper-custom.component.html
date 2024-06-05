@@ -1,0 +1,7 @@
+<div class="field">
+  <label *ngIf="to['label']" [for]="id">
+    {{ to['label'] }}
+    <ng-container *ngIf="to['required']">*</ng-container>
+  </label>
+  <ng-container #fieldComponent></ng-container>
+</div>
