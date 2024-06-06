@@ -5,6 +5,18 @@ import {Injectable} from '@angular/core';
   providedIn: 'root',
 })
 export class RequestsService {
+  // {
+  //           className: 'md:col-3',
+  //           key: 'email',
+  //           type: 'input',
+  //           wrappers: ['customWrapper'],
+  //           props: {
+  //             label: 'Email',
+  //             required: true,
+  //             type: 'email',
+  //             pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' // Regex pattern for email validation
+  //
+  //           }
   fields: FormlyFieldConfig[] = [
     {
       key: 'colorType',
