@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {RequestsServiceService} from './requests-service.service';
 import {FormlyFieldConfig,} from '@ngx-formly/core';
+import {RequestsService} from "./requests-service.service";
 
 
 @Component({
@@ -15,7 +15,7 @@ export class RequestsComponent implements OnInit {
   model = {};
   fields: FormlyFieldConfig[] = [];
 
-  constructor(private requestsService: RequestsServiceService) {
+  constructor(private requestsService: RequestsService) {
   }
 
   ngOnInit(): void {
