@@ -6,7 +6,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {BrowserModule} from "@angular/platform-browser";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {GeneralHeadersInterceptor} from "@shared/interceptors/general-headers.interceptor";
-import {environment} from "../environments/environment";
+import {environment} from "@env/environment";
 import {HttpClientInMemoryWebApiModule} from 'angular-in-memory-web-api';
 import {InMemoryDataService} from "@shared/services/in-memory-data.service";
 import {JoyrideModule} from "ngx-joyride";
@@ -24,7 +24,7 @@ const providers = [provideRouter(routes),
 if (environment.useMockApi) {
   providers.push(importProvidersFrom(HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, {
     passThruUnknownUrl: true,
-    delay: 2000
+    delay: 0,
   })));
 }
 export const appConfig: ApplicationConfig = {

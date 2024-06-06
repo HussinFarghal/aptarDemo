@@ -1,18 +1,17 @@
 <p-panel [toggleable]="true" header="Formly form">
-  <form [formGroup]="form" (ngSubmit)="onSubmit(model)">
-    <div class="grid">
-      <form [formGroup]="form" (ngSubmit)="onSubmit(model)">
-        <formly-form [form]="form" [fields]="fields" [model]="model"></formly-form>
+  <div class="grid">
+    <div class="md:col-3">
+      <form [formGroup]="formGroup">
+        <p-dropdown
+          (onChange)="onFormTypeDropDownChange($event)"
+          formControlName="selectedFormType"
+          [options]="formTypes"
+          dataKey="id"
+          optionLabel="name"
+          placeholder="Select a form type"/>
       </form>
     </div>
-    <div class="grid text-right">
-      <div class="col">
-        <button type="button" class="mr-3" pButton label="Reset" (click)="onReset()" [disabled]="!form.dirty"></button>
-        <button type="submit" pButton label="Submit" [disabled]="!form.valid"></button>
-      </div>
-
-
-    </div>
-  </form>
-  <pre> {{ model | json }}</pre>
+  </div>
+  <hr/>
+  <app-fromly-form [selectedFormType]="selectedFormType"/>
 </p-panel>

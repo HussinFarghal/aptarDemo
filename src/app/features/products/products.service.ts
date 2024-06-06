@@ -1,9 +1,9 @@
 import {computed, inject, Injectable, Injector, runInInjectionContext, signal, WritableSignal} from '@angular/core';
-import { IProduct } from "./models/product.interface";
-import { API_BASE_URL, API_ENDPOINTS } from "../../api-config";
-import { HttpClient } from "@angular/common/http";
+import {IProduct} from "./models/product.interface";
+import {API_ENDPOINTS} from "@app/api-config";
+import {HttpClient} from "@angular/common/http";
 import {catchError, map, Observable, throwError} from "rxjs";
-import { toSignal } from "@angular/core/rxjs-interop";
+import {toSignal} from "@angular/core/rxjs-interop";
 
 @Injectable({
   providedIn: 'root'

@@ -4,8 +4,9 @@ import {IProductCatalog, IProductFamilyFile} from '@shared/models/product-catalo
 import {ICategory} from '@shared/models/category.interface';
 import {IFinalProduct, IFinalProducts, IPageInformation} from '@shared/models/final-products.interface';
 import {ICustomer} from "@shared/models/customer.interface";
+import {IFormType} from "@shared/models/form-type.interface";
 
-const productFamilyNames : string[] = [
+const productFamilyNames: string[] = [
   'Ecolite Directional Pour Spout',
   'UltraFlex Nozzle',
   'PowerSpray System',
@@ -28,13 +29,15 @@ const productFamilyNames : string[] = [
   'FlowMax Handle'
 ];
 
-const customers : string[] = [
+const customers: string[] = [
   'henkin',
   'unilever',
   'West Coast',
   'North Region'
 ];
-
+//                 validators: {
+//                   validation: [ipValidator],
+//                 },
 @Injectable({
   providedIn: 'root'
 })
@@ -48,72 +51,191 @@ export class InMemoryDataService implements InMemoryDbService {
     const products = this.generateProducts(10);
     const finalCustomers = this.generateCustomers(customers.length);
     const finalProducts = this.generateFinalProducts(1000);
-    const formlyReq = [
+    const getFormsType: IFormType[] = [
       {
-        "key": "subject",
-        "type": "input",
-        "templateOptions": {
-          "label": "Subject",
-          "required": true,
-          "maxLength": 50
-        }
+        name: "From Type 1",
+        id: "1",
+        formlySchema: [
+          {
+            fieldGroupClassName: 'grid',
+            fieldGroup: [
+              {
+                className: 'md:col-6',
+                key: 'colorType',
+                type: 'radio',
+                props: {
+                  label: 'Color Type',
+                  required: true,
+                  options: [
+                    {value: 'Pantone', label: 'Pantone'},
+                    {value: 'RGB', label: 'RGB'},
+                    {value: 'HEX', label: 'HEX'},
+                    {value: 'CMYK', label: 'CMYK'},
+                  ],
+                },
+              },
+              {
+                className: 'md:col-6',
+                key: 'color',
+                type: 'input',
+                props: {
+                  type: 'color',
+                  label: 'Color Picker',
+                  required: true,
+                },
+              },
+            ],
+          },
+          {
+            fieldGroupClassName: 'grid',
+            fieldGroup: [
+              {
+                className: 'md:col-4',
+                key: 'partNumber',
+                type: 'input',
+                props: {
+                  label: 'Part Number',
+                  required: true,
+                  pattern: '^p-\\d+$',
+                  placeholder: 'e.g., p-12345',
+                },
+                validation: {
+                  messages: {
+                    pattern: 'Part number must start with "p-" and be followed by positive numbers.',
+                  },
+                },
+              },
+              {
+                className: 'md:col-4',
+                key: 'translucencePercentage',
+                type: 'input',
+                props: {
+                  type: 'number',
+                  label: 'Translucence percentage',
+                  min: 1,
+                  max: 100,
+                  required: true,
+                },
+                validation: {
+                  messages: {
+                    min: 'Number must be at least 1.',
+                    max: 'Number must be at most 100.',
+                    required: 'Number is required',
+                  },
+                },
+              },
+              {
+                key: 'ip',
+                type: 'input',
+                className: 'md:col-4',
+                props: {
+                  label: 'IP Address (using custom validation through `validators.validation` property)',
+                  required: true,
+                },
+
+              },
+              {
+                className: 'md:col-4',
+                key: 'sampleSubmission',
+                type: 'checkbox',
+                props: {
+                  label: 'Sample Submission',
+                },
+              },
+            ],
+          },
+          {
+            fieldGroupClassName: 'grid',
+            fieldGroup: [
+              {
+                className: 'md:col-12',
+                key: 'shippingAddress',
+                type: 'textarea',
+                expressions: {
+                  hide: '!model.sampleSubmission',
+                  'props.required': 'model.sampleSubmission'
+                },
+                props: {
+                  label: 'Shipping Address',
+                  maxLength: 250,
+                  rows: 3,
+                },
+              },
+            ],
+          },
+        ]
       },
       {
-        "key": "description",
-        "type": "textarea",
-        "templateOptions": {
-          "label": "Description",
-          "required": true,
-          "maxLength": 500
-        }
-      },
-      {
-        "key": "samplesCount",
-        "type": "input",
-        "templateOptions": {
-          "label": "Samples Number",
-          "type": "number",
-          "required": true,
-          "min": 1,
-          "max": 10
-        }
-      },
-      {
-        "key": "material",
-        "type": "select",
-        "templateOptions": {
-          "label": "Material",
-          "required": true,
-          "options": [
-            {"label": "Plastic", "value": 1},
-            {"label": "Aluminum", "value": 2},
-            {"label": "Glass", "value": 3}
-          ]
-        }
-      },
-      {
-        "key": "email",
-        "type": "input",
-        "templateOptions": {
-          "label": "Email",
-          "required": true,
-          "type": "email"
-        }
-      },
-      {
-        "key": "phoneNumber",
-        "type": "input",
-        "templateOptions": {
-          "label": "Phone Number",
-          "required": false,
-          "pattern": "^[0-9]*$"
-        }
+        name: "From Type 2",
+        id: "2",
+        formlySchema: [
+          {
+            "key": "subject",
+            "type": "input",
+            "templateOptions": {
+              "label": "Subject",
+              "required": true,
+              "maxLength": 50
+            }
+          },
+          {
+            "key": "description",
+            "type": "textarea",
+            "templateOptions": {
+              "label": "Description",
+              "required": true,
+              "maxLength": 500
+            }
+          },
+          {
+            "key": "samplesCount",
+            "type": "input",
+            "templateOptions": {
+              "label": "Samples Number",
+              "type": "number",
+              "required": true,
+              "min": 1,
+              "max": 10
+            }
+          },
+          {
+            "key": "material",
+            "type": "select",
+            "templateOptions": {
+              "label": "Material",
+              "required": true,
+              "options": [
+                {"label": "Plastic", "value": 1},
+                {"label": "Aluminum", "value": 2},
+                {"label": "Glass", "value": 3}
+              ]
+            }
+          },
+          {
+            "key": "email",
+            "type": "input",
+            "templateOptions": {
+              "label": "Email",
+              "required": true,
+              "type": "email"
+            }
+          },
+          {
+            "key": "phoneNumber",
+            "type": "input",
+            "templateOptions": {
+              "label": "Phone Number",
+              "required": false,
+              "pattern": "^[0-9]*$"
+            }
+          }
+        ]
       }
     ]
-    return {products, categories, finalCustomers, finalProducts, formlyReq};
+    return {products, categories, finalCustomers, finalProducts, getFormsType};
   }
 
-  get(reqInfo : RequestInfo) {
+  get(reqInfo: RequestInfo) {
     const collectionName = reqInfo.collectionName;
     if (collectionName === 'finalProducts') {
       const productQuery = reqInfo.query.get('productName');
@@ -122,11 +244,11 @@ export class InMemoryDataService implements InMemoryDbService {
       const assetName = assetQuery ? assetQuery[0] : '';
 
       if (productName || assetName) {
-        const db = reqInfo.utils.getDb() as { finalProducts : IFinalProducts };
+        const db = reqInfo.utils.getDb() as { finalProducts: IFinalProducts };
         const finalProductsList = db.finalProducts.list;
 
         // Step 1: Exact match filtering
-        let filteredProducts = finalProductsList.filter((product : IFinalProduct) => {
+        let filteredProducts = finalProductsList.filter((product: IFinalProduct) => {
           const [asset, ...nameParts] = product.displayName.split(' - ');
           const name = nameParts.join(' - ').replace('.pdf', '');
           return (productName ? name === productName : true) &&
@@ -135,7 +257,7 @@ export class InMemoryDataService implements InMemoryDbService {
 
         // Step 2: Partial match filtering if no exact matches found
         if (filteredProducts.length === 0 && assetName) {
-          filteredProducts = finalProductsList.filter((product : IFinalProduct) => {
+          filteredProducts = finalProductsList.filter((product: IFinalProduct) => {
             const [asset, ...nameParts] = product.displayName.split(' - ');
             const name = nameParts.join(' - ').replace('.pdf', '');
             return (productName ? name === productName : true) &&
@@ -162,11 +284,11 @@ export class InMemoryDataService implements InMemoryDbService {
   }
 
 
-  private generateCategories(count : number) : ICategory[] {
+  private generateCategories(count: number): ICategory[] {
     return Array.from({length: count}, (_, index) => this.createCategory(index + 1, count));
   }
 
-  private createCategory(id : number, total : number) : ICategory {
+  private createCategory(id: number, total: number): ICategory {
     const childCategories = id < total / 4 ? this.generateChildCategories(id, total) : [];
     return {
       comingSoon: Math.random() > 0.5,
@@ -185,17 +307,17 @@ export class InMemoryDataService implements InMemoryDbService {
     };
   }
 
-  private generateChildCategories(parentId : number, total : number) : ICategory[] {
+  private generateChildCategories(parentId: number, total: number): ICategory[] {
     return Array.from({length: Math.floor(Math.random() * (total / 4))}, (_, index) =>
       this.createCategory(parentId * 12 + index + 4, total)
     );
   }
 
-  private generateProducts(count : number) : IProductCatalog[] {
+  private generateProducts(count: number): IProductCatalog[] {
     return Array.from({length: count}, (_, index) => this.createProduct(index + 1, index % productFamilyNames.length));
   }
 
-  private createProduct(id : number, nameIndex : number) : IProductCatalog {
+  private createProduct(id: number, nameIndex: number): IProductCatalog {
     const name = `Product Name - ${id}`;
     const displayOrder = id;
     const icon = `icon-${id}`;
@@ -229,12 +351,12 @@ export class InMemoryDataService implements InMemoryDbService {
     };
   }
 
-  private generateProductFamilyFiles(productFamilyId : number, count : number, nameIndex : number) : IProductFamilyFile[] {
+  private generateProductFamilyFiles(productFamilyId: number, count: number, nameIndex: number): IProductFamilyFile[] {
     return Array.from({length: count}, (_, index) => this.createProductFamilyFile(productFamilyId, index + 1, nameIndex));
   }
 
-  private createProductFamilyFile(productFamilyId : number, fileId : number, nameIndex : number) : IProductFamilyFile {
-    const productFamily : IProductCatalog = {
+  private createProductFamilyFile(productFamilyId: number, fileId: number, nameIndex: number): IProductFamilyFile {
+    const productFamily: IProductCatalog = {
       name: productFamilyNames[nameIndex], // Use a unique name from the array
       displayOrder: productFamilyId,
       icon: `icon-${productFamilyId}`,
@@ -267,20 +389,20 @@ export class InMemoryDataService implements InMemoryDbService {
     };
   }
 
-  private generateCustomers(count : number) : ICustomer[] {
+  private generateCustomers(count: number): ICustomer[] {
     return Array.from({length: count}, (_, index) => this.createCustomer(index));
   }
 
-  private createCustomer(index : number) : ICustomer {
+  private createCustomer(index: number): ICustomer {
     return {
       partnerId: this.generateUUID(),
       finalCustomer: customers[index % customers.length]
     };
   }
 
-  private generateFinalProducts(count : number) : IFinalProducts {
+  private generateFinalProducts(count: number): IFinalProducts {
     const list = Array.from({length: count}, (_, index) => this.createFinalProduct(index + 1));
-    const pageInformation : IPageInformation = {
+    const pageInformation: IPageInformation = {
       pageCount: Math.ceil(count / 10),
       totalItemCount: count,
       pageNumber: 1,
@@ -289,7 +411,7 @@ export class InMemoryDataService implements InMemoryDbService {
     return {list, pageInformation};
   }
 
-  private createFinalProduct(id : number) : IFinalProduct {
+  private createFinalProduct(id: number): IFinalProduct {
     const randomNameIndex = Math.floor(Math.random() * productFamilyNames.length);
     const randomCustomerIndex = Math.floor(Math.random() * customers.length);
     return {
@@ -346,7 +468,7 @@ export class InMemoryDataService implements InMemoryDbService {
     };
   }
 
-  private generateFileFinalCustomers(count : number, fileId : number) {
+  private generateFileFinalCustomers(count: number, fileId: number) {
     return Array.from({length: count}, () => {
       const randomCustomerIndex = Math.floor(Math.random() * customers.length);
       return {

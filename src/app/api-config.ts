@@ -9,4 +9,5 @@ export const API_ENDPOINTS = {
   getFinalCustomers: () => `${API_BASE_URL}finalCustomers`,
   getFinalProducts: (productName : string, assetName : string) =>
     `${API_BASE_URL}finalProducts?productName=${productName}&assetName=${assetName}`,
+  getFormTypes: () => `${API_BASE_URL}getFormsType`,
 };

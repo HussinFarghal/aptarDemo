@@ -9,10 +9,12 @@ import {RequestsRoutingModule} from "./requests-routing.module";
 import {FormlyFormFieldModule} from '@ngx-formly/primeng/form-field';
 import {FormlyWrapperCustomComponent} from "./formly-wrapper-custom/formly-wrapper-custom.component";
 import {ButtonModule} from "primeng/button";
+import {FromlyFormComponent} from "@app/features/requests/fromly-form/fromly-form.component";
+import {DropdownModule} from "primeng/dropdown";
 
 
 @NgModule({
-  declarations: [RequestsComponent],
+  declarations: [RequestsComponent, FromlyFormComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -20,12 +22,14 @@ import {ButtonModule} from "primeng/button";
       wrappers: [
         {name: 'customWrapper', component: FormlyWrapperCustomComponent},
       ],
-    }), // Import FormlyModule with forRoot configuration
+    }),
     FormlyPrimeNGModule,
     PanelModule,
     RequestsRoutingModule,
     FormlyFormFieldModule,
     ButtonModule,
+    DropdownModule,
+
   ],
   exports: [RequestsComponent]
 })

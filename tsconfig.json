@@ -7,6 +7,18 @@
     "paths": {
       "@shared/*": [
         "src/app/shared/*"
+      ],
+      "@core/*": [
+        "src/app/core/*"
+      ],
+      "@env/*": [
+        "src/environments/*"
+      ],
+      "@config/*": [
+        "src/app/config/*"
+      ],
+      "@app/*": [
+        "src/app/*"
       ]
     },
     "strict": true,
