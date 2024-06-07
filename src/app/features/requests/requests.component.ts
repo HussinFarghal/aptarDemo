@@ -18,6 +18,7 @@ export class RequestsComponent implements OnInit, OnDestroy {
   isLoaded: boolean = false;
   isSuccess: boolean = false;
   isFailed: boolean = false;
+  selectedFormSubscription: Subscription = new Subscription();
   private formTypesSubscription: Subscription = new Subscription();
 
   constructor(private requestsService: RequestsService) {
@@ -28,6 +29,22 @@ export class RequestsComponent implements OnInit, OnDestroy {
       selectedFormType: new FormControl<IFormType>(this.selectedFormType)
     });
     this.getFormTypes();
+    this.selectedFormSubscription = this.requestsService.selectedFormType.subscribe({
+      next: (selectedFormType: IFormType) => {
+        this.selectedFormType = selectedFormType;
+        console.log('selectedFormType =', selectedFormType);
+      }
+    });
+  }
+
+  onFormTypeDropDownChange(event: any) {
+    this.requestsService.selectedFormType.next(event.value);
+    console.log('selectedFormType =', event.value);
+  }
+
+  ngOnDestroy(): void {
+    this.formTypesSubscription.unsubscribe();
+    this.selectedFormSubscription.unsubscribe();
   }
 
   private getFormTypes(): IFormType[] {
@@ -39,9 +56,7 @@ export class RequestsComponent implements OnInit, OnDestroy {
         this.isFailed = false;
         this.isSuccess = true;
         this.isLoaded = false;
-
-      },
-      error: (error) => {
+      }, error: (error) => {
         this.isLoaded = false;
         this.isFailed = true;
         this.isSuccess = false;
@@ -49,15 +64,6 @@ export class RequestsComponent implements OnInit, OnDestroy {
       }
     });
     return this.formTypes;
-  }
-
-  onFormTypeDropDownChange(event: any) {
-    this.requestsService.selectedFormType.next(event.value);
-    console.log('selectedFormType =', event.value);
-  }
-
-  ngOnDestroy(): void {
-    this.formTypesSubscription.unsubscribe();
   }
 
 

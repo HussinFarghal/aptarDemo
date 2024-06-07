@@ -11,6 +11,7 @@ import {FormlyWrapperCustomComponent} from "./formly-wrapper-custom/formly-wrapp
 import {ButtonModule} from "primeng/button";
 import {FromlyFormComponent} from "@app/features/requests/fromly-form/fromly-form.component";
 import {DropdownModule} from "primeng/dropdown";
+import {DividerModule} from "primeng/divider";
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import {DropdownModule} from "primeng/dropdown";
     FormlyFormFieldModule,
     ButtonModule,
     DropdownModule,
+    DividerModule,
 
   ],
   exports: [RequestsComponent]

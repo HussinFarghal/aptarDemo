@@ -2,16 +2,22 @@
   <div class="grid">
     <div class="md:col-3">
       <form [formGroup]="formGroup">
-        <p-dropdown
-          (onChange)="onFormTypeDropDownChange($event)"
-          formControlName="selectedFormType"
-          [options]="formTypes"
-          dataKey="id"
-          optionLabel="name"
-          placeholder="Select a form type"/>
+        <div class="field">
+          <label for="form-type">Form type</label>
+          <p-dropdown
+            id="form-type"
+            (onChange)="onFormTypeDropDownChange($event)"
+            formControlName="selectedFormType"
+            [options]="formTypes"
+            dataKey="id"
+            optionLabel="name"
+            placeholder="Select a form type"/>
+        </div>
       </form>
     </div>
   </div>
-  <hr/>
+  <p-divider align="center">
+    <b>{{ selectedFormType.name }}</b>
+  </p-divider>
   <app-fromly-form [selectedFormType]="selectedFormType"/>
 </p-panel>
