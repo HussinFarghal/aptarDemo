@@ -63,8 +63,10 @@ export class InMemoryDataService implements InMemoryDbService {
                 className: 'md:col-6',
                 key: 'colorType',
                 type: 'radio',
+                wrappers: ['customWrapper'],
                 props: {
                   label: 'Color Type',
+                  placeholder: 'Choose on of the following color types',
                   required: true,
                   options: [
                     {value: 'Pantone', label: 'Pantone'},
@@ -73,15 +75,22 @@ export class InMemoryDataService implements InMemoryDbService {
                     {value: 'CMYK', label: 'CMYK'},
                   ],
                 },
+                template: ""
               },
               {
                 className: 'md:col-6',
                 key: 'color',
                 type: 'input',
+                wrappers: ['customWrapper'],
                 props: {
                   type: 'color',
                   label: 'Color Picker',
                   required: true,
+                },
+                validation: {
+                  messages: {
+                    required: 'Color Picker is required',
+                  },
                 },
               },
             ],
@@ -93,6 +102,7 @@ export class InMemoryDataService implements InMemoryDbService {
                 className: 'md:col-4',
                 key: 'partNumber',
                 type: 'input',
+                wrappers: ['customWrapper'],
                 props: {
                   label: 'Part Number',
                   required: true,
@@ -109,6 +119,7 @@ export class InMemoryDataService implements InMemoryDbService {
                 className: 'md:col-4',
                 key: 'translucencePercentage',
                 type: 'input',
+                wrappers: ['customWrapper'],
                 props: {
                   type: 'number',
                   label: 'Translucence percentage',
@@ -127,10 +138,14 @@ export class InMemoryDataService implements InMemoryDbService {
               {
                 key: 'ip',
                 type: 'input',
+                wrappers: ['customWrapper'],
                 className: 'md:col-4',
                 props: {
-                  label: 'IP Address (using custom validation through `validators.validation` property)',
+                  label: 'IP Address (custom validation)',
                   required: true,
+                },
+                validators: {
+                  validation: ['ip'],
                 },
 
               },
@@ -138,6 +153,7 @@ export class InMemoryDataService implements InMemoryDbService {
                 className: 'md:col-4',
                 key: 'sampleSubmission',
                 type: 'checkbox',
+                wrappers: ['customWrapper'],
                 props: {
                   label: 'Sample Submission',
                 },
@@ -151,6 +167,7 @@ export class InMemoryDataService implements InMemoryDbService {
                 className: 'md:col-12',
                 key: 'shippingAddress',
                 type: 'textarea',
+                wrappers: ['customWrapper'],
                 expressions: {
                   hide: '!model.sampleSubmission',
                   'props.required': 'model.sampleSubmission'

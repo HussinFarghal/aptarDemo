@@ -1,8 +1,6 @@
 <form [formGroup]="formlyForm" (ngSubmit)="onSubmit(model)">
-  <div class="grid">
     <formly-form [form]="formlyForm" [fields]="selectedFormType.formlySchema" [model]="model"></formly-form>
-  </div>
-  <div class="grid text-right" *ngIf="selectedFormType.formlySchema.length !== 0">
+  <div class="grid text-right mt-4" *ngIf="selectedFormType.formlySchema.length !== 0">
     <div class="col">
       <button type="button" class="mr-3" pButton label="Reset" (click)="onReset()"
               [disabled]="!formlyForm.dirty"></button>

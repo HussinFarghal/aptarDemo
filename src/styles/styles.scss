@@ -132,4 +132,10 @@ form {
     font-size: 0.875em;
     margin-top: 0.25rem;
   }
+
+  .p-field-radiobutton {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem 0;
+  }
 }

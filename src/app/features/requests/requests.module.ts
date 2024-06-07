@@ -12,6 +12,7 @@ import {ButtonModule} from "primeng/button";
 import {FromlyFormComponent} from "@app/features/requests/fromly-form/fromly-form.component";
 import {DropdownModule} from "primeng/dropdown";
 import {DividerModule} from "primeng/divider";
+import {ipValidator, IpValidatorMessage} from "@shared/custom-validators/ip-validator.function";
 
 
 @NgModule({
@@ -20,6 +21,11 @@ import {DividerModule} from "primeng/divider";
     CommonModule,
     ReactiveFormsModule,
     FormlyModule.forChild({
+      validators: [{name: 'ip', validation: ipValidator}],
+      validationMessages: [
+        {name: 'ip', message: IpValidatorMessage},
+        {name: 'required', message: 'This field is required'},
+      ],
       wrappers: [
         {name: 'customWrapper', component: FormlyWrapperCustomComponent},
       ],
