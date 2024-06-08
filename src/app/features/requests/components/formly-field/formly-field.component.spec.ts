@@ -1,6 +1,6 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {FormlyWrapperCustomComponent} from './formly-wrapper-custom.component';
+import {FormlyWrapperCustomComponent} from './formly-field.component';
 
 describe('FormlyWrapperCustomComponent', () => {
   let component: FormlyWrapperCustomComponent;

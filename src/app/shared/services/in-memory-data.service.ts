@@ -63,10 +63,10 @@ export class InMemoryDataService implements InMemoryDbService {
                 className: 'md:col-6',
                 key: 'colorType',
                 type: 'radio',
-                wrappers: ['customWrapper'],
+                defaultValue: 'RGB',
+                wrappers: ['formly-field'],
                 props: {
                   label: 'Color Type',
-                  placeholder: 'Choose on of the following color types',
                   required: true,
                   options: [
                     {value: 'Pantone', label: 'Pantone'},
@@ -75,23 +75,19 @@ export class InMemoryDataService implements InMemoryDbService {
                     {value: 'CMYK', label: 'CMYK'},
                   ],
                 },
-                template: ""
               },
               {
                 className: 'md:col-6',
                 key: 'color',
                 type: 'input',
-                wrappers: ['customWrapper'],
+                defaultValue: null,
+                wrappers: ['formly-field'],
                 props: {
                   type: 'color',
                   label: 'Color Picker',
+                  placeholder: 'Select a color',
                   required: true,
-                },
-                validation: {
-                  messages: {
-                    required: 'Color Picker is required',
-                  },
-                },
+                }
               },
             ],
           },
@@ -102,7 +98,7 @@ export class InMemoryDataService implements InMemoryDbService {
                 className: 'md:col-4',
                 key: 'partNumber',
                 type: 'input',
-                wrappers: ['customWrapper'],
+                wrappers: ['formly-field'],
                 props: {
                   label: 'Part Number',
                   required: true,
@@ -119,7 +115,7 @@ export class InMemoryDataService implements InMemoryDbService {
                 className: 'md:col-4',
                 key: 'translucencePercentage',
                 type: 'input',
-                wrappers: ['customWrapper'],
+                wrappers: ['formly-field'],
                 props: {
                   type: 'number',
                   label: 'Translucence percentage',
@@ -129,8 +125,6 @@ export class InMemoryDataService implements InMemoryDbService {
                 },
                 validation: {
                   messages: {
-                    min: 'Number must be at least 1.',
-                    max: 'Number must be at most 100.',
                     required: 'Number is required',
                   },
                 },
@@ -138,7 +132,7 @@ export class InMemoryDataService implements InMemoryDbService {
               {
                 key: 'ip',
                 type: 'input',
-                wrappers: ['customWrapper'],
+                wrappers: ['formly-field'],
                 className: 'md:col-4',
                 props: {
                   label: 'IP Address (custom validation)',
@@ -153,7 +147,7 @@ export class InMemoryDataService implements InMemoryDbService {
                 className: 'md:col-4',
                 key: 'sampleSubmission',
                 type: 'checkbox',
-                wrappers: ['customWrapper'],
+                wrappers: ['formly-field'],
                 props: {
                   label: 'Sample Submission',
                 },
@@ -167,7 +161,7 @@ export class InMemoryDataService implements InMemoryDbService {
                 className: 'md:col-12',
                 key: 'shippingAddress',
                 type: 'textarea',
-                wrappers: ['customWrapper'],
+                wrappers: ['formly-field'],
                 expressions: {
                   hide: '!model.sampleSubmission',
                   'props.required': 'model.sampleSubmission'
@@ -175,7 +169,7 @@ export class InMemoryDataService implements InMemoryDbService {
                 props: {
                   label: 'Shipping Address',
                   maxLength: 250,
-                  rows: 3,
+                  rows: 10,
                 },
               },
             ],
@@ -187,68 +181,85 @@ export class InMemoryDataService implements InMemoryDbService {
         id: "2",
         formlySchema: [
           {
-            "key": "subject",
-            "type": "input",
-            "templateOptions": {
-              "label": "Subject",
-              "required": true,
-              "maxLength": 50
+            key: "subject",
+            type: "input",
+            wrappers: ['formly-field'],
+            props: {
+              label: "Subject",
+              required: true,
+              maxLength: 50
             }
           },
           {
-            "key": "description",
-            "type": "textarea",
-            "templateOptions": {
-              "label": "Description",
-              "required": true,
-              "maxLength": 500
+            key: "description",
+            type: "textarea",
+            wrappers: ['formly-field'],
+            props: {
+              label: "Description",
+              required: true,
+              rows: 10,
+              placeholder: "Write a description",
+              maxLength: 500
             }
           },
           {
-            "key": "samplesCount",
-            "type": "input",
-            "templateOptions": {
-              "label": "Samples Number",
-              "type": "number",
-              "required": true,
-              "min": 1,
-              "max": 10
+            key: "samplesCount",
+            type: "input",
+            wrappers: ['formly-field'],
+            props: {
+              label: "Samples Number",
+              type: "number",
+              required: true,
+              min: 1,
+              max: 10
             }
           },
           {
-            "key": "material",
-            "type": "select",
-            "templateOptions": {
-              "label": "Material",
-              "required": true,
-              "options": [
-                {"label": "Plastic", "value": 1},
-                {"label": "Aluminum", "value": 2},
-                {"label": "Glass", "value": 3}
+            key: "material",
+            type: "select",
+            wrappers: ['formly-field'],
+            defaultValue: 2,
+            props: {
+              label: "Material",
+              required: true,
+              options: [
+                {label: "Plastic", value: 1},
+                {label: "Aluminum", value: 2},
+                {label: "Glass", value: 3}
               ]
             }
           },
           {
-            "key": "email",
-            "type": "input",
-            "templateOptions": {
-              "label": "Email",
-              "required": true,
-              "type": "email"
+            key: "email",
+            type: "input",
+            wrappers: ['formly-field'],
+            props: {
+              type: "email",
+              label: "Email",
+              placeholder: "email@domain.com",
+              pattern: "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+              required: true,
+            },
+            validation: {
+              messages: {
+                pattern: 'email must be in the format your email@domain.com',
+              },
             }
           },
           {
-            "key": "phoneNumber",
-            "type": "input",
-            "templateOptions": {
-              "label": "Phone Number",
-              "required": false,
-              "pattern": "^[0-9]*$"
-            }
+            key: "phoneNumber",
+            type: "phoneMask",
+            wrappers: ['formly-field'],
+            props: {
+              label: "Phone Number",
+              placeholder: "002-02-372-353-74",
+              mask: "002-02-999-999-99",
+              required: true
+            },
           }
         ]
       }
-    ]
+    ];
     return {products, categories, finalCustomers, finalProducts, getFormsType};
   }
 
