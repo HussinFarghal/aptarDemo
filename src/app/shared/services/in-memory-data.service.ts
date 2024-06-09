@@ -152,6 +152,11 @@ export class InMemoryDataService implements InMemoryDbService {
                   },
                 },
               },
+            ],
+          },
+          {
+            fieldGroupClassName: 'grid',
+            fieldGroup: [
               {
                 className: 'md:col',
                 key: 'translucencePercentage',
@@ -193,7 +198,7 @@ export class InMemoryDataService implements InMemoryDbService {
                   label: 'Sample Submission',
                 },
               },
-            ],
+            ]
           },
           {
             fieldGroupClassName: 'grid',
