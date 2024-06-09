@@ -7,9 +7,9 @@ import {PanelModule} from 'primeng/panel';
 import {RequestsComponent} from './requests.component';
 import {RequestsRoutingModule} from "./requests-routing.module";
 import {FormlyFormFieldModule} from '@ngx-formly/primeng/form-field';
-import {FormlyFieldComponent} from "@app/features/requests/components/formly-field/formly-field.component";
+import {FormlyFieldComponent} from "@app/features/requests/components/components/formly-field/formly-field.component";
 import {ButtonModule} from "primeng/button";
-import {FromlyFormComponent} from "@app/features/requests/components/fromly-form/fromly-form.component";
+import {FromlyFormComponent} from "@app/features/requests/components/components/fromly-form/fromly-form.component";
 import {DropdownModule} from "primeng/dropdown";
 import {DividerModule} from "primeng/divider";
 import {ipValidator, IpValidatorMessage} from "@shared/custom-validators/ip-validator.function";
@@ -18,14 +18,21 @@ import {validateMax} from "@shared/generic-validators/max.function";
 import {validateMinLength} from "@shared/generic-validators/min-length.function";
 import {validateMaxLength} from "@shared/generic-validators/max-length.function";
 import {validateMin} from "@shared/generic-validators/min.function";
-import {InputPhoneMaskComponent} from "@app/features/requests/components/input-phone-mask/input-phone-mask.component";
+import {
+  InputPhoneMaskComponent
+} from "@app/features/requests/components/components/input-phone-mask/input-phone-mask.component";
 import {InputMaskModule} from "primeng/inputmask";
+import {
+  InputPartNumberMaskComponent
+} from "@app/features/requests/components/components/input-part-number-mask/input-part-number-mask.component";
 
 
 @NgModule({
-  declarations: [RequestsComponent, FromlyFormComponent, InputPhoneMaskComponent],
+  declarations: [RequestsComponent, FromlyFormComponent, InputPhoneMaskComponent, InputPartNumberMaskComponent],
   imports: [CommonModule, ReactiveFormsModule, FormlyModule.forChild({
-    validators: [{name: 'ip', validation: ipValidator}],
+    validators: [
+      {name: 'ip', validation: ipValidator}
+    ],
     validationMessages: [
       {name: 'ip', message: IpValidatorMessage},
       {name: 'required', message: validateRequired},
@@ -36,7 +43,7 @@ import {InputMaskModule} from "primeng/inputmask";
     ],
     types: [
       {name: 'phoneMask', component: InputPhoneMaskComponent},
-
+      {name: 'partNumberMask', component: InputPartNumberMaskComponent},
     ],
     wrappers: [{name: 'formly-field', component: FormlyFieldComponent}],
   }), FormlyPrimeNGModule, PanelModule, RequestsRoutingModule, FormlyFormFieldModule, ButtonModule, DropdownModule, DividerModule, InputMaskModule,

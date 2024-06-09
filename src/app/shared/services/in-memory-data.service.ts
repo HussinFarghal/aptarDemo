@@ -97,13 +97,14 @@ export class InMemoryDataService implements InMemoryDbService {
               {
                 className: 'md:col-4',
                 key: 'partNumber',
-                type: 'input',
+                type: 'partNumberMask',
                 wrappers: ['formly-field'],
                 props: {
                   label: 'Part Number',
                   required: true,
-                  pattern: '^p-\\d+$',
                   placeholder: 'e.g., p-12345',
+                  mask: 'p-99999',
+                  pattern: '^p-[0-9]+$',
                 },
                 validation: {
                   messages: {
