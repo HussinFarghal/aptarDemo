@@ -95,7 +95,7 @@ export class InMemoryDataService implements InMemoryDbService {
             fieldGroupClassName: 'grid',
             fieldGroup: [
               {
-                className: 'md:col-3',
+                className: 'md:col',
                 key: 'partNumber',
                 type: 'partNumberMask',
                 wrappers: ['formly-field'],
@@ -113,13 +113,13 @@ export class InMemoryDataService implements InMemoryDbService {
                 },
               },
               {
-                className: 'md:col-3',
-                key: 'translucencePercentage',
-                type: 'slider',
-                defaultValue: 50,
+                className: 'md:col',
+                key: 'translucenceNumber',
+                type: 'number',
+                defaultValue: 10,
                 wrappers: ['formly-field'],
                 props: {
-                  label: 'Translucence percentage',
+                  label: 'Translucence Number',
                   min: 0,
                   max: 100,
                   required: true,
@@ -130,26 +130,48 @@ export class InMemoryDataService implements InMemoryDbService {
                   },
                 },
               },
-              // {
-              //   className: 'md:col-3',
-              //   key: 'translucencePercentage',
-              //   type: 'input',
-              //   wrappers: ['formly-field'],
-              //   props: {
-              //     type: 'number',
-              //     label: 'Translucence percentage',
-              //     min: 1,
-              //     max: 100,
-              //     required: true,
-              //   },
-              //   validation: {
-              //     messages: {
-              //       required: 'Number is required',
-              //     },
-              //   },
-              // },
               {
-                className: 'md:col-3',
+                className: 'md:col',
+                key: 'translucencePercentage',
+                type: 'knob',
+                defaultValue: 10,
+                wrappers: ['formly-field'],
+                props: {
+                  label: 'Translucence Percentage',
+                  min: 0,
+                  max: 100,
+                  step: 1,
+                  valueTemplate: '{value}%', // Custom value template
+                  valueColor: '#00ff00', // Custom value color
+                  rangeColor: '#ff0000', // Custom range color
+                  required: true,
+                },
+                validation: {
+                  messages: {
+                    required: 'Number is required',
+                  },
+                },
+              },
+              {
+                className: 'md:col',
+                key: 'translucencePercentage',
+                type: 'slider',
+                defaultValue: 50,
+                wrappers: ['formly-field'],
+                props: {
+                  label: 'Translucence Number Slider',
+                  min: 0,
+                  max: 100,
+                  required: true,
+                },
+                validation: {
+                  messages: {
+                    required: 'Number is required',
+                  },
+                },
+              },
+              {
+                className: 'md:col',
                 key: 'ip',
                 type: 'input',
                 wrappers: ['formly-field'],
@@ -163,7 +185,7 @@ export class InMemoryDataService implements InMemoryDbService {
 
               },
               {
-                className: 'md:col-3',
+                className: 'md:col',
                 key: 'sampleSubmission',
                 type: 'checkbox',
                 wrappers: ['formly-field'],
