@@ -95,7 +95,7 @@ export class InMemoryDataService implements InMemoryDbService {
             fieldGroupClassName: 'grid',
             fieldGroup: [
               {
-                className: 'md:col-4',
+                className: 'md:col-3',
                 key: 'partNumber',
                 type: 'partNumberMask',
                 wrappers: ['formly-field'],
@@ -113,14 +113,14 @@ export class InMemoryDataService implements InMemoryDbService {
                 },
               },
               {
-                className: 'md:col-4',
+                className: 'md:col-3',
                 key: 'translucencePercentage',
-                type: 'input',
+                type: 'slider',
+                defaultValue: 50,
                 wrappers: ['formly-field'],
                 props: {
-                  type: 'number',
                   label: 'Translucence percentage',
-                  min: 1,
+                  min: 0,
                   max: 100,
                   required: true,
                 },
@@ -130,11 +130,29 @@ export class InMemoryDataService implements InMemoryDbService {
                   },
                 },
               },
+              // {
+              //   className: 'md:col-3',
+              //   key: 'translucencePercentage',
+              //   type: 'input',
+              //   wrappers: ['formly-field'],
+              //   props: {
+              //     type: 'number',
+              //     label: 'Translucence percentage',
+              //     min: 1,
+              //     max: 100,
+              //     required: true,
+              //   },
+              //   validation: {
+              //     messages: {
+              //       required: 'Number is required',
+              //     },
+              //   },
+              // },
               {
+                className: 'md:col-3',
                 key: 'ip',
                 type: 'input',
                 wrappers: ['formly-field'],
-                className: 'md:col-4',
                 props: {
                   label: 'IP Address (custom validation)',
                   required: true,
@@ -145,7 +163,7 @@ export class InMemoryDataService implements InMemoryDbService {
 
               },
               {
-                className: 'md:col-4',
+                className: 'md:col-3',
                 key: 'sampleSubmission',
                 type: 'checkbox',
                 wrappers: ['formly-field'],
