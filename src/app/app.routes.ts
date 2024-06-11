@@ -21,13 +21,6 @@ export const routes: Routes = [
       ),
   },
   {
-    path: "products",
-    loadComponent: () =>
-      import("./features/products/products.component").then(
-        (m) => m.ProductsComponent
-      ),
-  },
-  {
     path: "requests",
     loadChildren: () =>
       import("./features/requests/requests.module").then(
