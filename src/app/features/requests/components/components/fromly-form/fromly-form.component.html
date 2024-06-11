@@ -1,10 +1,28 @@
 <form [formGroup]="formlyForm" (ngSubmit)="onSubmit(model)">
-    <formly-form [form]="formlyForm" [fields]="selectedFormType.formlySchema" [model]="model"></formly-form>
-  <div class="grid text-right mt-4" *ngIf="selectedFormType.formlySchema.length !== 0">
+  <formly-form
+    [form]="formlyForm"
+    [fields]="selectedFormType.formSchema"
+    [model]="model"
+  ></formly-form>
+  <div
+    class="grid text-right mt-4"
+    *ngIf="selectedFormType.formSchema.length !== 0"
+  >
     <div class="col">
-      <button type="button" class="mr-3" pButton label="Reset" (click)="onReset()"
-              [disabled]="!formlyForm.dirty"></button>
-      <button type="submit" pButton label="Submit" [disabled]="!formlyForm.valid"></button>
+      <button
+        type="button"
+        class="mr-3"
+        pButton
+        label="Reset"
+        (click)="onReset()"
+        [disabled]="!formlyForm.dirty"
+      ></button>
+      <button
+        type="submit"
+        pButton
+        label="Submit"
+        [disabled]="!formlyForm.valid"
+      ></button>
     </div>
   </div>
   <pre>{{ model | json }}</pre>

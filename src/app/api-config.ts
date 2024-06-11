@@ -1,4 +1,4 @@
-import {environment} from "../environments/environment";
+import {environment} from "@env/environment";
 
 export const API_BASE_URL = environment.apiUrl;
 export const API_ENDPOINTS = {
@@ -7,7 +7,8 @@ export const API_ENDPOINTS = {
   addProducts: () => `${API_BASE_URL}addProducts`,
   deleteProducts: (id: string) => `${API_BASE_URL}deleteProducts/${id}`,
   getFinalCustomers: () => `${API_BASE_URL}finalCustomers`,
-  getFinalProducts: (productName : string, assetName : string) =>
+  getFinalProducts: (productName: string, assetName: string) =>
     `${API_BASE_URL}finalProducts?productName=${productName}&assetName=${assetName}`,
-  getFormTypes: () => `${API_BASE_URL}getFormsType`,
+  getFormTypes: () => `${API_BASE_URL}requests/types`,
+  getRequests: () => `${API_BASE_URL}requests`,
 };

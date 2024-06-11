@@ -1,5 +1,9 @@
 export const environment = {
   production: false,
-  useMockApi: true,
-  apiUrl: 'http://localhost:4200/api/' // Mock API base URL
+  mockApi: {
+    apiUrl: 'http://localhost:4200/api/', // Mock API base URL
+    isMockEnabled: true // Enable / disable mock API
+  },
+  apiUrl: 'http://localhost:44317/',
+
 };

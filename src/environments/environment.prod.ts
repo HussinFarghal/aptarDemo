@@ -1,5 +1,8 @@
 export const environment = {
   production: true,
-  useMockApi: false,
-  apiUrl: 'https://my.aptar.mobi/api/' // Real API base URL
+  mockApi: {
+    apiUrl: 'http://localhost:4200/api/', // Mock API base URL
+    isMockEnabled: true // Enable / disable mock API
+  },
+  apiUrl: 'http://localhost:44317/',
 };

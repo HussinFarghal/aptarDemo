@@ -21,10 +21,10 @@ const providers = [provideRouter(routes),
     multi: true
   }
 ];
-if (environment.useMockApi) {
+if (environment.mockApi.isMockEnabled) {
   providers.push(importProvidersFrom(HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, {
     passThruUnknownUrl: true,
-    delay: 0,
+    delay: 1000,
   })));
 }
 export const appConfig: ApplicationConfig = {
