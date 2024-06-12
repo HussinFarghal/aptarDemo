@@ -1,6 +1,6 @@
 import {environment} from "@env/environment";
 
-export const API_BASE_URL = environment.apiUrl;
+export const API_BASE_URL = environment.mockApi.isMockEnabled ? environment.mockApi.apiUrl : environment.apiUrl;
 export const API_ENDPOINTS = {
   getCategories: () => `${API_BASE_URL}categories`,
   getProducts: () => `${API_BASE_URL}products`,

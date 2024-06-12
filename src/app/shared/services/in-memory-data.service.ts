@@ -315,53 +315,16 @@ export class InMemoryDataService implements InMemoryDbService {
   }
 
   get(reqInfo: RequestInfo) {
-    const collectionName = reqInfo.collectionName;
-    if (collectionName === "finalProducts") {
-      const productQuery = reqInfo.query.get("productName");
-      const assetQuery = reqInfo.query.get("assetName");
-      const productName = productQuery ? productQuery[0] : "";
-      const assetName = assetQuery ? assetQuery[0] : "";
+    const {collectionName, query} = reqInfo;
 
-      if (productName || assetName) {
-        const db = reqInfo.utils.getDb() as { finalProducts: IFinalProducts };
-        const finalProductsList = db.finalProducts.list;
+    if (collectionName === 'requests') {
+      const urlSegments = reqInfo.url.split('/');
+      const endpoint = urlSegments[urlSegments.length - 1];
 
-        // Step 1: Exact match filtering
-        let filteredProducts = finalProductsList.filter(
-          (product: IFinalProduct) => {
-            const [asset, ...nameParts] = product.displayName.split(" - ");
-            const name = nameParts.join(" - ").replace(".pdf", "");
-            return (
-              (productName ? name === productName : true) &&
-              (assetName ? asset === assetName : true)
-            );
-          }
-        );
-
-        // Step 2: Partial match filtering if no exact matches found
-        if (filteredProducts.length === 0 && assetName) {
-          filteredProducts = finalProductsList.filter(
-            (product: IFinalProduct) => {
-              const [asset, ...nameParts] = product.displayName.split(" - ");
-              const name = nameParts.join(" - ").replace(".pdf", "");
-              return (
-                (productName ? name === productName : true) &&
-                (assetName ? asset.includes(assetName) : true)
-              );
-            }
-          );
-        }
-
+      if (endpoint === 'types') {
         return reqInfo.utils.createResponse$(() => {
           return {
-            body: {list: filteredProducts},
-            status: 200,
-          } as ResponseOptions;
-        });
-      } else {
-        return reqInfo.utils.createResponse$(() => {
-          return {
-            body: {list: []},
+            body: this.createDb().getFormsType,
             status: 200,
           } as ResponseOptions;
         });

@@ -35,14 +35,11 @@ export class FromlyFormComponent implements OnInit, OnDestroy {
           this.route.queryParams.subscribe((params) => {
             this.id = params["id"];
           });
-          debugger;
           if (this.id) {
             this.requestsService
               .getRequests()
               .subscribe((response: IRequest[]) => {
-                this.model = response.filter((c) => c.id === this.id)[0][
-                  "body"
-                  ];
+                console.log("response =", response);
               });
           }
         }

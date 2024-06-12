@@ -5,10 +5,6 @@ import {HttpClient} from "@angular/common/http";
 import {API_ENDPOINTS} from "@app/api-config";
 import {IRequest} from "@shared/models/request.interface";
 
-// export function ipValidator(control: AbstractControl): null | { ip: boolean } {
-//   return !control.value || /(\d{1,3}\.){3}\d{1,3}/.test(control.value) ? null : {ip: true};
-// }
-
 @Injectable({
   providedIn: "root",
 })

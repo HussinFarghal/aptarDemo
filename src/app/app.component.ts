@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {CommonModule} from "@angular/common";
-import {HeaderComponent} from "./core/header/header.component";
-import {SidebarComponent} from "./core/sidebar/sidebar.component";
-import {FooterComponent} from "./core/footer/footer.component";
+import {HeaderComponent} from "@core/header/header.component";
+import {SidebarComponent} from "@core/sidebar/sidebar.component";
+import {FooterComponent} from "@core/footer/footer.component";
 
 @Component({
   selector: 'app-root',
@@ -13,7 +13,6 @@ import {FooterComponent} from "./core/footer/footer.component";
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  title = 'aptar-product-assets';
 
   ngOnInit() : void {
 
