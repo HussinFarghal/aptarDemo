@@ -113,7 +113,7 @@ export class InMemoryDataService implements InMemoryDbService {
           {
             "key": "partNumber",
             "type": "string",
-            "uiType": "input",
+            "uiType": "partNumberMask",
             "properties": {
               "label": "Part Number",
               "placeholder": "e.g., p-12345"
@@ -135,7 +135,7 @@ export class InMemoryDataService implements InMemoryDbService {
           {
             "key": "translucencePercentage",
             "type": "int",
-            "uiType": "slider",
+            "uiType": "input",
             "properties": {
               "label": "Translucence percentage"
             },

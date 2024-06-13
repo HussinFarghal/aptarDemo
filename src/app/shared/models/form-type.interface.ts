@@ -13,7 +13,7 @@ interface Property {
   rows?: number
 }
 
-interface Validator {
+export interface Validator {
   expression?: string | null;
   type?: string;
   message?: string | null;

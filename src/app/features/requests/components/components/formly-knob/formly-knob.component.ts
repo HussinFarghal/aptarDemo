@@ -13,7 +13,7 @@ export class FormlyKnobComponent extends FieldType implements OnInit {
     this.props.min = this.props.min ?? 0;
     this.props.max = this.props.max ?? 100;
     this.props.step = this.props.step ?? 1;
-    this.props['valueTemplate'] = this.props['valueTemplate'] ?? '{10}';
+    this.props['valueTemplate'] = this.props['valueTemplate'] ?? '{1}';
 
   }
 
