@@ -11,6 +11,8 @@ interface Property {
   placeholder?: string;
   label: string;
   rows?: number
+  uiRow?: number;
+  uiColPercentage?: number;
 }
 
 export interface Validator {

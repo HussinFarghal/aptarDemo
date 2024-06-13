@@ -57,7 +57,7 @@ import {CalendarModule} from "primeng/calendar";
       {name: 'partNumberMask', component: InputPartNumberMaskComponent},
       {name: 'slider', component: FormlySliderComponent},
       {name: 'knob', component: FormlyKnobComponent},
-      {name: 'calendar', component: FormlyCalendarComponent},
+      {name: 'date', component: FormlyCalendarComponent},
 
 
     ],

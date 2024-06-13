@@ -9,7 +9,6 @@ import {FormControl} from "@angular/forms";
   styleUrl: './formly-calendar.component.scss'
 })
 export class FormlyCalendarComponent extends FieldType implements OnInit {
-  rangeDates: Date[] | undefined;
 
   ngOnInit(): void {
   }

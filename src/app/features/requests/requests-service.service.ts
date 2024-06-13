@@ -13,7 +13,6 @@ export class RequestsService {
   }
 
   private _selectedFormType = new BehaviorSubject<IFormType>({fields: [], id: 0, name: ''});
-
   selectedFormType$ = this._selectedFormType.asObservable();
 
   get selectedFormType(): IFormType {
@@ -54,47 +53,71 @@ export class RequestsService {
   }
 
   private mapToFormlyFields(fields: any[]): any[] {
-    return fields.reduce((acc, field, index) => {
-      const fieldGroupIndex = Math.floor(index / 2);
-      if (!acc[fieldGroupIndex]) {
-        acc[fieldGroupIndex] = {
-          fieldGroupClassName: 'grid',
-          fieldGroup: [],
+    const rows = this.groupFieldsByRow(fields);
+    const mappedFields = rows.map(rowFields => ({
+      fieldGroupClassName: 'grid',
+      fieldGroup: rowFields.map(field => {
+        const validation = this.mapValidationRules(field.validationRules);
+        return {
+          className: this.mapUiColPercentageToClass(field.properties.uiColPercentage),
+          key: field.key,
+          type: this.mapUiTypeToFieldType(field.uiType),
+          defaultValue: null,
+          wrappers: ['formly-field'],
+          props: {
+            label: field.properties.label,
+            placeholder: field.properties.placeholder || '',
+            required: validation.required,
+            options: field.options ? field.options.map((option: { label: any; value: any; }) => ({
+              label: option.label,
+              value: option.value
+            })) : undefined,
+            type: field.uiType === 'color' ? 'color' : undefined,
+            min: validation.min,
+            max: validation.max,
+            pattern: validation.pattern,
+            step: validation.step,
+            mask: validation.mask,
+            maxLength: validation.maxLength,
+            minLength: validation.minLength,
+            valueTemplate: validation.valueTemplate || '{value}%',
+            valueColor: validation.valueColor,
+            rangeColor: validation.rangeColor,
+          },
+          validation: validation.messages ? {messages: validation.messages} : undefined,
+          expressions: this.mapExpressions(field),
         };
+      })
+    }));
+    console.log('Mapped Fields:', mappedFields);
+    return mappedFields;
+  }
+
+  private groupFieldsByRow(fields: any[]): any[][] {
+    const rows: any = {};
+    fields.forEach(field => {
+      const rowIndex = field.properties.uiRow;
+      if (!rows[rowIndex]) {
+        rows[rowIndex] = [];
       }
+      rows[rowIndex].push(field);
+    });
+    return Object.values(rows);
+  }
 
-      const validation = this.mapValidationRules(field.validationRules);
-      const formlyField = {
-        className: this.getFieldClassName(field.key),
-        key: field.key,
-        type: this.mapUiTypeToFieldType(field.key),
-        defaultValue: null,
-        wrappers: ['formly-field'],
-        props: {
-          label: field.properties.label,
-          placeholder: field.properties.placeholder || '',
-          required: validation.required,
-          options: field.options ? field.options.map((option: { label: any; value: any; }) => ({
-            label: option.label,
-            value: option.value
-          })) : undefined,
-          type: field.uiType === 'color' ? 'color' : undefined,
-          min: validation.min,
-          max: validation.max,
-          pattern: validation.pattern,
-          step: field.key === 'translucencePercentage' ? validation.step || 1 : validation.step,
-          mask: field.key === 'partNumber' ? 'p-99999' : validation.mask,
-          valueTemplate: field.key === 'translucencePercentage' ? validation.valueTemplate || '{value}%' : validation.valueTemplate,
-          valueColor: validation.valueColor,
-          rangeColor: validation.rangeColor,
-        },
-        validation: validation.messages ? {messages: validation.messages} : undefined,
-        expressions: this.mapExpressions(field.key),
-      };
-
-      acc[fieldGroupIndex].fieldGroup.push(formlyField);
-      return acc;
-    }, []);
+  private mapUiColPercentageToClass(uiColPercentage: number): string {
+    const colClasses: { [key: number]: string } = {
+      100: 'md:col-12',
+      75: 'md:col-9',
+      66.6667: 'md:col-8',
+      50: 'md:col-6',
+      41.6667: 'md:col-5',
+      33.3333: 'md:col-4',
+      25: 'md:col-3',
+      16.6667: 'md:col-2',
+      8.3333: 'md:col-1'
+    };
+    return colClasses[uiColPercentage] || 'md:col-12';
   }
 
   private mapValidationRules(rules: any[]): {
@@ -108,6 +131,8 @@ export class RequestsService {
     valueTemplate?: string;
     valueColor?: string;
     rangeColor?: string;
+    maxLength?: number;
+    minLength?: number;
   } {
     if (!rules) {
       return {required: false};
@@ -124,6 +149,8 @@ export class RequestsService {
       valueTemplate?: string;
       valueColor?: string;
       rangeColor?: string;
+      maxLength?: number;
+      minLength?: number;
     } = {required: false, messages: {}};
 
     rules.forEach(rule => {
@@ -139,82 +166,44 @@ export class RequestsService {
       } else if (rule.type === 'Max') {
         validation.max = rule.max;
         validation.messages['max'] = rule.message || `Value should be at most ${rule.max}`;
-      } else if (rule.type === 'Step') {
-        validation.step = rule.step;
-      } else if (rule.type === 'Mask') {
-        validation.mask = rule.mask;
-      } else if (rule.type === 'ValueTemplate') {
-        validation.valueTemplate = rule.valueTemplate;
-      } else if (rule.type === 'ValueColor') {
-        validation.valueColor = rule.valueColor;
-      } else if (rule.type === 'RangeColor') {
-        validation.rangeColor = rule.rangeColor;
+      } else if (rule.type === 'maxLength') {
+        validation.maxLength = rule.maxLength;
+        validation.messages['maxLength'] = rule.message || `Value should be at most ${rule.maxLength} characters`;
+      } else if (rule.type === 'minLength') {
+        validation.minLength = rule.minLength;
+        validation.messages['minLength'] = rule.message || `Value should be at least ${rule.minLength} characters`;
       }
     });
 
     return validation;
   }
 
-  private mapExpressions(key: string): { [key: string]: string } {
+  private mapExpressions(field: any): { [key: string]: string } {
     const expressions: { [key: string]: string } = {};
 
-    if (key === 'shippingAddress' || key === 'shippingDate') {
-      expressions['hide'] = '!model.sampleSubmission';
-      expressions['props.required'] = 'model.sampleSubmission';
+    if (field.validationRules) {
+      field.validationRules.forEach((rule: { expression: string; }) => {
+        if (rule.expression) {
+          expressions['hide'] = `!model.${rule.expression}`;
+          expressions['props.required'] = `model.${rule.expression}`;
+        }
+      });
     }
 
     return expressions;
   }
 
-  private getFieldClassName(key: string): string {
-    switch (key) {
-
-      case 'colorType':
-        return 'col-12 md:col-6';
-
-      case 'color':
-        return 'col-12 md:col-6';
-
-      case 'partNumber':
-        return 'col-12 md:col-6';
-
-      case 'translucencePercentage':
-        return 'col-12 md:col-6';
-
-      case 'sampleSubmission':
-        return 'col-12 md:col-12';
-
-      case 'shippingAddress':
-      case 'shippingDate':
-
-        return 'col-12 md:col-12';
-      default:
-        return 'col-12 md:col-12';
-    }
-  }
-
-  private mapUiTypeToFieldType(key: string): string {
-    switch (key) {
-      case 'colorType':
-        return 'radio';
-
+  private mapUiTypeToFieldType(uiType: string): string {
+    switch (uiType) {
+      case 'radio':
+      case 'checkbox':
+      case 'input':
+      case 'textarea':
+      case 'slider':
+      case 'date':
+        return uiType;
       case 'color':
         return 'input';
-
-      case 'partNumber':
-        return 'partNumberMask';
-
-      case 'translucencePercentage':
-        return 'slider';
-
-      case 'sampleSubmission':
-        return 'checkbox';
-
-      case 'shippingAddress':
-        return 'textarea';
-
-      case 'shippingDate':
-        return 'calendar';
       default:
         return 'input';
     }

@@ -52,7 +52,7 @@ export class InMemoryDataService implements InMemoryDbService {
     const finalProducts = this.generateFinalProducts(1000);
     const getFormsType: IFormType[] = [
       {
-        "id": 21,
+        "id": 0,
         "name": "ColorMatch",
         "fields": [
           {
@@ -61,7 +61,9 @@ export class InMemoryDataService implements InMemoryDbService {
             "uiType": "radio",
             "properties": {
               "label": "Color Type",
-              "placeholder": "Color Type"
+              "placeholder": "Color Type",
+              "uiRow": 1,
+              "uiColPercentage": 50
             },
             "options": [
               {
@@ -99,7 +101,9 @@ export class InMemoryDataService implements InMemoryDbService {
             "uiType": "color",
             "properties": {
               "label": "Color",
-              "placeholder": "Color"
+              "placeholder": "Color",
+              "uiRow": 1,
+              "uiColPercentage": 50
             },
             "options": null,
             "validationRules": [
@@ -113,10 +117,12 @@ export class InMemoryDataService implements InMemoryDbService {
           {
             "key": "partNumber",
             "type": "string",
-            "uiType": "partNumberMask",
+            "uiType": "input",
             "properties": {
               "label": "Part Number",
-              "placeholder": "e.g., p-12345"
+              "placeholder": "e.g., p-12345",
+              "uiRow": 2,
+              "uiColPercentage": 25
             },
             "options": null,
             "validationRules": [
@@ -137,7 +143,9 @@ export class InMemoryDataService implements InMemoryDbService {
             "type": "int",
             "uiType": "slider",
             "properties": {
-              "label": "Translucence percentage"
+              "label": "Translucence percentage",
+              "uiRow": 3,
+              "uiColPercentage": 100
             },
             "options": null,
             "validationRules": [
@@ -147,12 +155,12 @@ export class InMemoryDataService implements InMemoryDbService {
                 "message": null
               },
               {
-                "min": 1.0,
+                "min": 1,
                 "type": "Min",
                 "message": "Number must be at least 1."
               },
               {
-                "max": 100.0,
+                "max": 100,
                 "type": "Max",
                 "message": "Number must be at most 100."
               }
@@ -163,32 +171,12 @@ export class InMemoryDataService implements InMemoryDbService {
             "type": "bool",
             "uiType": "checkbox",
             "properties": {
-              "label": "Sample Submission"
+              "label": "Sample Submission",
+              "uiRow": 4,
+              "uiColPercentage": 25
             },
             "options": null,
             "validationRules": null
-          },
-          {
-            "key": "shippingAddress",
-            "type": "string",
-            "uiType": "textarea",
-            "properties": {
-              "rows": 3,
-              "label": "Shipping Address"
-            },
-            "options": null,
-            "validationRules": [
-              {
-                "expression": "sampleSubmission",
-                "type": "Required",
-                "message": null
-              },
-              {
-                "maxLength": 250,
-                "type": "MaxLength",
-                "message": null
-              }
-            ]
           },
           {
             "key": "shippingDate",
@@ -196,7 +184,8 @@ export class InMemoryDataService implements InMemoryDbService {
             "uiType": "date",
             "properties": {
               "label": "Shipping Date",
-              "placeholder": "Choose a date please"
+              "uiRow": 5,
+              "uiColPercentage": 50
             },
             "options": null,
             "validationRules": [
@@ -209,6 +198,30 @@ export class InMemoryDataService implements InMemoryDbService {
                 "minDate": null,
                 "maxDate": "2024-10-23T00:00:00",
                 "type": "DateRange",
+                "message": null
+              }
+            ]
+          },
+          {
+            "key": "shippingAddress",
+            "type": "string",
+            "uiType": "textarea",
+            "properties": {
+              "label": "Shipping Address",
+              "rows": 3,
+              "uiRow": 6,
+              "uiColPercentage": 100
+            },
+            "options": null,
+            "validationRules": [
+              {
+                "expression": "sampleSubmission",
+                "type": "Required",
+                "message": null
+              },
+              {
+                "maxLength": 5,
+                "type": "maxLength",
                 "message": null
               }
             ]
