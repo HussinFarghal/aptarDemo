@@ -5,6 +5,7 @@ import {RequestsService} from "@app/features/requests/requests-service.service";
 import {Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {IRequest} from "@shared/models/request.interface";
+import {FormlyFieldConfig} from "@ngx-formly/core";
 
 @Component({
   selector: "app-fromly-form",
@@ -16,6 +17,7 @@ export class FromlyFormComponent implements OnInit, OnDestroy {
   @Input() selectedFormType!: IFormType;
   formlyForm: FormGroup = new FormGroup({});
   selectedFormTypeSubscriptions: Subscription = new Subscription();
+  formlyFields: FormlyFieldConfig[] = [];
   model = {};
   apiUrl: string = "https://localhost:44317/requests/";
   id: number = 0;
@@ -32,6 +34,7 @@ export class FromlyFormComponent implements OnInit, OnDestroy {
         (formType: IFormType) => {
           this.selectedFormType = formType;
           console.log("selectedFormType =", this.selectedFormType);
+          this.formlyFields = formType.fields as FormlyFieldConfig[];
           this.route.queryParams.subscribe((params) => {
             this.id = params["id"];
           });
@@ -47,7 +50,7 @@ export class FromlyFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(model: any) {
-    this.requestsService.submit(model);
+    console.log("model =", model);
   }
 
   onReset() {

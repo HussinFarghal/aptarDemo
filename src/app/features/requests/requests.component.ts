@@ -3,6 +3,7 @@ import {FormControl, FormGroup} from "@angular/forms";
 import {RequestsService} from "./requests-service.service";
 import {Subscription} from "rxjs";
 import {IFormType} from "@shared/models/form-type.interface";
+import {DropdownChangeEvent} from "primeng/dropdown";
 
 @Component({
   selector: "app-requests",
@@ -12,7 +13,7 @@ import {IFormType} from "@shared/models/form-type.interface";
 })
 export class RequestsComponent implements OnInit, OnDestroy {
   selectedFormType!: IFormType;
-  formGroup!: FormGroup;
+  formType!: FormGroup;
   formTypes: IFormType[] = [];
   isLoaded: boolean = false;
   isSuccess: boolean = false;
@@ -24,20 +25,20 @@ export class RequestsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.formGroup = new FormGroup({
+    this.formType = new FormGroup({
       selectedFormType: new FormControl<IFormType>(this.selectedFormType),
     });
-    this.getFormTypes();
     this.selectedFormSubscription = this.requestsService.selectedFormType$.subscribe({
       next: (selectedFormType: IFormType) => {
         this.selectedFormType = selectedFormType;
         console.log("selectedFormType =", selectedFormType);
       },
     });
+    this.getFormTypes();
 
   }
 
-  onFormTypeDropDownChange(event: any) {
+  onFormTypeDropDownChange(event: DropdownChangeEvent) {
     this.requestsService.selectedFormType = event.value;
     console.log("selectedFormType =", event.value);
   }
@@ -56,8 +57,7 @@ export class RequestsComponent implements OnInit, OnDestroy {
         this.isFailed = false;
         this.isSuccess = true;
         this.isLoaded = false;
-      },
-      error: (error) => {
+      }, error: (error) => {
         this.isLoaded = false;
         this.isFailed = true;
         this.isSuccess = false;
@@ -66,4 +66,6 @@ export class RequestsComponent implements OnInit, OnDestroy {
     });
     return this.formTypes;
   }
+
+
 }
