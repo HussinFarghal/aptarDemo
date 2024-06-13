@@ -1,7 +1,7 @@
 <div class="field" [ngClass]="{'has-error': showError}">
-  <label [ngClass]="{'flex': field.type === 'radio'}" *ngIf="props['label']" [for]="id">
+  <label [ngClass]="{'flex': field.type === 'radio' || 'calendar'}" *ngIf="props['label']" [for]="id">
     {{ props['label'] }}
-    <ng-container *ngIf="to['required']">*</ng-container>
+    <ng-container *ngIf="props['required']">*</ng-container>
   </label>
   <ng-container #fieldComponent></ng-container>
   <div *ngIf="showError" class="error-message">

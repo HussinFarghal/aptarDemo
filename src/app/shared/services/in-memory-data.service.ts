@@ -135,7 +135,7 @@ export class InMemoryDataService implements InMemoryDbService {
           {
             "key": "translucencePercentage",
             "type": "int",
-            "uiType": "input",
+            "uiType": "slider",
             "properties": {
               "label": "Translucence percentage"
             },

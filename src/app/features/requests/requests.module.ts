@@ -31,11 +31,15 @@ import {
 import {SliderModule} from "primeng/slider";
 import {FormlyKnobComponent} from "@app/features/requests/components/components/formly-knob/formly-knob.component";
 import {KnobModule} from "primeng/knob";
+import {
+  FormlyCalendarComponent
+} from "@app/features/requests/components/components/formly-calendar/formly-calendar.component";
+import {CalendarModule} from "primeng/calendar";
 
 
 @NgModule({
   declarations: [RequestsComponent, FromlyFormComponent, InputPhoneMaskComponent,
-    InputPartNumberMaskComponent, FormlySliderComponent, FormlyKnobComponent],
+    InputPartNumberMaskComponent, FormlySliderComponent, FormlyKnobComponent, FormlyCalendarComponent],
   imports: [CommonModule, ReactiveFormsModule, FormlyModule.forChild({
     validators: [
       {name: 'ip', validation: ipValidator}
@@ -53,11 +57,12 @@ import {KnobModule} from "primeng/knob";
       {name: 'partNumberMask', component: InputPartNumberMaskComponent},
       {name: 'slider', component: FormlySliderComponent},
       {name: 'knob', component: FormlyKnobComponent},
+      {name: 'calendar', component: FormlyCalendarComponent},
 
 
     ],
     wrappers: [{name: 'formly-field', component: FormlyFieldComponent}],
-  }), FormlyPrimeNGModule, PanelModule, RequestsRoutingModule, FormlyFormFieldModule, ButtonModule, DropdownModule, DividerModule, InputMaskModule, SliderModule, KnobModule,
+  }), FormlyPrimeNGModule, PanelModule, RequestsRoutingModule, FormlyFormFieldModule, ButtonModule, DropdownModule, DividerModule, InputMaskModule, SliderModule, KnobModule, CalendarModule,
 
   ],
   exports: [RequestsComponent]

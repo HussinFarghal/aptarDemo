@@ -65,9 +65,9 @@ export class RequestsService {
 
       const validation = this.mapValidationRules(field.validationRules);
       const formlyField = {
-        className: this.getFieldClassName(field.uiType),
+        className: this.getFieldClassName(field.key),
         key: field.key,
-        type: this.mapUiTypeToFieldType(field.uiType),
+        type: this.mapUiTypeToFieldType(field.key),
         defaultValue: null,
         wrappers: ['formly-field'],
         props: {
@@ -82,9 +82,9 @@ export class RequestsService {
           min: validation.min,
           max: validation.max,
           pattern: validation.pattern,
-          step: field.uiType === 'knob' ? validation.step || 1 : validation.step,
-          mask: field.uiType === 'partNumberMask' ? 'p-99999' : validation.mask,
-          valueTemplate: field.uiType === 'knob' ? validation.valueTemplate || '{value}%' : validation.valueTemplate,
+          step: field.key === 'translucencePercentage' ? validation.step || 1 : validation.step,
+          mask: field.key === 'partNumber' ? 'p-99999' : validation.mask,
+          valueTemplate: field.key === 'translucencePercentage' ? validation.valueTemplate || '{value}%' : validation.valueTemplate,
           valueColor: validation.valueColor,
           rangeColor: validation.rangeColor,
         },
@@ -166,41 +166,55 @@ export class RequestsService {
     return expressions;
   }
 
-  private getFieldClassName(uiType: string): string {
-    switch (uiType) {
-      case 'radio':
+  private getFieldClassName(key: string): string {
+    switch (key) {
+
+      case 'colorType':
+        return 'col-12 md:col-6';
+
       case 'color':
-        return 'md:col-6';
-      case 'input':
-      case 'textarea':
-      case 'slider':
-      case 'knob':
-      case 'checkbox':
-        return 'md:col';
-      case 'date':
-        return 'md:col-12';
+        return 'col-12 md:col-6';
+
+      case 'partNumber':
+        return 'col-12 md:col-6';
+
+      case 'translucencePercentage':
+        return 'col-12 md:col-6';
+
+      case 'sampleSubmission':
+        return 'col-12 md:col-12';
+
+      case 'shippingAddress':
+      case 'shippingDate':
+
+        return 'col-12 md:col-12';
       default:
-        return 'md:col-12';
+        return 'col-12 md:col-12';
     }
   }
 
-  private mapUiTypeToFieldType(uiType: string): string {
-    switch (uiType) {
-      case 'radio':
-      case 'checkbox':
-        return uiType;
+  private mapUiTypeToFieldType(key: string): string {
+    switch (key) {
+      case 'colorType':
+        return 'radio';
+
       case 'color':
-      case 'input':
-      case 'textarea':
         return 'input';
-      case 'partNumberMask':
-        return uiType;
-      case 'date':
+
+      case 'partNumber':
+        return 'partNumberMask';
+
+      case 'translucencePercentage':
+        return 'slider';
+
+      case 'sampleSubmission':
+        return 'checkbox';
+
+      case 'shippingAddress':
+        return 'textarea';
+
+      case 'shippingDate':
         return 'calendar';
-      case 'knob':
-        return uiType;
-      case 'slider':
-        return uiType;
       default:
         return 'input';
     }
