@@ -4,7 +4,6 @@ import {IProductCatalog, IProductFamilyFile,} from "@shared/models/product-catal
 import {ICategory} from "@shared/models/category.interface";
 import {IFinalProduct, IFinalProducts, IPageInformation,} from "@shared/models/final-products.interface";
 import {ICustomer} from "@shared/models/customer.interface";
-import {IFormType} from "@shared/models/form-type.interface";
 
 const productFamilyNames: string[] = [
   "Ecolite Directional Pour Spout",
@@ -50,7 +49,7 @@ export class InMemoryDataService implements InMemoryDbService {
     const products = this.generateProducts(10);
     const finalCustomers = this.generateCustomers(customers.length);
     const finalProducts = this.generateFinalProducts(1000);
-    const getFormsType: IFormType[] = [
+    const getFormsType: any[] = [
       {
         "id": 0,
         "name": "ColorMatch",
@@ -185,7 +184,8 @@ export class InMemoryDataService implements InMemoryDbService {
             "properties": {
               "label": "Shipping Date",
               "uiRow": 5,
-              "uiColPercentage": 50
+              "uiColPercentage": 50,
+              "expression.hide": "!sampleSubmission"
             },
             "options": null,
             "validationRules": [
@@ -210,7 +210,8 @@ export class InMemoryDataService implements InMemoryDbService {
               "label": "Shipping Address",
               "rows": 3,
               "uiRow": 6,
-              "uiColPercentage": 100
+              "uiColPercentage": 100,
+              "expression.hide": "!sampleSubmission"
             },
             "options": null,
             "validationRules": [
@@ -220,8 +221,8 @@ export class InMemoryDataService implements InMemoryDbService {
                 "message": null
               },
               {
-                "max": 5,
-                "type": "maxLength",
+                "maxLength": 5,
+                "type": "MaxLength",
                 "message": null
               }
             ]

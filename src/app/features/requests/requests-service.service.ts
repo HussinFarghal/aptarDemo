@@ -9,11 +9,12 @@ import {IRequest} from '@shared/models/request.interface';
   providedIn: 'root',
 })
 export class RequestsService {
-  private _selectedFormType = new BehaviorSubject<IFormType>({fields: [], id: 0, name: ''});
-  selectedFormType$ = this._selectedFormType.asObservable();
-
   constructor(private http: HttpClient) {
   }
+
+  private _selectedFormType = new BehaviorSubject<IFormType>({fields: [], id: 0, name: ''});
+
+  selectedFormType$ = this._selectedFormType.asObservable();
 
   get selectedFormType(): IFormType {
     return this._selectedFormType.value;
@@ -53,6 +54,17 @@ export class RequestsService {
     );
   }
 
+  transformExpression(expression: string) {
+    // Regular expression to match field names
+    const fieldRegex = /\b[a-zA-Z_]\w*\b/g;
+    // Replace field names with "model.fieldName"
+    // Return the transformed expression
+    return expression.replace(
+      fieldRegex,
+      (match) => `model.${match}`
+    );
+  }
+
   /**
    * Maps backend field definitions to Formly field configurations.
    * @param fields The fields to map.
@@ -87,6 +99,10 @@ export class RequestsService {
    */
   private mapFieldToFormly = (field: any): any => {
     const validation = this.mapValidationRules(field.validationRules);
+    // Helper function to convert date string to Date object
+    const convertToDate = (dateString: string | null | undefined): Date | null => {
+      return dateString ? new Date(dateString) : null;
+    };
     return {
       className: this.mapUiColPercentageToClass(field.properties.uiColPercentage),
       key: field.key,
@@ -104,6 +120,8 @@ export class RequestsService {
         pattern: validation.pattern,
         maxLength: validation.maxLength,
         minLength: validation.minLength,
+        minDate: convertToDate(validation.minDate),
+        maxDate: convertToDate(validation.maxDate),
 
       },
       validation: validation.messages ? {messages: validation.messages} : undefined,
@@ -144,6 +162,8 @@ export class RequestsService {
     pattern?: string;
     maxLength?: number;
     minLength?: number;
+    minDate?: string | null;
+    maxDate?: string | null;
   } {
     if (!rules) return {required: false};
 
@@ -155,6 +175,8 @@ export class RequestsService {
       pattern?: string;
       maxLength?: number;
       minLength?: number;
+      minDate?: string | null;
+      maxDate?: string | null;
     } = {required: false, messages: {}};
 
     rules.forEach(rule => {
@@ -175,13 +197,21 @@ export class RequestsService {
           validation.max = rule.max;
           validation.messages['max'] = rule.message || `Value should be at most ${rule.max}`;
           break;
-        case 'maxLength':
-          validation.maxLength = rule.max;
+        case 'MaxLength':
+          validation.maxLength = rule.maxLength;
           validation.messages['maxLength'] = rule.message || `Value should be at most ${rule.maxLength} characters`;
           break;
         case 'minLength':
-          validation.minLength = rule.min;
+          validation.minLength = rule.minLength;
           validation.messages['minLength'] = rule.message || `Value should be at least ${rule.minLength} characters`;
+          break;
+        case 'minDate':
+          validation.minDate = rule.minDate;
+          validation.messages['minDate'] = rule.message || `Date should be at least ${rule.minDate}`;
+          break;
+        case 'maxDate':
+          validation.maxDate = rule.maxDate;
+          validation.messages['maxDate'] = rule.message || `Date should be at most ${rule.maxDate}`;
           break;
       }
     });
@@ -212,8 +242,10 @@ export class RequestsService {
     if (field.validationRules) {
       field.validationRules.forEach((rule: { expression: string }) => {
         if (rule.expression) {
-          expressions['hide'] = `!model.${rule.expression}`;
-          expressions['props.required'] = `model.${rule.expression}`;
+          expressions['props.required'] = this.transformExpression(rule.expression);
+        }
+        if (field.properties['expression.hide']) {
+          expressions['hide'] = this.transformExpression(field.properties['expression.hide']);
         }
       });
     }

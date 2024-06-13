@@ -1,7 +1,8 @@
 <p-calendar
   [formControl]="getFormControl()"
   [showIcon]="true"
-  selectionMode="single"
+  [minDate]="props['minDate']"
+  [maxDate]="props['maxDate']"
   [readonlyInput]="true"
 >
 </p-calendar>
