@@ -1,12 +1,12 @@
 <form [formGroup]="formlyForm" (ngSubmit)="onSubmit(model)">
   <formly-form
     [form]="formlyForm"
-    [fields]="selectedFormType.formSchema"
+    [fields]="[]"
     [model]="model"
   ></formly-form>
   <div
     class="grid text-right mt-4"
-    *ngIf="selectedFormType.formSchema.length !== 0"
+    *ngIf="selectedFormType.fields.length !== 0"
   >
     <div class="col">
       <button

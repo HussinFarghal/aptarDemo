@@ -52,258 +52,169 @@ export class InMemoryDataService implements InMemoryDbService {
     const finalProducts = this.generateFinalProducts(1000);
     const getFormsType: IFormType[] = [
       {
-        name: "From Type 1",
-        id: "1",
-        formSchema: [
+        "id": 21,
+        "name": "ColorMatch",
+        "fields": [
           {
-            fieldGroupClassName: "grid",
-            fieldGroup: [
+            "key": "colorType",
+            "type": "int",
+            "uiType": "radio",
+            "properties": {
+              "label": "Color Type",
+              "placeholder": "Color Type"
+            },
+            "options": [
               {
-                className: "md:col-6",
-                key: "colorType",
-                type: "radio",
-                defaultValue: "RGB",
-                wrappers: ["formly-field"],
-                props: {
-                  label: "Color Type",
-                  required: true,
-                  options: [
-                    {value: "Pantone", label: "Pantone"},
-                    {value: "RGB", label: "RGB"},
-                    {value: "HEX", label: "HEX"},
-                    {value: "CMYK", label: "CMYK"},
-                  ],
-                },
+                "label": "Pantone",
+                "value": "Pantone"
               },
               {
-                className: "md:col-6",
-                key: "color",
-                type: "input",
-                defaultValue: null,
-                wrappers: ["formly-field"],
-                props: {
-                  type: "color",
-                  label: "Color Picker",
-                  placeholder: "Select a color",
-                  required: true,
-                },
+                "label": "RGB",
+                "value": "RGB"
               },
+              {
+                "label": "HEX",
+                "value": "HEX"
+              },
+              {
+                "label": "CMYK",
+                "value": "CMYK"
+              }
             ],
-          },
-          {
-            fieldGroupClassName: "grid",
-            fieldGroup: [
+            "validationRules": [
               {
-                className: "md:col",
-                key: "partNumber",
-                type: "partNumberMask",
-                wrappers: ["formly-field"],
-                props: {
-                  label: "Part Number",
-                  required: true,
-                  placeholder: "e.g., p-12345",
-                  mask: "p-99999",
-                  pattern: "^p-[0-9]+$",
-                },
-                validation: {
-                  messages: {
-                    pattern:
-                      'Part number must start with "p-" and be followed by positive numbers.',
-                  },
-                },
+                "expression": null,
+                "type": "Required",
+                "message": null
               },
               {
-                className: "md:col",
-                key: "translucenceNumber",
-                type: "number",
-                defaultValue: 10,
-                wrappers: ["formly-field"],
-                props: {
-                  label: "Translucence Number",
-                  min: 0,
-                  max: 100,
-                  required: true,
-                },
-                validation: {
-                  messages: {
-                    required: "Number is required",
-                  },
-                },
+                "type": "InOptions",
+                "message": null
+              }
+            ]
+          },
+          {
+            "key": "color",
+            "type": "string",
+            "uiType": "color",
+            "properties": {
+              "label": "Color",
+              "placeholder": "Color"
+            },
+            "options": null,
+            "validationRules": [
+              {
+                "expression": null,
+                "type": "Required",
+                "message": null
+              }
+            ]
+          },
+          {
+            "key": "partNumber",
+            "type": "string",
+            "uiType": "input",
+            "properties": {
+              "label": "Part Number",
+              "placeholder": "e.g., p-12345"
+            },
+            "options": null,
+            "validationRules": [
+              {
+                "expression": null,
+                "type": "Required",
+                "message": null
               },
               {
-                className: "md:col",
-                key: "translucencePercentage",
-                type: "knob",
-                defaultValue: 10,
-                wrappers: ["formly-field"],
-                props: {
-                  label: "Translucence Percentage",
-                  min: 0,
-                  max: 100,
-                  step: 1,
-                  valueTemplate: "{value}%", // Custom value template
-                  valueColor: "#00ff00", // Custom value color
-                  rangeColor: "#ff0000", // Custom range color
-                  required: true,
-                },
-                validation: {
-                  messages: {
-                    required: "Number is required",
-                  },
-                },
-              },
-            ],
+                "pattern": "^p-\\d+$",
+                "type": "Pattern",
+                "message": "Part number must start with \"p-\" and be followed by positive numbers."
+              }
+            ]
           },
           {
-            fieldGroupClassName: "grid",
-            fieldGroup: [
+            "key": "translucencePercentage",
+            "type": "int",
+            "uiType": "slider",
+            "properties": {
+              "label": "Translucence percentage"
+            },
+            "options": null,
+            "validationRules": [
               {
-                className: "md:col",
-                key: "translucencePercentage",
-                type: "slider",
-                defaultValue: 50,
-                wrappers: ["formly-field"],
-                props: {
-                  label: "Translucence Number Slider",
-                  min: 0,
-                  max: 100,
-                  required: true,
-                },
-                validation: {
-                  messages: {
-                    required: "Number is required",
-                  },
-                },
+                "expression": null,
+                "type": "Required",
+                "message": null
               },
               {
-                className: "md:col",
-                key: "ip",
-                type: "input",
-                wrappers: ["formly-field"],
-                props: {
-                  label: "IP Address (custom validation)",
-                  required: true,
-                },
-                validators: {
-                  validation: ["ip"],
-                },
+                "min": 1.0,
+                "type": "Min",
+                "message": "Number must be at least 1."
               },
               {
-                className: "md:col",
-                key: "sampleSubmission",
-                type: "checkbox",
-                wrappers: ["formly-field"],
-                props: {
-                  label: "Sample Submission",
-                },
-              },
-            ],
+                "max": 100.0,
+                "type": "Max",
+                "message": "Number must be at most 100."
+              }
+            ]
           },
           {
-            fieldGroupClassName: "grid",
-            fieldGroup: [
+            "key": "sampleSubmission",
+            "type": "bool",
+            "uiType": "checkbox",
+            "properties": {
+              "label": "Sample Submission"
+            },
+            "options": null,
+            "validationRules": null
+          },
+          {
+            "key": "shippingAddress",
+            "type": "string",
+            "uiType": "textarea",
+            "properties": {
+              "rows": 3,
+              "label": "Shipping Address"
+            },
+            "options": null,
+            "validationRules": [
               {
-                className: "md:col-12",
-                key: "shippingAddress",
-                type: "textarea",
-                wrappers: ["formly-field"],
-                expressions: {
-                  hide: "!model.sampleSubmission",
-                  "props.required": "model.sampleSubmission",
-                },
-                props: {
-                  label: "Shipping Address",
-                  maxLength: 250,
-                  rows: 10,
-                },
+                "expression": "sampleSubmission",
+                "type": "Required",
+                "message": null
               },
-            ],
-          },
-        ],
-      },
-      {
-        name: "From Type 2",
-        id: "2",
-        formSchema: [
-          {
-            key: "subject",
-            type: "input",
-            wrappers: ["formly-field"],
-            props: {
-              label: "Subject",
-              required: true,
-              maxLength: 50,
-            },
+              {
+                "maxLength": 250,
+                "type": "MaxLength",
+                "message": null
+              }
+            ]
           },
           {
-            key: "description",
-            type: "textarea",
-            wrappers: ["formly-field"],
-            props: {
-              label: "Description",
-              required: true,
-              rows: 10,
-              placeholder: "Write a description",
-              maxLength: 500,
+            "key": "shippingDate",
+            "type": "DateTime",
+            "uiType": "date",
+            "properties": {
+              "label": "Shipping Date",
+              "placeholder": "Choose a date please"
             },
-          },
-          {
-            key: "samplesCount",
-            type: "input",
-            wrappers: ["formly-field"],
-            props: {
-              label: "Samples Number",
-              type: "number",
-              required: true,
-              min: 1,
-              max: 10,
-            },
-          },
-          {
-            key: "material",
-            type: "select",
-            wrappers: ["formly-field"],
-            defaultValue: 2,
-            props: {
-              label: "Material",
-              required: true,
-              options: [
-                {label: "Plastic", value: 1},
-                {label: "Aluminum", value: 2},
-                {label: "Glass", value: 3},
-              ],
-            },
-          },
-          {
-            key: "email",
-            type: "input",
-            wrappers: ["formly-field"],
-            props: {
-              type: "email",
-              label: "Email",
-              placeholder: "email@domain.com",
-              pattern: "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
-              required: true,
-            },
-            validation: {
-              messages: {
-                pattern: "email must be in the format your email@domain.com",
+            "options": null,
+            "validationRules": [
+              {
+                "expression": "sampleSubmission",
+                "type": "Required",
+                "message": null
               },
-            },
-          },
-          {
-            key: "phoneNumber",
-            type: "phoneMask",
-            wrappers: ["formly-field"],
-            props: {
-              label: "Phone Number",
-              placeholder: "002-02-372-353-74",
-              mask: "002-02-999-999-99",
-              required: true,
-            },
-          },
-        ],
-      },
+              {
+                "minDate": null,
+                "maxDate": "2024-10-23T00:00:00",
+                "type": "DateRange",
+                "message": null
+              }
+            ]
+          }
+        ]
+      }
     ];
     return {
       products,

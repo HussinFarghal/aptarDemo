@@ -13,7 +13,7 @@ import {IRequest} from "@shared/models/request.interface";
   styleUrl: "./fromly-form.component.scss",
 })
 export class FromlyFormComponent implements OnInit, OnDestroy {
-  @Input() selectedFormType: IFormType = {id: "", name: "", formSchema: []};
+  @Input() selectedFormType!: IFormType;
   formlyForm: FormGroup = new FormGroup({});
   selectedFormTypeSubscriptions: Subscription = new Subscription();
   model = {};

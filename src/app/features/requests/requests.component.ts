@@ -11,7 +11,7 @@ import {IFormType} from "@shared/models/form-type.interface";
   standalone: false,
 })
 export class RequestsComponent implements OnInit, OnDestroy {
-  selectedFormType: IFormType = {id: "", name: "", formSchema: []};
+  selectedFormType!: IFormType;
   formGroup!: FormGroup;
   formTypes: IFormType[] = [];
   isLoaded: boolean = false;
@@ -27,19 +27,18 @@ export class RequestsComponent implements OnInit, OnDestroy {
     this.formGroup = new FormGroup({
       selectedFormType: new FormControl<IFormType>(this.selectedFormType),
     });
-
     this.getFormTypes();
-    this.selectedFormSubscription =
-      this.requestsService.selectedFormType.subscribe({
-        next: (selectedFormType: IFormType) => {
-          this.selectedFormType = selectedFormType;
-          console.log("selectedFormType =", selectedFormType);
-        },
-      });
+    this.selectedFormSubscription = this.requestsService.selectedFormType$.subscribe({
+      next: (selectedFormType: IFormType) => {
+        this.selectedFormType = selectedFormType;
+        console.log("selectedFormType =", selectedFormType);
+      },
+    });
+
   }
 
   onFormTypeDropDownChange(event: any) {
-    this.requestsService.selectedFormType.next(event.value);
+    this.requestsService.selectedFormType = event.value;
     console.log("selectedFormType =", event.value);
   }
 
