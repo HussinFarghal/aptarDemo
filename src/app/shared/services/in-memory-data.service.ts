@@ -220,7 +220,7 @@ export class InMemoryDataService implements InMemoryDbService {
                 "message": null
               },
               {
-                "maxLength": 5,
+                "max": 5,
                 "type": "maxLength",
                 "message": null
               }
